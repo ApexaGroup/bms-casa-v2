@@ -29,7 +29,7 @@ function ForgotPasswordPageDesign() {
   return (
     <div className="forgot-password-container">
       <Card className="card-style">
-        <Logo />
+        <Logo myStyle="app-logo" />
 
         <span className="span-title">Forgot Password?</span>
         <p className="p-subtitle">You can reset your password here</p>

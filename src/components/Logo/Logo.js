@@ -7,10 +7,10 @@ import "./LogoCSS.css";
 // Image imports
 import casalogo from "../../assets/casa-logo.png";
 
-function Logo() {
+function Logo(props) {
   return (
     <div className="app-logo-container">
-      <img src={casalogo} className="app-logo" />
+      <img src={casalogo} className={props.myStyle} />
     </div>
   );
 }

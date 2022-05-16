@@ -35,7 +35,7 @@ function LoginPageDesign() {
   return (
     <div className="login-container">
       <Card className="card-style">
-        <Logo />
+        <Logo myStyle="app-logo" />
 
         <span className="span-login-first-text">Login | </span>
         <span className="span-login-second-text">Sign in to your Account</span>
