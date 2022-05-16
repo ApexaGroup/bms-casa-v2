@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+// Default react and react-router imports
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Input, Button } from "antd";
-import "./LoginPageCSS.css";
-import casalogo from "../../assets/casa-logo.png";
+
+// Antd components imports
+import { Card, Input, Button, Spin } from "antd";
 import {
   UserOutlined,
   EyeInvisibleOutlined,
@@ -10,54 +11,67 @@ import {
   KeyOutlined,
 } from "@ant-design/icons";
 
+// Css design imports
+import "./LoginPageCSS.css";
+
+// Image imports
+import casalogo from "../../assets/casa-logo.png";
+
+/**
+ * Custom component imports
+ * @LoginPageLogic This page contains logic of this form
+ */
+
+import { LoginPageStates, login } from "./LoginPageLogic";
+
 function LoginPageDesign() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+
+  // Destructuring of logic variables/methods
+  let { username, password, loading, setUsername, setPassword, setLoading } =
+    LoginPageStates;
 
   return (
     <div className="login-container">
       <Card className="card-style">
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={casalogo}
-            style={{ width: 170, height: "auto", textAlign: "center" }}
-          />
+        <div className="app-logo-container">
+          <img src={casalogo} className="app-logo" />
         </div>
 
-        <span style={{ fontSize: 28, fontWeight: "bold" }}>Login | </span>
-        <span style={{ fontSize: 22, fontWeight: "normal" }}>
-          Sign in to your Account
-        </span>
+        <span className="span-login-first-text">Login | </span>
+        <span className="span-login-second-text">Sign in to your Account</span>
         <Input
           size="large"
           placeholder="Username"
           prefix={<UserOutlined />}
-          style={{ marginTop: 20 }}
+          className="username-input"
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <Input.Password
           size="large"
           placeholder="Password"
           prefix={<KeyOutlined />}
+          value={password}
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
-          style={{ marginTop: 10, marginBottom: 20 }}
+          className="password-input"
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Button type="primary" block size="large" onClick={(e) => {}}>
+        <Button type="primary" block size="large" onClick={login}>
           Login
         </Button>
 
+        {loading ? (
+          <div className="div-spin">
+            <Spin />
+          </div>
+        ) : null}
+
         <p
-          style={{
-            textAlign: "center",
-            color: "GrayText",
-            marginTop: 10,
-            cursor: "pointer",
-          }}
+          className="p-forgotpassword"
           onClick={(e) => {
             e.preventDefault();
             navigate("/forgotPassword");

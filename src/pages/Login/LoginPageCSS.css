@@ -17,4 +17,45 @@
 .card-style{
   width: 400px;
   opacity: 0.9;
-}  
+}
+
+.app-logo-container{
+  text-align: center;
+}
+
+.app-logo{
+  width: 170px;
+  height: auto;
+  text-align: center;
+}
+
+.span-login-first-text{
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.span-login-second-text{
+  font-size: 22px;
+  font-weight: normal;
+}
+
+.username-input{
+  margin-top: 20px;
+}
+
+.password-input{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.div-spin{
+  text-align: center;
+  margin: 10px;
+}
+
+.p-forgotpassword{
+  text-align: center;
+  color: gray;
+  margin-top: 10px;
+  cursor: pointer;
+}

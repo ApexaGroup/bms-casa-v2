@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Input, Button } from "antd";
+import { Card, Input, Button, Spin } from "antd";
 import "./ForgotPasswordPageCSS.css";
 import casalogo from "../../assets/casa-logo.png";
 import {
@@ -13,6 +13,8 @@ import {
 function ForgotPasswordPageDesign() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="forgot-password-container">
       <Card className="card-style">
@@ -40,6 +42,12 @@ function ForgotPasswordPageDesign() {
         <Button type="primary" block size="large">
           Send password reset Link
         </Button>
+
+        {loading ? (
+          <div style={{ textAlign: "center", margin: 10 }}>
+            <Spin />
+          </div>
+        ) : null}
 
         <p
           style={{

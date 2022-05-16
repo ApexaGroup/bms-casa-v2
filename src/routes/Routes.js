@@ -6,6 +6,7 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
+import TheLayout from "../containers/TheLayout";
 import ForgotPasswordPageDesign from "../pages/ForgotPassword/ForgotPasswordPageDesign";
 
 import Login from "../pages/Login/LoginPageDesign";
@@ -19,6 +20,8 @@ export default function () {
           path="/forgotPassword"
           element={<ForgotPasswordPageDesign />}
         ></Route>
+
+        <Route path="/dashboard" element={<TheLayout />}></Route>
       </Routes>
     </Router>
   );
