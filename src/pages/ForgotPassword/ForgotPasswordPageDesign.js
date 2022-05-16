@@ -1,41 +1,44 @@
+// Default react and react-router imports
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Antd components imports
 import { Card, Input, Button, Spin } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
+// Css design imports
 import "./ForgotPasswordPageCSS.css";
-import casalogo from "../../assets/casa-logo.png";
-import {
-  UserOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  KeyOutlined,
-} from "@ant-design/icons";
+
+/**
+ * Custom component imports
+ * @ForgotPasswordPageLogic This page contains logic of this form
+ * @Logo This component renders a logo
+ * @Loader This component will render a loader from Spin Antd
+ */
+
+import { ForgotPageStates } from "./ForgotPasswordPageLogic";
+import Logo from "../../components/Logo/Logo";
+import Loader from "../../components/Loader/Loader";
 
 function ForgotPasswordPageDesign() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  // Destructuring of logic variables/methods
+  let { username, loading, setUsername, setLoading } = ForgotPageStates;
 
   return (
     <div className="forgot-password-container">
       <Card className="card-style">
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={casalogo}
-            style={{ width: 170, height: "auto", textAlign: "center" }}
-          />
-        </div>
+        <Logo />
 
-        <span style={{ fontSize: 28, fontWeight: "bold" }}>
-          Forgot Password?
-        </span>
-        <p style={{ fontSize: 20, fontWeight: "normal" }}>
-          You can reset your password here
-        </p>
+        <span className="span-title">Forgot Password?</span>
+        <p className="p-subtitle">You can reset your password here</p>
         <Input
           size="large"
           placeholder="Username"
+          value={username}
           prefix={<UserOutlined />}
-          style={{ marginTop: 0, marginBottom: 20 }}
+          className="input-username"
           onChange={(e) => setUsername(e.target.value)}
         />
 
@@ -43,19 +46,10 @@ function ForgotPasswordPageDesign() {
           Send password reset Link
         </Button>
 
-        {loading ? (
-          <div style={{ textAlign: "center", margin: 10 }}>
-            <Spin />
-          </div>
-        ) : null}
+        {loading ? <Loader /> : null}
 
         <p
-          style={{
-            textAlign: "center",
-            color: "GrayText",
-            marginTop: 10,
-            cursor: "pointer",
-          }}
+          className="p-logintoAccount"
           onClick={(e) => {
             e.preventDefault();
             navigate("/");

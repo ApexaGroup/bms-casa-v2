@@ -19,16 +19,6 @@
   opacity: 0.9;
 }
 
-.app-logo-container{
-  text-align: center;
-}
-
-.app-logo{
-  width: 170px;
-  height: auto;
-  text-align: center;
-}
-
 .span-login-first-text{
   font-size: 28px;
   font-weight: bold;

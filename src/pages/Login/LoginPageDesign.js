@@ -14,15 +14,16 @@ import {
 // Css design imports
 import "./LoginPageCSS.css";
 
-// Image imports
-import casalogo from "../../assets/casa-logo.png";
-
 /**
  * Custom component imports
  * @LoginPageLogic This page contains logic of this form
+ * @Logo This component will render a logo
+ * @Loader This component will render a loader from Spin Antd
  */
 
 import { LoginPageStates, login } from "./LoginPageLogic";
+import Logo from "../../components/Logo/Logo";
+import Loader from "../../components/Loader/Loader";
 
 function LoginPageDesign() {
   const navigate = useNavigate();
@@ -34,9 +35,7 @@ function LoginPageDesign() {
   return (
     <div className="login-container">
       <Card className="card-style">
-        <div className="app-logo-container">
-          <img src={casalogo} className="app-logo" />
-        </div>
+        <Logo />
 
         <span className="span-login-first-text">Login | </span>
         <span className="span-login-second-text">Sign in to your Account</span>
@@ -64,11 +63,7 @@ function LoginPageDesign() {
           Login
         </Button>
 
-        {loading ? (
-          <div className="div-spin">
-            <Spin />
-          </div>
-        ) : null}
+        {loading ? <Loader /> : null}
 
         <p
           className="p-forgotpassword"
