@@ -18,7 +18,11 @@ const SubMenu = Menu.SubMenu;
 function TheLayout() {
   return (
     <Layout style={{ minHeight: "100vh" }} theme="light">
-      <Sider width={200} theme="light">
+      <Sider
+        width={200}
+        theme="light"
+        style={{ backgroundColor: "#ff5500", opacity: "0.8" }}
+      >
         <TheSidebar />
       </Sider>
       <Layout>

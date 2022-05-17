@@ -1,9 +1,12 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
+
+import "./index.css";
 
 function TheContent() {
   return (
-    <div style={{ margin: 10, backgroundColor: "white", minHeight: "75vh" }}>
-      Content
+    <div className="div-content-container">
+      <Outlet />
     </div>
   );
 }

@@ -1,0 +1,65 @@
+.div-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 1;
+    align-items: stretch;
+}
+.div-approval-pending{
+    background-color: rgb(242, 105, 105);
+    padding: 0px;
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    color: white;
+    border-radius: 5px;
+}
+
+.div-total-opportunity{
+    background-color: rgb(144, 152, 240);
+    padding: 0px;
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    color: white;
+    border-radius: 5px;
+}
+
+.div-total-users{
+    background-color: rgb(27, 38, 163);
+    padding: 0px;
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    color: white;
+    border-radius: 5px;
+}
+
+.div-total-clients{
+    background-color: rgb(195, 181, 20);
+    padding: 0px;
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    color: white;
+    border-radius: 5px;
+}
+
+
+
+.div-graph{
+    text-align: center;
+}
+
+.div-graph-user{
+    text-align: center;
+    width: 100%;
+}

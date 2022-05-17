@@ -1,0 +1,22 @@
+/* Footer CSS starts */
+.div-footer-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.span-highlighted-text{
+    color: blue;
+}
+/* Footer CSS ends */
+
+/* TheContent CSS starts */
+
+.div-content-container{
+    margin: 10px !important;
+    background-color: white !important;
+    min-height: 75vh;
+
+}
+
+/* TheContent CSS ends */
