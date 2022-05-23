@@ -9,38 +9,31 @@ import {
   UserSwitchOutlined,
 } from "@ant-design/icons";
 
-import Logo from "../components/Logo/Logo";
+import Logo from "../../components/Logo/Logo";
+import "./TheSidebarCSS.css";
+
+import { TheSidebarStates } from "./TheSidebarLogic";
+
 const SubMenu = Menu.SubMenu;
 
 function TheSidebar() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  // Destructuring of logic variables/methods
+  let { isModalVisible, setIsModalVisible, showModal, handleOk, handleCancel } =
+    TheSidebarStates;
 
   return (
-    <div style={{ backgroundColor: "#ff5500" }}>
+    <div className="div-container-sidebar">
       <Logo myStyle="app-logo-dashboard" />
-      <div style={{ textAlign: "center", cursor: "pointer" }}>
-        <span style={{ color: "white" }} onClick={showModal}>
+      <div className="div-container-version">
+        <span className="span-version" onClick={showModal}>
           V2.0.0
         </span>
       </div>
 
       <Menu
-        theme="light"
         defaultSelectedKeys={["1"]}
         mode="inline"
-        style={{ backgroundColor: "#ff5500" }}
+        className="menu-container"
       >
         <SubMenu key="1" title={"User Management"} icon={<ApartmentOutlined />}>
           <Menu.Item key="20">

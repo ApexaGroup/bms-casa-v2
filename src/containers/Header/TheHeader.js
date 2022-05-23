@@ -1,5 +1,5 @@
 import React from "react";
-import UserIcon from "../assets/user.png";
+import UserIcon from "../../assets/user.png";
 import { Menu, Dropdown, message } from "antd";
 import {
   UserOutlined,
@@ -7,6 +7,8 @@ import {
   SettingOutlined,
   KeyOutlined,
 } from "@ant-design/icons";
+
+import "./TheHeaderCSS.css";
 
 function TheHeader() {
   function handleMenuClick(e) {
@@ -42,16 +44,9 @@ function TheHeader() {
     />
   );
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        height: "100%",
-      }}
-    >
+    <div className="div-header-container">
       <Dropdown overlay={menu}>
-        <img src={UserIcon} style={{ marginRight: 20, cursor: "pointer" }} />
+        <img src={UserIcon} className="img-profile" />
       </Dropdown>
     </div>
   );

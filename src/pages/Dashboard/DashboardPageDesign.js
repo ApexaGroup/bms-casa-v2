@@ -12,7 +12,7 @@ import "./DashboardPageCSS.css";
  * @DashboardItem This component is for showing dashboard item
  */
 
-import DashboardItem from "../../components/DashboardItem/DashboardItem";
+import DashboardTiles from "../../components/DashboardTiles/DashboardTiles";
 
 function DashboardPageDesign() {
   // Dummy Data
@@ -29,26 +29,26 @@ function DashboardPageDesign() {
     <div>
       <div className="div-container">
         <div className="div-approval-pending">
-          <DashboardItem value="14" title="Approval Pending" />
+          <DashboardTiles value="14" title="Approval Pending" />
           <div className="div-graph">
             <TinyColumn {...config} />
           </div>
         </div>
         <div className="div-total-opportunity">
-          <DashboardItem value="04" title="Total Opportunity" />
+          <DashboardTiles value="04" title="Total Opportunity" />
           <div className="div-graph">
             <TinyLine {...config} />
           </div>
         </div>
         <div className="div-total-users">
-          <DashboardItem value="34" title="Total Users" />
+          <DashboardTiles value="34" title="Total Users" />
 
           <div className="div-graph-user">
             <TinyArea {...config} />
           </div>
         </div>
         <div className="div-total-clients">
-          <DashboardItem value="46" title="Total Clients" />
+          <DashboardTiles value="46" title="Total Clients" />
 
           <div className="div-graph-user">
             <TinyColumn {...config} />

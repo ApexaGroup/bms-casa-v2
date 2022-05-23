@@ -1,5 +1,15 @@
 @import '~antd/dist/antd.css';
 
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+	background: transparent;
+}
+.ant-menu{
+  background: #ff5500;
+  }
+
+  .ant-layout-sider-children {
+    background: #ff5500;
+  }
 .App {
   text-align: center;
 }

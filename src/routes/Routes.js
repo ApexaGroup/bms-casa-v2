@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
-import { TheContent } from "../containers";
-import TheLayout from "../containers/TheLayout";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import TheContent from "../containers/Content/TheContent";
+import TheLayout from "../containers/Layout/TheLayout";
 import Dashboard from "../pages/Dashboard/DashboardPageDesign";
 import ForgotPasswordPageDesign from "../pages/ForgotPassword/ForgotPasswordPageDesign";
 

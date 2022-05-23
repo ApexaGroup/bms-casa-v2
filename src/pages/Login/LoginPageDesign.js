@@ -29,8 +29,25 @@ function LoginPageDesign() {
   const navigate = useNavigate();
 
   // Destructuring of logic variables/methods
-  let { username, password, loading, setUsername, setPassword, setLoading } =
-    LoginPageStates;
+  // let {
+  //   username,
+  //   password,
+  //   loading,
+  //   handleUsername,
+  //   setPassword,
+  //   setLoading,
+  //   authenticate,
+  // } = LoginPageStates;
+
+  const {
+    username,
+    handleUsername,
+    password,
+    handlePassword,
+    loginAPIcall,
+    loading,
+    handleLoading,
+  } = LoginPageStates();
 
   return (
     <div className="login-container">
@@ -45,7 +62,7 @@ function LoginPageDesign() {
           prefix={<UserOutlined />}
           className="username-input"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => handleUsername(e.target.value)}
         />
         <Input.Password
           size="large"
@@ -56,10 +73,10 @@ function LoginPageDesign() {
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
           className="password-input"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => handlePassword(e.target.value)}
         />
 
-        <Button type="primary" block size="large" onClick={login}>
+        <Button type="primary" block size="large" onClick={loginAPIcall}>
           Login
         </Button>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import "./index.css";
+import "./TheContentCSS.css";
 
 function TheContent() {
   return (

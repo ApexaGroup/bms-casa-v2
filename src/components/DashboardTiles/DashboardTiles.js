@@ -1,7 +1,7 @@
 import React from "react";
 
 // Css design imports
-import "./DashboardItemCSS.css";
+import "./DashboardTilesCSS.css";
 
 function DashboardItem(props) {
   return (
