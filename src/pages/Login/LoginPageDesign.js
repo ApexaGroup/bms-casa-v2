@@ -29,16 +29,6 @@ function LoginPageDesign() {
   const navigate = useNavigate();
 
   // Destructuring of logic variables/methods
-  // let {
-  //   username,
-  //   password,
-  //   loading,
-  //   handleUsername,
-  //   setPassword,
-  //   setLoading,
-  //   authenticate,
-  // } = LoginPageStates;
-
   const {
     username,
     handleUsername,

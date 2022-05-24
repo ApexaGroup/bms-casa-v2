@@ -5,6 +5,15 @@
     justify-content: end;
 }
 
+.input-style{
+    /* margin: 5px !important; */
+    margin-bottom: 5px !important;
+}
+.userProfileImage{
+    width: 40px;
+    height: 40px;
+}
+
 .div-search{
     width: 200px;
 }

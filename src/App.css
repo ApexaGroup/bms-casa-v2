@@ -10,6 +10,10 @@
   .ant-layout-sider-children {
     background: #ff5500;
   }
+
+  .ant-menu-inline .ant-menu-item::after{
+    border-right: #ff5500 !important;
+  }
 .App {
   text-align: center;
 }
