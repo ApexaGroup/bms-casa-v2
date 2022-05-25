@@ -1,11 +1,8 @@
 // Default react and react-router imports
 import React from "react";
 
-// Antd icons
-import { PlusOutlined } from "@ant-design/icons";
-
 // Antd components imports
-import { Input, Button, Table, Modal, Col, Row, message, Upload } from "antd";
+import { Input, Button, Table, Modal, Col, Row, Upload } from "antd";
 
 // Css design imports
 import "./UserPageCSS.css";

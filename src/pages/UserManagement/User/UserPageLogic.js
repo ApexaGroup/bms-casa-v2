@@ -1,9 +1,17 @@
+// Default react and react-router imports
 import React, { useState, useEffect } from "react";
+
+//antd icons import
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+
+// antd components imports
 import { message, Space } from "antd";
+
+// axios
 import axios from "../../../axios";
 
 const UserPageStates = () => {
+  // useState
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -39,15 +47,18 @@ const UserPageStates = () => {
     getUsersAPIcall();
   }, []);
 
+  // loading method
   const handleLoading = (loading) => {
     setLoading(loading);
   };
 
+  // method for showing modal
   const showModal = () => {
     setIsModalVisible(true);
     setIsEdit(false);
   };
 
+  // method to be called when modal ok is clicked
   const handleOk = () => {
     setIsModalVisible(false);
     if (!isEdit) {
@@ -57,6 +68,7 @@ const UserPageStates = () => {
     }
   };
 
+  // method to be called when modal cancel is clicked
   const handleCancel = () => {
     setIsModalVisible(false);
   };
