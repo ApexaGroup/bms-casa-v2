@@ -61,6 +61,7 @@ const UserPageStates = () => {
     setIsModalVisible(false);
   };
 
+  // table columns
   const columns = [
     {
       title: "Username",
@@ -160,6 +161,7 @@ const UserPageStates = () => {
     },
   ];
 
+  // get users api call
   const getUsersAPIcall = () => {
     setLoading(true);
 
@@ -178,6 +180,7 @@ const UserPageStates = () => {
       });
   };
 
+  // upload button render method
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -191,6 +194,7 @@ const UserPageStates = () => {
     </div>
   );
 
+  // upload api call
   const uploadAPICall = (file) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -216,12 +220,14 @@ const UserPageStates = () => {
       });
   };
 
+  // handlechange method for file picker
   const handleChange = (info) => {
     if (info.file.originFileObj) {
       uploadAPICall(info.file.originFileObj);
     }
   };
 
+  // add user api call
   const addUserAPICall = () => {
     setLoading(true);
 
@@ -240,6 +246,7 @@ const UserPageStates = () => {
       });
   };
 
+  // update user api call
   const updateUserAPICall = () => {
     setLoading(true);
 

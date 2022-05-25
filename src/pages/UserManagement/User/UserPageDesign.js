@@ -10,6 +10,11 @@ import { Input, Button, Table, Modal, Col, Row, message, Upload } from "antd";
 // Css design imports
 import "./UserPageCSS.css";
 
+/**
+ * Custom component imports
+ * @UserPageLogic This page contains logic of this form
+ */
+
 import { UserPageStates } from "./UserPageLogic";
 
 const { Search } = Input;
@@ -23,7 +28,6 @@ function UserPageDesign() {
     uploadButton,
     imageUrl,
     isEdit,
-    setIsEdit,
     showModal,
     handleCancel,
     handleOk,
