@@ -7,6 +7,7 @@ import {
   InfoCircleOutlined,
   ApartmentOutlined,
   UserSwitchOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 
 import Logo from "../../components/Logo/Logo";
@@ -31,20 +32,25 @@ function TheSidebar() {
       </div>
 
       <Menu
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={["0"]}
         mode="inline"
         className="menu-container"
       >
+        <Menu.Item key="1">
+          <DashboardOutlined />
+          <span>Dashboard</span>
+          <Link to="/dashboard" />
+        </Menu.Item>
         <SubMenu key="1" title={"User Management"} icon={<ApartmentOutlined />}>
           <Menu.Item key="20">
             <UserOutlined />
             <span>User</span>
-            <Link to={"/dashboard/user-management/user"} />
+            <Link to={"/user"} />
           </Menu.Item>
           <Menu.Item key="21">
             <UserSwitchOutlined />
             <span>Role</span>
-            <Link to={"/dashboard/user-management/role"} />
+            <Link to={"/role"} />
           </Menu.Item>
         </SubMenu>
         <Menu.Item key="2">

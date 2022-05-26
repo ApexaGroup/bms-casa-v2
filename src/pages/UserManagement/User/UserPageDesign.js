@@ -49,9 +49,10 @@ function UserPageDesign() {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        width={1000}
       >
         <Row gutter={6}>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               placeholder="Username"
               name="username"
@@ -61,7 +62,7 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               placeholder="Password"
               name="password"
@@ -71,7 +72,9 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-          <Col span={8}>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="First Name"
@@ -81,9 +84,7 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-        </Row>
-        <Row gutter={6}>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Last Name"
@@ -93,8 +94,9 @@ function UserPageDesign() {
               type={"text"}
             />
           </Col>
-
-          <Col span={8}>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Contact No"
@@ -104,7 +106,7 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Address"
@@ -114,9 +116,7 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-        </Row>
-        <Row gutter={6}>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Alternate No"
@@ -126,7 +126,7 @@ function UserPageDesign() {
               onChange={handleChangeData}
             />
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Default Company ID"
@@ -136,8 +136,9 @@ function UserPageDesign() {
               type={"text"}
             />
           </Col>
-
-          <Col span={8}>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="City"
@@ -147,7 +148,7 @@ function UserPageDesign() {
               type={"text"}
             />
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="State"
@@ -157,7 +158,7 @@ function UserPageDesign() {
               type={"text"}
             />
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Input
               className="input-style"
               placeholder="Zipcode"
@@ -167,7 +168,7 @@ function UserPageDesign() {
               type={"zipcode"}
             />
           </Col>
-          <Col span={8}>
+          <Col span={24}>
             <Upload
               name="avatar"
               listType="picture-card"

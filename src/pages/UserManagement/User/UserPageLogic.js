@@ -34,6 +34,26 @@ const UserPageStates = () => {
     zipcode: "",
   });
 
+  const resetStates = () => {
+    setUserData({
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      contactNo: "",
+      address: "",
+      alternateNo: "",
+      userProfileImage: "",
+      isActive: true,
+      defaultCompanyId: "",
+      city: "",
+      state: "",
+      zipcode: "",
+    });
+
+    setImageUrl("");
+  };
+
   const handleChangeData = (evt) => {
     const value = evt.target.value;
 
@@ -56,6 +76,7 @@ const UserPageStates = () => {
   const showModal = () => {
     setIsModalVisible(true);
     setIsEdit(false);
+    resetStates();
   };
 
   // method to be called when modal ok is clicked
@@ -75,6 +96,14 @@ const UserPageStates = () => {
 
   // table columns
   const columns = [
+    {
+      title: "Profile Image",
+      dataIndex: "userProfileImage",
+      key: "userProfileImage",
+      render: (userProfileImage) => (
+        <img src={userProfileImage} className="userProfileImage" />
+      ),
+    },
     {
       title: "Username",
       dataIndex: "username",
@@ -97,46 +126,6 @@ const UserPageStates = () => {
       key: "contactNo",
     },
 
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
-      title: "Alternate No",
-      dataIndex: "alternateNo",
-      key: "alternateNo",
-    },
-
-    {
-      title: "Profile Image",
-      dataIndex: "userProfileImage",
-      key: "userProfileImage",
-      render: (userProfileImage) => (
-        <img src={userProfileImage} className="userProfileImage" />
-      ),
-    },
-
-    {
-      title: "Default Company Id",
-      dataIndex: "defaultCompanyId",
-      key: "defaultCompanyId",
-    },
-    {
-      title: "City",
-      dataIndex: "city",
-      key: "city",
-    },
-    {
-      title: "State",
-      dataIndex: "state",
-      key: "state",
-    },
-    {
-      title: "Zipcode",
-      dataIndex: "zipcode",
-      key: "zipcode",
-    },
     {
       title: "Action",
       key: "action",

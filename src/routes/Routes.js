@@ -8,22 +8,24 @@ import ForgotPasswordPageDesign from "../pages/ForgotPassword/ForgotPasswordPage
 import Login from "../pages/Login/LoginPageDesign";
 import Role from "../pages/UserManagement/Role/RolePageDesign";
 import User from "../pages/UserManagement/User/UserPageDesign";
+import Content from "../pages/UserManagement/Content/ContentPageDesign";
+import pageData from "../pages/UserManagement/PageData/PageData";
 
 export default function () {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />}></Route>
+        <Route path="/login" element={<Login />}></Route>
         <Route
           path="/forgotPassword"
           element={<ForgotPasswordPageDesign />}
         ></Route>
 
-        <Route path="/dashboard" element={<TheLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="user-management" element={<TheContent />}>
-            <Route path="user" element={<User />} />
-            <Route path="role" element={<Role />} />
+        <Route path="/" element={<TheLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="" element={<TheContent />}>
+            <Route path="user" element={<Content data={pageData.user} />} />
+            <Route path="role" element={<Content data={pageData.role} />} />
           </Route>
         </Route>
       </Routes>
