@@ -9,9 +9,11 @@ import Login from "../pages/Login/LoginPageDesign";
 import Role from "../pages/UserManagement/Role/RolePageDesign";
 import User from "../pages/UserManagement/User/UserPageDesign";
 import Content from "../pages/UserManagement/Content/ContentPageDesign";
-import pageData from "../pages/UserManagement/PageData/PageData";
+import { pageData } from "../pages/UserManagement/PageData/PageData";
 
 export default function () {
+  const { user, role } = pageData();
+
   return (
     <Router>
       <Routes>
@@ -24,8 +26,8 @@ export default function () {
         <Route path="/" element={<TheLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="" element={<TheContent />}>
-            <Route path="user" element={<Content data={pageData.user} />} />
-            <Route path="role" element={<Content data={pageData.role} />} />
+            <Route path="user" element={<Content data={user} />} />
+            <Route path="role" element={<Content data={role} />} />
           </Route>
         </Route>
       </Routes>
