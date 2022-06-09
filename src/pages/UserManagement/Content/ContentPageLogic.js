@@ -181,10 +181,11 @@ function ContentPageLogic() {
     </div>
   );
 
-  // User form data
+  // User form data // generalFields
   const userFields = [
     {
       name: "username",
+      typeofinput: "input",
       placeholder: "Username",
       type: "text",
       className: "input-style",
@@ -193,6 +194,7 @@ function ContentPageLogic() {
     },
     {
       name: "password",
+      typeofinput: "input",
       placeholder: "Password",
       type: "password",
       className: "input-style",
@@ -202,6 +204,7 @@ function ContentPageLogic() {
 
     {
       name: "firstName",
+      typeofinput: "input",
       placeholder: "first Name",
       type: "text",
       className: "input-style",
@@ -211,6 +214,7 @@ function ContentPageLogic() {
 
     {
       name: "lastName",
+      typeofinput: "input",
       placeholder: "Last Name",
       type: "text",
       className: "input-style",
@@ -219,6 +223,7 @@ function ContentPageLogic() {
     },
     {
       name: "contactNo",
+      typeofinput: "input",
       placeholder: "Contact No",
       type: "text",
       className: "input-style",
@@ -228,6 +233,7 @@ function ContentPageLogic() {
 
     {
       name: "address",
+      typeofinput: "input",
       placeholder: "Address",
       type: "text",
       className: "input-style",
@@ -237,6 +243,7 @@ function ContentPageLogic() {
 
     {
       name: "alternateNo",
+      typeofinput: "input",
       placeholder: "Alternate No",
       type: "text",
       className: "input-style",
@@ -246,6 +253,7 @@ function ContentPageLogic() {
 
     {
       name: "defaultCompanyId",
+      typeofinput: "input",
       placeholder: "Default Company Id",
       type: "text",
       className: "input-style",
@@ -255,6 +263,7 @@ function ContentPageLogic() {
 
     {
       name: "city",
+      typeofinput: "input",
       placeholder: "City",
       type: "text",
       className: "input-style",
@@ -264,6 +273,7 @@ function ContentPageLogic() {
 
     {
       name: "state",
+      typeofinput: "input",
       placeholder: "State",
       type: "text",
       className: "input-style",
@@ -273,6 +283,7 @@ function ContentPageLogic() {
 
     {
       name: "zipcode",
+      typeofinput: "input",
       placeholder: "Zipcode",
       type: "text",
       className: "input-style",
@@ -282,6 +293,7 @@ function ContentPageLogic() {
 
     {
       name: "avatar",
+      typeofinput: "upload",
       placeholder: "Zipcode",
       type: "upload",
       className: "avatar-uploader",
@@ -291,6 +303,8 @@ function ContentPageLogic() {
   ];
 
   // user modal for add and edit
+
+  // 1. array 2. route name
   const UserModal = (
     <div>
       <Modal
@@ -301,7 +315,48 @@ function ContentPageLogic() {
         width={1000}
       >
         <Row gutter={6}>
-          <Col span={12}>
+          {userFields.map((record) => {
+            if (record.typeofinput == "upload") {
+              return (
+                <Col span={24}>
+                  <Upload
+                    name={record.name}
+                    listType="picture-card"
+                    className={record.className}
+                    showUploadList={false}
+                    onChange={record.method}
+                  >
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt="avatar"
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    ) : (
+                      uploadButton
+                    )}
+                  </Upload>
+                </Col>
+              );
+            } else {
+              return (
+                <Col span={12}>
+                  <Input
+                    placeholder={record.placeholder}
+                    name={record.name}
+                    value={record.value}
+                    type={record.type}
+                    className={record.className}
+                    onChange={record.method}
+                  />
+                </Col>
+              );
+            }
+          })}
+        </Row>
+        {/* <Col span={12}>
             <Input
               placeholder="Username"
               name="username"
@@ -438,7 +493,7 @@ function ContentPageLogic() {
               )}
             </Upload>
           </Col>
-        </Row>
+        </Row> */}
       </Modal>
     </div>
   );
