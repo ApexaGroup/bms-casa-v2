@@ -1,9 +1,32 @@
 import React from "react";
-import { Space } from "antd";
-import { ContentPageStates } from "../Content/ContentPageLogic";
+import { Button, Space } from "antd";
+import ContentPageLogic from "../Content/ContentPageLogic";
 
 const pageData = () => {
-  const { handleEditOperation } = ContentPageStates();
+  const {
+    pageName,
+    setPageName,
+    dataSource,
+    setDataSource,
+    loading,
+    setLoading,
+    isEdit,
+    setIsEdit,
+    isModalVisible,
+    setIsModalVisible,
+    id,
+    setId,
+    imageUrl,
+    setImageUrl,
+    userData,
+    setUserData,
+    tblHeaders,
+    setTblHeaders,
+    handleChangeData,
+    resetStates,
+    deleteUserApiCall,
+  } = ContentPageLogic();
+
   const data = {
     user: {
       page: "user",
@@ -44,13 +67,14 @@ const pageData = () => {
           key: "action",
           render: (_, record) => (
             <Space size="middle">
-              <a
-                onClick={() => {
-                  handleEditOperation(record);
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalVisible(true);
                 }}
               >
                 Edit
-              </a>
+              </Button>
               <a>Delete</a>
             </Space>
           ),
@@ -67,21 +91,21 @@ const pageData = () => {
         //           setId(record.id);
         //           setIsModalVisible(true);
         //           setImageUrl(record.userProfileImage);
-        //           setUserData({
-        //             username: record.username,
-        //             password: record.password,
-        //             firstName: record.firstName,
-        //             lastName: record.lastName,
-        //             contactNo: record.contactNo,
-        //             address: record.address,
-        //             alternateNo: record.alternateNo,
-        //             userProfileImage: record.userProfileImage,
-        //             isActive: true,
-        //             defaultCompanyId: record.defaultCompanyId,
-        //             city: record.city,
-        //             state: record.state,
-        //             zipcode: record.zipcode,
-        //           });
+        // setUserData({
+        //   username: record.username,
+        //   password: record.password,
+        //   firstName: record.firstName,
+        //   lastName: record.lastName,
+        //   contactNo: record.contactNo,
+        //   address: record.address,
+        //   alternateNo: record.alternateNo,
+        //   userProfileImage: record.userProfileImage,
+        //   isActive: true,
+        //   defaultCompanyId: record.defaultCompanyId,
+        //   city: record.city,
+        //   state: record.state,
+        //   zipcode: record.zipcode,
+        // });
         //         }}
         //       >
         //         Edit

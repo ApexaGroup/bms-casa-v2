@@ -30,7 +30,7 @@ const LoginPageStates = () => {
       setLoading(true);
 
       axios
-        .post("/auth/login", loginRequest)
+        .post("/api/auth/login", loginRequest)
         .then((response) => {
           setLoading(false);
           if (response.status == 200) {

@@ -1,16 +1,16 @@
-// Default react and react-router imports
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+
+// Antd components imports
+import { Input, Button, Modal, Col, Row, Upload, Space, message } from "antd";
 
 //antd icons import
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
-// antd components imports
-import { message, Space } from "antd";
+// network handler
+import handler from "../../../handlers/generalHandler";
 
-// axios
-import axios from "../../../axios";
-
-const ContentPageStates = () => {
+function ContentPageLogic() {
+  // useStates
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,92 @@ const ContentPageStates = () => {
     state: "",
     zipcode: "",
   });
+  const [tblHeaders, setTblHeaders] = useState([
+    {
+      title: "Profile Image",
+      dataIndex: "userProfileImage",
+      key: "userProfileImage",
+      render: (userProfileImage) => (
+        <img src={userProfileImage} className="userProfileImage" />
+      ),
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
+    },
+    {
+      title: "FirstName",
+      dataIndex: "firstName",
+      key: "firstName",
+    },
+    {
+      title: "LastName",
+      dataIndex: "lastName",
+      key: "lastName",
+    },
 
+    {
+      title: "Contact No",
+      dataIndex: "contactNo",
+      key: "contactNo",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setImageUrl(record.userProfileImage);
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setUserData({
+                username: record.username,
+                password: record.password,
+                firstName: record.firstName,
+                lastName: record.lastName,
+                contactNo: record.contactNo,
+                address: record.address,
+                alternateNo: record.alternateNo,
+                userProfileImage: record.userProfileImage,
+                isActive: true,
+                defaultCompanyId: record.defaultCompanyId,
+                city: record.city,
+                state: record.state,
+                zipcode: record.zipcode,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              deleteUserApiCall(record.id);
+            }}
+          >
+            Delete
+          </a>
+        </Space>
+      ),
+    },
+  ]);
+
+  // form handler
+  const handleChangeData = (evt) => {
+    const value = evt.target.value;
+
+    setUserData({
+      ...userData,
+      [evt.target.name]: value,
+    });
+  };
+
+  // reset states
   const resetStates = () => {
     setUserData({
       username: "",
@@ -54,28 +139,9 @@ const ContentPageStates = () => {
     setImageUrl("");
   };
 
-  const handleChangeData = (evt) => {
-    const value = evt.target.value;
-
-    setUserData({
-      ...userData,
-      [evt.target.name]: value,
-    });
-  };
-
-  useEffect(() => {
-    getUsersAPIcall();
-  }, []);
-
-  // loading method
-  const handleLoading = (loading) => {
-    setLoading(loading);
-  };
-
   // method for showing modal
   const showModal = () => {
     setIsModalVisible(true);
-    setIsEdit(false);
     resetStates();
   };
 
@@ -94,40 +160,14 @@ const ContentPageStates = () => {
     setIsModalVisible(false);
   };
 
-  useEffect(() => {
-    switch (pageName) {
-      case "user":
-        getUsersAPIcall();
-        break;
-
-      case "role":
-        break;
-
-      default:
-        break;
+  // handle file pick change
+  const handleChange = (info) => {
+    if (info.file.originFileObj) {
+      uploadAPICall(info.file.originFileObj);
     }
-  }, [pageName]);
-
-  // get users api call
-  const getUsersAPIcall = () => {
-    setLoading(true);
-
-    axios
-      .get("/user/getUsers")
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          setDataSource(response.data.data);
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getUsersAPIcall", error);
-      });
   };
 
-  // upload button render method
+  // upload button to show in form
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -141,12 +181,280 @@ const ContentPageStates = () => {
     </div>
   );
 
+  // user modal for add and edit
+  const UserModal = (
+    <div>
+      <Modal
+        title={isEdit ? "Edit user" : "Add new user"}
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={1000}
+      >
+        <Row gutter={6}>
+          <Col span={12}>
+            <Input
+              placeholder="Username"
+              name="username"
+              value={userData.username}
+              type={"text"}
+              className="input-style"
+              onChange={handleChangeData}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              placeholder="Password"
+              name="password"
+              value={userData.password}
+              type={"password"}
+              className="input-style"
+              onChange={handleChangeData}
+            />
+          </Col>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="First Name"
+              name="firstName"
+              value={userData.firstName}
+              type={"text"}
+              onChange={handleChangeData}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Last Name"
+              name="lastName"
+              value={userData.lastName}
+              onChange={handleChangeData}
+              type={"text"}
+            />
+          </Col>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Contact No"
+              name="contactNo"
+              value={userData.contactNo}
+              type={"phone"}
+              onChange={handleChangeData}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Address"
+              name="address"
+              value={userData.address}
+              type={"text"}
+              onChange={handleChangeData}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Alternate No"
+              name="alternateNo"
+              value={userData.alternateNo}
+              type={"phone"}
+              onChange={handleChangeData}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Default Company ID"
+              name="defaultCompanyId"
+              value={userData.defaultCompanyId}
+              onChange={handleChangeData}
+              type={"text"}
+            />
+          </Col>
+        </Row>
+        <Row gutter={6}>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="City"
+              name="city"
+              value={userData.city}
+              onChange={handleChangeData}
+              type={"text"}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="State"
+              name="state"
+              value={userData.state}
+              onChange={handleChangeData}
+              type={"text"}
+            />
+          </Col>
+          <Col span={12}>
+            <Input
+              className="input-style"
+              placeholder="Zipcode"
+              name="zipcode"
+              value={userData.zipcode}
+              onChange={handleChangeData}
+              type={"zipcode"}
+            />
+          </Col>
+          <Col span={24}>
+            <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              onChange={handleChange}
+            >
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+          </Col>
+        </Row>
+      </Modal>
+    </div>
+  );
+
+  // delete user api call
+  const deleteUserApiCall = (id) => {
+    setLoading(true);
+
+    let updatebleData = {
+      id: id,
+    };
+
+    handler
+      .dataPost("/api/auth/deleteUser", updatebleData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          //handleOk();
+          getUsersAPIcall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- updateUserAPICall", error);
+      });
+  };
+
+  // add user api call
+  const addUserAPICall = () => {
+    setLoading(true);
+
+    handler
+      .dataPost("/api/auth/register", userData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          getUsersAPIcall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- addUserAPICall", error);
+      });
+
+    // axios
+    //   .post("/api/auth/register", userData)
+    //   .then((response) => {
+    //     setLoading(false);
+    //     if (response.status == 200) {
+    //       getUsersAPIcall();
+    //     } else if (response.status == 400) {
+    //       window.alert(response.data.message);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!- addUserAPICall", error);
+    //   });
+  };
+
+  // get user api call
+  const getUsersAPIcall = () => {
+    setLoading(true);
+
+    handler
+      .dataGet("/api/auth/getUsers", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getUsersAPIcall", error);
+      });
+
+    // axios
+    //   .get("/api/auth/getUsers")
+    //   .then((response) => {
+    //     setLoading(false);
+    //     if (response.status == 200) {
+    //       setDataSource(response.data.data);
+    //     } else if (response.status == 400) {
+    //       window.alert(response.data.message);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!- getUsersAPIcall", error);
+    //   });
+  };
+
+  // update user api call
+  const updateUserAPICall = () => {
+    setLoading(true);
+
+    let updatebleData = {
+      ...userData,
+      id: id,
+    };
+
+    handler
+      .dataPost("/api/auth/updateUser", updatebleData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          //handleOk();
+          getUsersAPIcall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- updateUserAPICall", error);
+      });
+  };
+
   // upload api call
   const uploadAPICall = (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    axios
-      .post("/auth/upload", formData)
+    handler
+      .dataPost("/api/auth/upload", formData, {})
       .then((response) => {
         setLoading(true);
         if (response.data.status == 200) {
@@ -167,104 +475,42 @@ const ContentPageStates = () => {
       });
   };
 
-  // handlechange method for file picker
-  const handleChange = (info) => {
-    if (info.file.originFileObj) {
-      uploadAPICall(info.file.originFileObj);
-    }
-  };
-
-  // add user api call
-  const addUserAPICall = () => {
-    setLoading(true);
-
-    axios
-      .post("/auth/register", userData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          getUsersAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- addUserAPICall", error);
-      });
-  };
-
-  // update user api call
-  const updateUserAPICall = () => {
-    setLoading(true);
-
-    let updatebleData = {
-      ...userData,
-      id: id,
-    };
-
-    axios
-      .post("/user/updateUser", updatebleData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          getUsersAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- updateUserAPICall", error);
-      });
-  };
-
-  const handleEditOperation = (data) => {
-    setIsEdit(true);
-    setId(data.id);
-    setIsModalVisible(!isModalVisible);
-    setImageUrl(data.userProfileImage);
-    setUserData({
-      username: data.username,
-      password: data.password,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      contactNo: data.contactNo,
-      address: data.address,
-      alternateNo: data.alternateNo,
-      userProfileImage: data.userProfileImage,
-      isActive: true,
-      defaultCompanyId: data.defaultCompanyId,
-      city: data.city,
-      state: data.state,
-      zipcode: data.zipcode,
-    });
-  };
-
+  // states container
   const StatesContainer = {
-    //all states
     pageName,
-    dataSource,
-    loading,
-    isModalVisible,
-    uploadButton,
-    imageUrl,
-    userData,
-    isEdit,
-    // all methods
-    setIsModalVisible,
     setPageName,
+    dataSource,
+    setDataSource,
+    loading,
+    setLoading,
+    isEdit,
     setIsEdit,
-    handleLoading,
-    getUsersAPIcall,
-    showModal,
-    handleOk,
-    handleCancel,
-    handleChange,
+    isModalVisible,
+    setIsModalVisible,
+    id,
+    setId,
+    imageUrl,
     setImageUrl,
+    userData,
+    setUserData,
+    tblHeaders,
+    setTblHeaders,
     handleChangeData,
-    handleEditOperation,
+    resetStates,
+    deleteUserApiCall,
+    handleChange,
+    handleOk,
+    getUsersAPIcall,
+    updateUserAPICall,
+    uploadAPICall,
+    uploadButton,
+    handleCancel,
+    showModal,
+    getUsersAPIcall,
+    UserModal,
   };
 
   return StatesContainer;
-};
+}
 
-export { ContentPageStates };
+export default ContentPageLogic;
