@@ -181,6 +181,115 @@ function ContentPageLogic() {
     </div>
   );
 
+  // User form data
+  const userFields = [
+    {
+      name: "username",
+      placeholder: "Username",
+      type: "text",
+      className: "input-style",
+      value: userData.username,
+      method: handleChangeData,
+    },
+    {
+      name: "password",
+      placeholder: "Password",
+      type: "password",
+      className: "input-style",
+      value: userData.password,
+      method: handleChangeData,
+    },
+
+    {
+      name: "firstName",
+      placeholder: "first Name",
+      type: "text",
+      className: "input-style",
+      value: userData.firstName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "lastName",
+      placeholder: "Last Name",
+      type: "text",
+      className: "input-style",
+      value: userData.lastName,
+      method: handleChangeData,
+    },
+    {
+      name: "contactNo",
+      placeholder: "Contact No",
+      type: "text",
+      className: "input-style",
+      value: userData.contactNo,
+      method: handleChangeData,
+    },
+
+    {
+      name: "address",
+      placeholder: "Address",
+      type: "text",
+      className: "input-style",
+      value: userData.address,
+      method: handleChangeData,
+    },
+
+    {
+      name: "alternateNo",
+      placeholder: "Alternate No",
+      type: "text",
+      className: "input-style",
+      value: userData.alternateNo,
+      method: handleChangeData,
+    },
+
+    {
+      name: "defaultCompanyId",
+      placeholder: "Default Company Id",
+      type: "text",
+      className: "input-style",
+      value: userData.defaultCompanyId,
+      method: handleChangeData,
+    },
+
+    {
+      name: "city",
+      placeholder: "City",
+      type: "text",
+      className: "input-style",
+      value: userData.city,
+      method: handleChangeData,
+    },
+
+    {
+      name: "state",
+      placeholder: "State",
+      type: "text",
+      className: "input-style",
+      value: userData.state,
+      method: handleChangeData,
+    },
+
+    {
+      name: "zipcode",
+      placeholder: "Zipcode",
+      type: "text",
+      className: "input-style",
+      value: userData.zipcode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "avatar",
+      placeholder: "Zipcode",
+      type: "upload",
+      className: "avatar-uploader",
+      value: userData.userProfileImage,
+      method: handleChange,
+    },
+  ];
+
   // user modal for add and edit
   const UserModal = (
     <div>

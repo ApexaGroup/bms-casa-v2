@@ -11,7 +11,6 @@ const getInitizlizedApi = () => {
 
 const handleResponse = (response) => {
   try {
-    console.log(response, "check response data");
     const responseBodyJson = {};
     responseBodyJson.status = response.status;
     responseBodyJson.data = response.data;
@@ -35,7 +34,6 @@ const dataGet = (url, headers) => {
 };
 
 const dataPost = (url, data, headers) => {
-  console.log(data, "Data post method");
   return getInitizlizedApi()
     .post(url, data, { headers })
     .then(
@@ -47,7 +45,6 @@ const dataPost = (url, data, headers) => {
 };
 
 const dataPut = (url, data, headers) => {
-  console.log(data, "Data post method");
   return getInitizlizedApi()
     .put(url, data, { headers })
     .then(
@@ -59,7 +56,6 @@ const dataPut = (url, data, headers) => {
 };
 
 const dataDelete = (url, data, headers) => {
-  console.log(data, "Data post method");
   return getInitizlizedApi()
     .delete(url, data, { headers })
     .then(

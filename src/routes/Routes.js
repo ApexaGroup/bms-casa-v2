@@ -6,8 +6,6 @@ import Dashboard from "../pages/Dashboard/DashboardPageDesign";
 import ForgotPasswordPageDesign from "../pages/ForgotPassword/ForgotPasswordPageDesign";
 
 import Login from "../pages/Login/LoginPageDesign";
-import Role from "../pages/UserManagement/Role/RolePageDesign";
-import User from "../pages/UserManagement/User/UserPageDesign";
 import Content from "../pages/UserManagement/Content/ContentPageDesign";
 import { pageData } from "../pages/UserManagement/PageData/PageData";
 
