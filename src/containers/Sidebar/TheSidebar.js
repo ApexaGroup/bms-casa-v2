@@ -4,10 +4,12 @@ import { Layout, Menu, Modal, Button } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
-  InfoCircleOutlined,
+  ProjectOutlined,
   ApartmentOutlined,
   UserSwitchOutlined,
   DashboardOutlined,
+  DesktopOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 
 import Logo from "../../components/Logo/Logo";
@@ -41,7 +43,11 @@ function TheSidebar() {
           <span>Dashboard</span>
           <Link to="/dashboard" />
         </Menu.Item>
-        <SubMenu key="1" title={"User Management"} icon={<ApartmentOutlined />}>
+        <SubMenu
+          key="10"
+          title={"User Management"}
+          icon={<ApartmentOutlined />}
+        >
           <Menu.Item key="20">
             <UserOutlined />
             <span>User</span>
@@ -53,10 +59,18 @@ function TheSidebar() {
             <Link to={"/role"} />
           </Menu.Item>
         </SubMenu>
-        <Menu.Item key="2">
-          <InfoCircleOutlined />
-          <span>Menu 2</span>
-        </Menu.Item>
+        <SubMenu key="2" title={"Client Master"} icon={<DesktopOutlined />}>
+          <Menu.Item key="20">
+            <SolutionOutlined />
+            <span>Construction Company</span>
+            <Link to={"/client-master/construction-company"} />
+          </Menu.Item>
+          <Menu.Item key="21">
+            <ProjectOutlined />
+            <span>Project Manager</span>
+            <Link to={"/client-master/project-manager"} />
+          </Menu.Item>
+        </SubMenu>
         <Menu.Item key="3">
           <LogoutOutlined />
           <span>Logout</span>

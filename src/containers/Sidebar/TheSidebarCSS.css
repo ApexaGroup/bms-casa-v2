@@ -1,5 +1,6 @@
 .div-container-sidebar{
-background-color:#ff5500 ;
+/* background-color:#ff5500 ; */
+width: 100%;
 }
 
 .div-container-version{
@@ -12,5 +13,5 @@ background-color:#ff5500 ;
 }
 
 .menu-container{
-    background-color: #ff5500;
+    /* background-color: #ff5500; */
 }

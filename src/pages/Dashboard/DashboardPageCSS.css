@@ -54,11 +54,11 @@ li.ant-menu-item {
 }
 
 li.ant-menu-item.ant-menu-item-active {
-    background-color: #ff5500 !important;
+    /* background-color: #ff5500 !important; */
 }
 
 ul#rc-menu-uuid-87718-2-1-popup::after {
-    background-color: #ff5500 !important;
+    /* background-color: #ff5500 !important; */
 }
 
 .div-total-clients{

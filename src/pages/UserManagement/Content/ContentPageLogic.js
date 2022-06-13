@@ -33,7 +33,23 @@ function ContentPageLogic() {
     state: "",
     zipcode: "",
   });
-  const [tblHeaders, setTblHeaders] = useState([
+  let [tblHeaders, setTblHeaders] = useState([]);
+
+  const [ccData, setCCdata] = useState({
+    construction_company_name: "",
+    contact_person_name: "",
+    contact_no: "",
+    alternate_no: "",
+    email: "",
+    address: "",
+    isActive: true,
+    city: "",
+    state: "",
+    zipcode: "",
+    notes: "",
+  });
+
+  const userTblHeaders = [
     {
       title: "Profile Image",
       dataIndex: "userProfileImage",
@@ -106,16 +122,86 @@ function ContentPageLogic() {
         </Space>
       ),
     },
-  ]);
+  ];
+
+  const ccTblHeaders = [
+    {
+      title: "Construction company name",
+      dataIndex: "construction_company_name",
+      key: "construction_company_name",
+    },
+
+    {
+      title: "Contact person name",
+      dataIndex: "contact_person_name",
+      key: "contact_person_name",
+    },
+
+    {
+      title: "Contact no",
+      dataIndex: "contact_no",
+      key: "contact_no",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setCCdata({
+                construction_company_name: record.construction_company_name,
+                contact_person_name: record.contact_person_name,
+                contact_no: record.contact_no,
+                alternate_no: record.alternate_no,
+                email: record.email,
+                address: record.address,
+                isActive: true,
+                city: record.city,
+                state: record.state,
+                zipcode: record.zipcode,
+                notes: record.notes,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              //deleteUserApiCall(record.id);
+            }}
+          >
+            Delete
+          </a>
+        </Space>
+      ),
+    },
+  ];
+
+  const [generalFields, setGeneralFields] = useState([]);
 
   // form handler
   const handleChangeData = (evt) => {
     const value = evt.target.value;
 
-    setUserData({
-      ...userData,
-      [evt.target.name]: value,
-    });
+    if (pageName === "user" || "role") {
+      setUserData({
+        ...userData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "construction_company") {
+      setCCdata({
+        ...ccData,
+        [evt.target.name]: value,
+      });
+    }
   };
 
   // reset states
@@ -148,10 +234,29 @@ function ContentPageLogic() {
   // method to be called when modal ok is clicked
   const handleOk = () => {
     setIsModalVisible(false);
-    if (!isEdit) {
-      addUserAPICall();
-    } else {
-      updateUserAPICall();
+
+    switch (pageName) {
+      case "user":
+        if (!isEdit) {
+          addUserAPICall();
+        } else {
+          updateUserAPICall();
+        }
+        break;
+
+      case "role":
+        break;
+
+      case "construction_company":
+        if (!isEdit) {
+          addConstructionCompanyAPICall();
+        } else {
+          updateConstructionCompanyAPICall();
+        }
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -180,6 +285,100 @@ function ContentPageLogic() {
       </div>
     </div>
   );
+
+  // Construction Company form data // generalFields
+
+  const ccFields = [
+    {
+      name: "construction_company_name",
+      typeofinput: "input",
+      placeholder: "Construction Company Name",
+      type: "text",
+      className: "input-style",
+      value: ccData.construction_company_name,
+      method: handleChangeData,
+    },
+
+    {
+      name: "contact_person_name",
+      typeofinput: "input",
+      placeholder: "Contact Person Name",
+      type: "text",
+      className: "input-style",
+      value: ccData.contact_person_name,
+      method: handleChangeData,
+    },
+
+    {
+      name: "contact_no",
+      typeofinput: "input",
+      placeholder: "Contact no",
+      type: "text",
+      className: "input-style",
+      value: ccData.contact_no,
+      method: handleChangeData,
+    },
+
+    {
+      name: "alternate_no",
+      typeofinput: "input",
+      placeholder: "Alternate no",
+      type: "text",
+      className: "input-style",
+      value: ccData.alternate_no,
+      method: handleChangeData,
+    },
+
+    {
+      name: "address",
+      typeofinput: "input",
+      placeholder: "Address",
+      type: "text",
+      className: "input-style",
+      value: ccData.address,
+      method: handleChangeData,
+    },
+
+    {
+      name: "city",
+      typeofinput: "input",
+      placeholder: "City",
+      type: "text",
+      className: "input-style",
+      value: ccData.city,
+      method: handleChangeData,
+    },
+
+    {
+      name: "state",
+      typeofinput: "input",
+      placeholder: "State",
+      type: "text",
+      className: "input-style",
+      value: ccData.state,
+      method: handleChangeData,
+    },
+
+    {
+      name: "zipcode",
+      typeofinput: "input",
+      placeholder: "Zipcode",
+      type: "text",
+      className: "input-style",
+      value: ccData.zipcode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "notes",
+      typeofinput: "input",
+      placeholder: "Notes",
+      type: "text",
+      className: "input-style",
+      value: ccData.notes,
+      method: handleChangeData,
+    },
+  ];
 
   // User form data // generalFields
   const userFields = [
@@ -305,198 +504,77 @@ function ContentPageLogic() {
   // user modal for add and edit
 
   // 1. array 2. route name
-  const UserModal = (
-    <div>
-      <Modal
-        title={isEdit ? "Edit user" : "Add new user"}
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        width={1000}
-      >
-        <Row gutter={6}>
-          {userFields.map((record) => {
-            if (record.typeofinput == "upload") {
-              return (
-                <Col span={24}>
-                  <Upload
-                    name={record.name}
-                    listType="picture-card"
-                    className={record.className}
-                    showUploadList={false}
-                    onChange={record.method}
-                  >
-                    {imageUrl ? (
-                      <img
-                        src={imageUrl}
-                        alt="avatar"
-                        style={{
-                          width: "100%",
-                        }}
+
+  const renderModal = (pageName, generalFields) => {
+    if (pageName === "construction_company") {
+      generalFields = ccFields;
+    }
+
+    if (pageName === "user") {
+      generalFields = userFields;
+    }
+
+    const UserModal = (
+      <div>
+        <Modal
+          title={isEdit ? `Edit ${pageName}` : `Add new ${pageName}`}
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1000}
+        >
+          <Row gutter={6}>
+            {generalFields.map((record) => {
+              switch (record.typeofinput) {
+                case "upload":
+                  return (
+                    <Col span={24}>
+                      <Upload
+                        name={record.name}
+                        listType="picture-card"
+                        className={record.className}
+                        showUploadList={false}
+                        onChange={record.method}
+                      >
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt="avatar"
+                            style={{
+                              width: "100%",
+                            }}
+                          />
+                        ) : (
+                          uploadButton
+                        )}
+                      </Upload>
+                    </Col>
+                  );
+
+                case "input":
+                  return (
+                    <Col span={12}>
+                      <Input
+                        placeholder={record.placeholder}
+                        name={record.name}
+                        value={record.value}
+                        type={record.type}
+                        className={record.className}
+                        onChange={record.method}
                       />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-                </Col>
-              );
-            } else {
-              return (
-                <Col span={12}>
-                  <Input
-                    placeholder={record.placeholder}
-                    name={record.name}
-                    value={record.value}
-                    type={record.type}
-                    className={record.className}
-                    onChange={record.method}
-                  />
-                </Col>
-              );
-            }
-          })}
-        </Row>
-        {/* <Col span={12}>
-            <Input
-              placeholder="Username"
-              name="username"
-              value={userData.username}
-              type={"text"}
-              className="input-style"
-              onChange={handleChangeData}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              placeholder="Password"
-              name="password"
-              value={userData.password}
-              type={"password"}
-              className="input-style"
-              onChange={handleChangeData}
-            />
-          </Col>
-        </Row>
-        <Row gutter={6}>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="First Name"
-              name="firstName"
-              value={userData.firstName}
-              type={"text"}
-              onChange={handleChangeData}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Last Name"
-              name="lastName"
-              value={userData.lastName}
-              onChange={handleChangeData}
-              type={"text"}
-            />
-          </Col>
-        </Row>
-        <Row gutter={6}>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Contact No"
-              name="contactNo"
-              value={userData.contactNo}
-              type={"phone"}
-              onChange={handleChangeData}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Address"
-              name="address"
-              value={userData.address}
-              type={"text"}
-              onChange={handleChangeData}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Alternate No"
-              name="alternateNo"
-              value={userData.alternateNo}
-              type={"phone"}
-              onChange={handleChangeData}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Default Company ID"
-              name="defaultCompanyId"
-              value={userData.defaultCompanyId}
-              onChange={handleChangeData}
-              type={"text"}
-            />
-          </Col>
-        </Row>
-        <Row gutter={6}>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="City"
-              name="city"
-              value={userData.city}
-              onChange={handleChangeData}
-              type={"text"}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="State"
-              name="state"
-              value={userData.state}
-              onChange={handleChangeData}
-              type={"text"}
-            />
-          </Col>
-          <Col span={12}>
-            <Input
-              className="input-style"
-              placeholder="Zipcode"
-              name="zipcode"
-              value={userData.zipcode}
-              onChange={handleChangeData}
-              type={"zipcode"}
-            />
-          </Col>
-          <Col span={24}>
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              onChange={handleChange}
-            >
-              {imageUrl ? (
-                <img
-                  src={imageUrl}
-                  alt="avatar"
-                  style={{
-                    width: "100%",
-                  }}
-                />
-              ) : (
-                uploadButton
-              )}
-            </Upload>
-          </Col>
-        </Row> */}
-      </Modal>
-    </div>
-  );
+                    </Col>
+                  );
+                default:
+                  break;
+              }
+            })}
+          </Row>
+        </Modal>
+      </div>
+    );
+
+    return UserModal;
+  };
 
   // delete user api call
   const deleteUserApiCall = (id) => {
@@ -555,12 +633,55 @@ function ContentPageLogic() {
     //   });
   };
 
+  // add construction company api call
+  const addConstructionCompanyAPICall = () => {
+    setLoading(true);
+
+    handler
+      .dataPost("/construction-company/addCC", ccData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          getConstructionCompanyAPIcall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- addUserAPICall", error);
+      });
+  };
+
+  // update construction company api call
+  const updateConstructionCompanyAPICall = () => {
+    setLoading(true);
+
+    let updatebleData = {
+      ...ccData,
+      id: id,
+    };
+
+    handler
+      .dataPost("/construction-company/updateCC", updatebleData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          getConstructionCompanyAPIcall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- updateUserAPICall", error);
+      });
+  };
+
   // get user api call
   const getUsersAPIcall = () => {
     setLoading(true);
 
     handler
-      .dataGet("/api/auth/getUsers", {})
+      .dataGet("/user/getUsers", {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
@@ -572,20 +693,45 @@ function ContentPageLogic() {
       .catch((error) => {
         console.error("There was an error!- getUsersAPIcall", error);
       });
+  };
 
-    // axios
-    //   .get("/api/auth/getUsers")
-    //   .then((response) => {
-    //     setLoading(false);
-    //     if (response.status == 200) {
-    //       setDataSource(response.data.data);
-    //     } else if (response.status == 400) {
-    //       window.alert(response.data.message);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("There was an error!- getUsersAPIcall", error);
-    //   });
+  const getConstructionCompanyAPIcall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/construction-company/getCC", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+  // get calls
+  const getCall = (pageName) => {
+    switch (pageName) {
+      case "user":
+        getUsersAPIcall();
+        break;
+
+      case "role":
+        alert("role");
+        break;
+
+      case "construction_company":
+        getConstructionCompanyAPIcall();
+        break;
+
+      default:
+        break;
+    }
   };
 
   // update user api call
@@ -603,7 +749,7 @@ function ContentPageLogic() {
         setLoading(false);
         if (response.status == 200) {
           //handleOk();
-          getUsersAPIcall();
+          // getUsersAPIcall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -664,14 +810,20 @@ function ContentPageLogic() {
     deleteUserApiCall,
     handleChange,
     handleOk,
-    getUsersAPIcall,
+    getCall,
     updateUserAPICall,
     uploadAPICall,
     uploadButton,
     handleCancel,
     showModal,
-    getUsersAPIcall,
-    UserModal,
+    renderModal,
+    userFields,
+    ccFields,
+    generalFields,
+    setGeneralFields,
+    userTblHeaders,
+    ccTblHeaders,
+    setTblHeaders,
   };
 
   return StatesContainer;

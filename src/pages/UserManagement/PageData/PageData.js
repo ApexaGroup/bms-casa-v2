@@ -162,6 +162,52 @@ const pageData = () => {
         },
       ],
     },
+    construction_company: {
+      page: "construction_company",
+      buttonText: "Add Construction Company",
+      tableColumns: [
+        {
+          title: "Profile Image",
+          dataIndex: "userProfileImage",
+          key: "userProfileImage",
+          render: (userProfileImage) => (
+            <img src={userProfileImage} className="userProfileImage" />
+          ),
+        },
+        {
+          title: "Username",
+          dataIndex: "username",
+          key: "username",
+        },
+        {
+          title: "FirstName",
+          dataIndex: "firstName",
+          key: "firstName",
+        },
+        {
+          title: "LastName",
+          dataIndex: "lastName",
+          key: "lastName",
+        },
+
+        {
+          title: "Contact No",
+          dataIndex: "contactNo",
+          key: "contactNo",
+        },
+
+        {
+          title: "Action",
+          key: "action",
+          render: (_, record) => (
+            <Space size="middle">
+              <a>Edit</a>
+              <a>Delete</a>
+            </Space>
+          ),
+        },
+      ],
+    },
   };
 
   return data;

@@ -18,18 +18,33 @@ function ContentPageDesign(props) {
 
   // States from Content Page Logic
   const {
+    pageName,
+    setPageName,
     dataSource,
     isModalVisible,
     tblHeaders,
-    getUsersAPIcall,
+    getCall,
     showModal,
-    UserModal,
+    renderModal,
+    generalFields,
+    ccTblHeaders,
+    userTblHeaders,
+    setTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
   useEffect(() => {
-    getUsersAPIcall();
-  }, []);
+    setPageName(data.page);
+    getCall(data.page);
+
+    if (data.page === "user") {
+      setTblHeaders(userTblHeaders);
+    }
+
+    if (data.page === "construction_company") {
+      setTblHeaders(ccTblHeaders);
+    }
+  }, [data.page]);
 
   return (
     <div>
@@ -46,7 +61,7 @@ function ContentPageDesign(props) {
           <h1>{isModalVisible}</h1>
         </div>
 
-        <div>{UserModal}</div>
+        <div>{renderModal(pageName, generalFields)}</div>
       </div>
     </div>
   );
