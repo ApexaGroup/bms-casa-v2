@@ -10,7 +10,7 @@ import Content from "../pages/UserManagement/Content/ContentPageDesign";
 import { pageData } from "../pages/UserManagement/PageData/PageData";
 
 export default function () {
-  const { user, role, construction_company } = pageData();
+  const { user, role, construction_company, project_manager } = pageData();
 
   return (
     <Router>
@@ -35,7 +35,7 @@ export default function () {
             />
             <Route
               path="project-manager"
-              element={<Content data={construction_company} />}
+              element={<Content data={project_manager} />}
             />
           </Route>
         </Route>

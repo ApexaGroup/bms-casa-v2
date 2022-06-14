@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 
 // Antd components imports
-import { Input, Button, Modal, Col, Row, Upload, Space, message } from "antd";
+import {
+  Input,
+  Button,
+  Modal,
+  Col,
+  Row,
+  Upload,
+  Space,
+  message,
+  Select,
+} from "antd";
 
 //antd icons import
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -11,8 +21,10 @@ import handler from "../../../handlers/generalHandler";
 
 function ContentPageLogic() {
   // useStates
+  const { Option } = Select;
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
+  const [cc, setCC] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,6 +45,7 @@ function ContentPageLogic() {
     state: "",
     zipcode: "",
   });
+
   let [tblHeaders, setTblHeaders] = useState([]);
 
   const [ccData, setCCdata] = useState({
@@ -49,6 +62,22 @@ function ContentPageLogic() {
     notes: "",
   });
 
+  const [pmData, setPmData] = useState({
+    construction_company_id: "",
+    project_manager_name: "",
+    contact_no: "",
+    cell_phone: "",
+    email: "",
+    alternate_email: "",
+    address: "",
+    isActive: true,
+    city: "",
+    state: "",
+    zipcode: "",
+    notes: "",
+  });
+
+  // table headers
   const userTblHeaders = [
     {
       title: "Profile Image",
@@ -183,6 +212,72 @@ function ContentPageLogic() {
     },
   ];
 
+  const pmTblHeaders = [
+    {
+      title: "Project manager name",
+      dataIndex: "project_manager_name",
+      key: "project_manager_name",
+    },
+    {
+      title: "Contact no",
+      dataIndex: "contact_no",
+      key: "contact_no",
+    },
+    {
+      title: "Cell phone",
+      dataIndex: "cell_phone",
+      key: "cell_phone",
+    },
+
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setPmData({
+                construction_company_id: record.construction_company_id,
+                project_manager_name: record.project_manager_name,
+                contact_no: record.contact_no,
+                cell_phone: record.cell_phone,
+                email: record.email,
+                alternate_email: record.alternate_email,
+                address: record.address,
+                isActive: true,
+                city: record.city,
+                state: record.state,
+                zipcode: record.zipcode,
+                notes: record.notes,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              //deleteUserApiCall(record.id);
+            }}
+          >
+            Delete
+          </a>
+        </Space>
+      ),
+    },
+  ];
+
+  // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
   // form handler
@@ -202,6 +297,21 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+
+    if (pageName === "project_manager") {
+      setPmData({
+        ...pmData,
+        [evt.target.name]: value,
+      });
+    }
+  };
+
+  // select handler
+  const selectHandleChange = (value) => {
+    setPmData({
+      ...pmData,
+      construction_company_id: value,
+    });
   };
 
   // reset states
@@ -252,6 +362,14 @@ function ContentPageLogic() {
           addConstructionCompanyAPICall();
         } else {
           updateConstructionCompanyAPICall();
+        }
+        break;
+
+      case "project_manager":
+        if (!isEdit) {
+          addProjectManagerAPICall();
+        } else {
+          // updateConstructionCompanyAPICall();
         }
         break;
 
@@ -501,9 +619,119 @@ function ContentPageLogic() {
     },
   ];
 
-  // user modal for add and edit
+  const pmFields = [
+    {
+      name: "construction_company_id",
+      typeofinput: "select",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: pmData.construction_company_id,
+      method: selectHandleChange,
+    },
 
-  // 1. array 2. route name
+    {
+      name: "project_manager_name",
+      typeofinput: "input",
+      placeholder: "Project manager name",
+      type: "text",
+      className: "input-style",
+      value: pmData.project_manager_name,
+      method: handleChangeData,
+    },
+
+    {
+      name: "contact_no",
+      typeofinput: "input",
+      placeholder: "Contact no",
+      type: "text",
+      className: "input-style",
+      value: pmData.contact_no,
+      method: handleChangeData,
+    },
+
+    {
+      name: "cell_phone",
+      typeofinput: "input",
+      placeholder: "Cell phone",
+      type: "text",
+      className: "input-style",
+      value: pmData.cell_phone,
+      method: handleChangeData,
+    },
+
+    {
+      name: "email",
+      typeofinput: "input",
+      placeholder: "Email",
+      type: "text",
+      className: "input-style",
+      value: pmData.email,
+      method: handleChangeData,
+    },
+
+    {
+      name: "alternate_email",
+      typeofinput: "input",
+      placeholder: "Alternate email",
+      type: "text",
+      className: "input-style",
+      value: pmData.alternate_email,
+      method: handleChangeData,
+    },
+
+    {
+      name: "address",
+      typeofinput: "input",
+      placeholder: "Address",
+      type: "text",
+      className: "input-style",
+      value: pmData.address,
+      method: handleChangeData,
+    },
+
+    {
+      name: "city",
+      typeofinput: "input",
+      placeholder: "City",
+      type: "text",
+      className: "input-style",
+      value: pmData.city,
+      method: handleChangeData,
+    },
+
+    {
+      name: "state",
+      typeofinput: "input",
+      placeholder: "State",
+      type: "text",
+      className: "input-style",
+      value: pmData.state,
+      method: handleChangeData,
+    },
+
+    {
+      name: "zipcode",
+      typeofinput: "input",
+      placeholder: "Zipcode",
+      type: "text",
+      className: "input-style",
+      value: pmData.zipcode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "notes",
+      typeofinput: "input",
+      placeholder: "Notes",
+      type: "text",
+      className: "input-style",
+      value: pmData.notes,
+      method: handleChangeData,
+    },
+  ];
+
+  // user modal for add and edit
 
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -512,6 +740,10 @@ function ContentPageLogic() {
 
     if (pageName === "user") {
       generalFields = userFields;
+    }
+
+    if (pageName === "project_manager") {
+      generalFields = pmFields;
     }
 
     const UserModal = (
@@ -548,6 +780,24 @@ function ContentPageLogic() {
                           uploadButton
                         )}
                       </Upload>
+                    </Col>
+                  );
+
+                case "select":
+                  return (
+                    <Col span={12}>
+                      <Select
+                        style={{ width: "100%" }}
+                        onChange={selectHandleChange}
+                      >
+                        {cc.map((item) => {
+                          return (
+                            <Option value={item.id}>
+                              {item.construction_company_name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
                     </Col>
                   );
 
@@ -676,6 +926,46 @@ function ContentPageLogic() {
       });
   };
 
+  // get project manager api call
+  const getProjectManagerAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/project-manager/getPMs", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  // add project manager api call
+  const addProjectManagerAPICall = () => {
+    setLoading(true);
+
+    handler
+      .dataPost("/project-manager/addPM", pmData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          getProjectManagerAPICall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- addUserAPICall", error);
+      });
+  };
+
   // get user api call
   const getUsersAPIcall = () => {
     setLoading(true);
@@ -729,9 +1019,34 @@ function ContentPageLogic() {
         getConstructionCompanyAPIcall();
         break;
 
+      case "project_manager":
+        getCCforPM();
+        getProjectManagerAPICall();
+        break;
+
       default:
         break;
     }
+  };
+
+  const getCCforPM = () => {
+    setLoading(true);
+    handler
+      .dataGet("/construction-company/getCC", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setCC(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
   };
 
   // update user api call
@@ -824,6 +1139,7 @@ function ContentPageLogic() {
     userTblHeaders,
     ccTblHeaders,
     setTblHeaders,
+    pmTblHeaders,
   };
 
   return StatesContainer;

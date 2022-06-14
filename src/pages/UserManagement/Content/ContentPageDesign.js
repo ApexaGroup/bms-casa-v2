@@ -30,6 +30,7 @@ function ContentPageDesign(props) {
     ccTblHeaders,
     userTblHeaders,
     setTblHeaders,
+    pmTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -43,6 +44,10 @@ function ContentPageDesign(props) {
 
     if (data.page === "construction_company") {
       setTblHeaders(ccTblHeaders);
+    }
+
+    if (data.page === "project_manager") {
+      setTblHeaders(pmTblHeaders);
     }
   }, [data.page]);
 
