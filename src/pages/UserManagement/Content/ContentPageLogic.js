@@ -390,9 +390,9 @@ function ContentPageLogic() {
     switch (pageName) {
       case "user":
         if (!isEdit) {
-          addUserAPICall();
+          addAPICalls("user");
         } else {
-          updateUserAPICall();
+          updateAPICalls("user");
         }
         break;
 
@@ -401,18 +401,18 @@ function ContentPageLogic() {
 
       case "construction_company":
         if (!isEdit) {
-          addConstructionCompanyAPICall();
+          addAPICalls("construction_company");
         } else {
-          updateConstructionCompanyAPICall();
+          updateAPICalls("construction_company");
           resetCCstates();
         }
         break;
 
       case "project_manager":
         if (!isEdit) {
-          addProjectManagerAPICall();
+          addAPICalls("project_manager");
         } else {
-          updateProjectManagerAPICall();
+          updateAPICalls("project_manager");
           resetPMstates();
         }
         break;
@@ -994,69 +994,170 @@ function ContentPageLogic() {
     }
   };
 
-  // add user api call
-  const addUserAPICall = () => {
-    setLoading(true);
+  // update API calls
+  const updateAPICalls = (pageName) => {
+    switch (pageName) {
+      case "user":
+        setLoading(true);
 
-    handler
-      .dataPost("/auth/register", userData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 201) {
-          message.success(response.data.message);
-          getUsersAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- addUserAPICall", error);
-      });
+        let updatebleDataUser = {
+          ...userData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/user/updateUser", updatebleDataUser, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              //handleOk();
+              message.success(response.data.message);
+              getUsersAPIcall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+
+      case "role":
+        break;
+
+      case "construction_company":
+        setLoading(true);
+
+        let updatebleDataConstCompany = {
+          ...ccData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/construction-company/updateCC",
+            updatebleDataConstCompany,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getConstructionCompanyAPIcall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+
+      case "project_manager":
+        setLoading(true);
+
+        let updatebleDataProjectManager = {
+          ...pmData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/project-manager/updatePM",
+            updatebleDataProjectManager,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getProjectManagerAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+
+      default:
+        break;
+    }
   };
 
-  // add construction company api call
-  const addConstructionCompanyAPICall = () => {
-    setLoading(true);
+  // add API calls
+  const addAPICalls = (pageName) => {
+    switch (pageName) {
+      case "user":
+        setLoading(true);
 
-    handler
-      .dataPost("/construction-company/addCC", ccData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 201) {
-          message.success("success");
-          getConstructionCompanyAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- addUserAPICall", error);
-      });
-  };
+        handler
+          .dataPost("/auth/register", userData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getUsersAPIcall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addUserAPICall", error);
+          });
+        break;
 
-  // update construction company api call
-  const updateConstructionCompanyAPICall = () => {
-    setLoading(true);
+      case "role":
+        break;
 
-    let updatebleData = {
-      ...ccData,
-      id: id,
-    };
+      case "construction_company":
+        setLoading(true);
 
-    handler
-      .dataPost("/construction-company/updateCC", updatebleData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          message.success(response.data.message);
-          getConstructionCompanyAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- updateUserAPICall", error);
-      });
+        handler
+          .dataPost("/construction-company/addCC", ccData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success("success");
+              getConstructionCompanyAPIcall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- addConstructionCompanyAPICall",
+              error
+            );
+          });
+        break;
+
+      case "project_manager":
+        setLoading(true);
+
+        handler
+          .dataPost("/project-manager/addPM", pmData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getProjectManagerAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- addProjectManagerAPICall",
+              error
+            );
+          });
+        break;
+
+      default:
+        break;
+    }
   };
 
   // get project manager api call
@@ -1080,52 +1181,7 @@ function ContentPageLogic() {
       });
   };
 
-  // update project manager api call
-  const updateProjectManagerAPICall = () => {
-    setLoading(true);
-
-    let updatebleData = {
-      ...pmData,
-      id: id,
-    };
-
-    handler
-      .dataPost("/project-manager/updatePM", updatebleData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          message.success(response.data.message);
-          getProjectManagerAPICall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- updateUserAPICall", error);
-      });
-  };
-
-  // add project manager api call
-  const addProjectManagerAPICall = () => {
-    setLoading(true);
-
-    handler
-      .dataPost("/project-manager/addPM", pmData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          message.success(response.data.message);
-          getProjectManagerAPICall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- addUserAPICall", error);
-      });
-  };
-
-  // get user api call
+  // get user list api call
   const getUsersAPIcall = () => {
     setLoading(true);
 
@@ -1145,7 +1201,7 @@ function ContentPageLogic() {
       });
   };
 
-  //
+  // get construction company list api call
   const getConstructionCompanyAPIcall = () => {
     setLoading(true);
     handler
@@ -1167,7 +1223,7 @@ function ContentPageLogic() {
   };
 
   // get calls getAllData() getTblData()
-  const getCall = (pageName) => {
+  const getAllData = (pageName) => {
     switch (pageName) {
       case "user":
         getUsersAPIcall();
@@ -1182,7 +1238,7 @@ function ContentPageLogic() {
         break;
 
       case "project_manager":
-        getCCforPM();
+        getConstructionCompanyForProjectManager();
         getProjectManagerAPICall();
         break;
 
@@ -1193,7 +1249,7 @@ function ContentPageLogic() {
 
   // get list of Construction Company for Project Manager.
   // we will fill select component using below method
-  const getCCforPM = () => {
+  const getConstructionCompanyForProjectManager = () => {
     setLoading(true);
     handler
       .dataGet("/construction-company/getCC", {})
@@ -1210,32 +1266,6 @@ function ContentPageLogic() {
           "There was an error!- getConstructionCompanyAPIcall",
           error
         );
-      });
-  };
-
-  // update user api call
-  const updateUserAPICall = () => {
-    setLoading(true);
-
-    let updatebleData = {
-      ...userData,
-      id: id,
-    };
-
-    handler
-      .dataPost("/user/updateUser", updatebleData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          //handleOk();
-          message.success(response.data.message);
-          getUsersAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- updateUserAPICall", error);
       });
   };
 
@@ -1289,8 +1319,7 @@ function ContentPageLogic() {
     resetStates,
     handleChange,
     handleOk,
-    getCall,
-    updateUserAPICall,
+    getAllData,
     uploadAPICall,
     uploadButton,
     handleCancel,

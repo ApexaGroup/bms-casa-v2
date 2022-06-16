@@ -23,7 +23,7 @@ function ContentPageDesign(props) {
     dataSource,
     isModalVisible,
     tblHeaders,
-    getCall,
+    getAllData,
     showModal,
     renderModal,
     generalFields,
@@ -36,7 +36,7 @@ function ContentPageDesign(props) {
   // useeffect
   useEffect(() => {
     setPageName(data.page);
-    getCall(data.page);
+    getAllData(data.page);
 
     if (data.page === "user") {
       setTblHeaders(userTblHeaders);
