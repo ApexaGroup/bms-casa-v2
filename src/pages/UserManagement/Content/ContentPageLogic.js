@@ -11,10 +11,17 @@ import {
   Space,
   message,
   Select,
+  Switch,
+  Popconfirm,
 } from "antd";
 
 //antd icons import
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  LoadingOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 
 // network handler
 import handler from "../../../handlers/generalHandler";
@@ -22,6 +29,7 @@ import handler from "../../../handlers/generalHandler";
 function ContentPageLogic() {
   // useStates
   const { Option } = Select;
+  const { TextArea } = Input;
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [cc, setCC] = useState([]);
@@ -140,14 +148,12 @@ function ContentPageLogic() {
           >
             Edit
           </Button>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              deleteUserApiCall(record.id);
-            }}
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("user", record.id)}
           >
-            Delete
-          </a>
+            <a>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -199,14 +205,12 @@ function ContentPageLogic() {
           >
             Edit
           </Button>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              //deleteUserApiCall(record.id);
-            }}
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("construction_company", record.id)}
           >
-            Delete
-          </a>
+            <a>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -249,6 +253,7 @@ function ContentPageLogic() {
               setPmData({
                 construction_company_id: record.construction_company_id,
                 project_manager_name: record.project_manager_name,
+
                 contact_no: record.contact_no,
                 cell_phone: record.cell_phone,
                 email: record.email,
@@ -264,14 +269,12 @@ function ContentPageLogic() {
           >
             Edit
           </Button>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              //deleteUserApiCall(record.id);
-            }}
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("project_manager", record.id)}
           >
-            Delete
-          </a>
+            <a>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -308,6 +311,7 @@ function ContentPageLogic() {
 
   // select handler
   const selectHandleChange = (value) => {
+    // alert(value);
     setPmData({
       ...pmData,
       construction_company_id: value,
@@ -316,6 +320,7 @@ function ContentPageLogic() {
 
   // reset states
   const resetStates = () => {
+    setIsEdit(false);
     setUserData({
       username: "",
       password: "",
@@ -333,6 +338,43 @@ function ContentPageLogic() {
     });
 
     setImageUrl("");
+  };
+
+  // reset CC state
+  const resetCCstates = () => {
+    setIsEdit(false);
+    setCCdata({
+      construction_company_name: "",
+      contact_person_name: "",
+      contact_no: "",
+      alternate_no: "",
+      email: "",
+      address: "",
+      isActive: true,
+      city: "",
+      state: "",
+      zipcode: "",
+      notes: "",
+    });
+  };
+
+  // reset PM states
+  const resetPMstates = () => {
+    setIsEdit(false);
+    setPmData({
+      construction_company_id: "",
+      project_manager_name: "",
+      contact_no: "",
+      cell_phone: "",
+      email: "",
+      alternate_email: "",
+      address: "",
+      isActive: true,
+      city: "",
+      state: "",
+      zipcode: "",
+      notes: "",
+    });
   };
 
   // method for showing modal
@@ -362,6 +404,7 @@ function ContentPageLogic() {
           addConstructionCompanyAPICall();
         } else {
           updateConstructionCompanyAPICall();
+          resetCCstates();
         }
         break;
 
@@ -369,7 +412,8 @@ function ContentPageLogic() {
         if (!isEdit) {
           addProjectManagerAPICall();
         } else {
-          // updateConstructionCompanyAPICall();
+          updateProjectManagerAPICall();
+          resetPMstates();
         }
         break;
 
@@ -381,6 +425,9 @@ function ContentPageLogic() {
   // method to be called when modal cancel is clicked
   const handleCancel = () => {
     setIsModalVisible(false);
+    resetStates();
+    resetCCstates();
+    resetPMstates();
   };
 
   // handle file pick change
@@ -489,11 +536,21 @@ function ContentPageLogic() {
 
     {
       name: "notes",
-      typeofinput: "input",
+      typeofinput: "textarea",
       placeholder: "Notes",
       type: "text",
       className: "input-style",
       value: ccData.notes,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: ccData.isActive,
       method: handleChangeData,
     },
   ];
@@ -722,17 +779,26 @@ function ContentPageLogic() {
 
     {
       name: "notes",
-      typeofinput: "input",
+      typeofinput: "textarea",
       placeholder: "Notes",
       type: "text",
       className: "input-style",
       value: pmData.notes,
       method: handleChangeData,
     },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: pmData.isActive,
+      method: handleChangeData,
+    },
   ];
 
   // user modal for add and edit
-
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
       generalFields = ccFields;
@@ -754,6 +820,7 @@ function ContentPageLogic() {
           onOk={handleOk}
           onCancel={handleCancel}
           width={1000}
+          destroyOnClose
         >
           <Row gutter={6}>
             {generalFields.map((record) => {
@@ -788,6 +855,11 @@ function ContentPageLogic() {
                     <Col span={12}>
                       <Select
                         style={{ width: "100%" }}
+                        defaultValue={
+                          isEdit
+                            ? pmData.construction_company_id
+                            : "Select Company"
+                        }
                         onChange={selectHandleChange}
                       >
                         {cc.map((item) => {
@@ -801,10 +873,37 @@ function ContentPageLogic() {
                     </Col>
                   );
 
+                case "switch":
+                  return (
+                    <Col span={24}>
+                      <label>Active/Inactive </label>
+                      <Switch
+                        checkedChildren={<CheckOutlined />}
+                        unCheckedChildren={<CloseOutlined />}
+                        defaultChecked
+                      />
+                    </Col>
+                  );
+
                 case "input":
                   return (
                     <Col span={12}>
                       <Input
+                        placeholder={record.placeholder}
+                        name={record.name}
+                        value={record.value}
+                        type={record.type}
+                        className={record.className}
+                        onChange={record.method}
+                      />
+                    </Col>
+                  );
+
+                case "textarea":
+                  return (
+                    <Col span={12}>
+                      <TextArea
+                        rows={4}
                         placeholder={record.placeholder}
                         name={record.name}
                         value={record.value}
@@ -826,28 +925,73 @@ function ContentPageLogic() {
     return UserModal;
   };
 
-  // delete user api call
-  const deleteUserApiCall = (id) => {
-    setLoading(true);
-
-    let updatebleData = {
+  // delete API calls
+  const deleteAPICalls = (pageName, id) => {
+    const updatebleData = {
       id: id,
     };
+    switch (pageName) {
+      case "user":
+        setLoading(true);
+        handler
+          .dataPost("/user/deleteUser", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getUsersAPIcall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
 
-    handler
-      .dataPost("/api/auth/deleteUser", updatebleData, {})
-      .then((response) => {
-        setLoading(false);
-        if (response.status == 200) {
-          //handleOk();
-          getUsersAPIcall();
-        } else if (response.status == 400) {
-          window.alert(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- updateUserAPICall", error);
-      });
+      case "role":
+        break;
+
+      case "construction_company":
+        setLoading(true);
+
+        handler
+          .dataPost("/construction-company/deleteCC", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getConstructionCompanyAPIcall();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+      case "project_manager":
+        setLoading(true);
+
+        handler
+          .dataPost("/project-manager/deletePM", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getProjectManagerAPICall();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+
+      default:
+        break;
+    }
   };
 
   // add user api call
@@ -855,10 +999,11 @@ function ContentPageLogic() {
     setLoading(true);
 
     handler
-      .dataPost("/api/auth/register", userData, {})
+      .dataPost("/auth/register", userData, {})
       .then((response) => {
         setLoading(false);
-        if (response.status == 200) {
+        if (response.status == 201) {
+          message.success(response.data.message);
           getUsersAPIcall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -867,20 +1012,6 @@ function ContentPageLogic() {
       .catch((error) => {
         console.error("There was an error!- addUserAPICall", error);
       });
-
-    // axios
-    //   .post("/api/auth/register", userData)
-    //   .then((response) => {
-    //     setLoading(false);
-    //     if (response.status == 200) {
-    //       getUsersAPIcall();
-    //     } else if (response.status == 400) {
-    //       window.alert(response.data.message);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("There was an error!- addUserAPICall", error);
-    //   });
   };
 
   // add construction company api call
@@ -891,7 +1022,8 @@ function ContentPageLogic() {
       .dataPost("/construction-company/addCC", ccData, {})
       .then((response) => {
         setLoading(false);
-        if (response.status == 200) {
+        if (response.status == 201) {
+          message.success("success");
           getConstructionCompanyAPIcall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -916,6 +1048,7 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
+          message.success(response.data.message);
           getConstructionCompanyAPIcall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -947,6 +1080,31 @@ function ContentPageLogic() {
       });
   };
 
+  // update project manager api call
+  const updateProjectManagerAPICall = () => {
+    setLoading(true);
+
+    let updatebleData = {
+      ...pmData,
+      id: id,
+    };
+
+    handler
+      .dataPost("/project-manager/updatePM", updatebleData, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          message.success(response.data.message);
+          getProjectManagerAPICall();
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- updateUserAPICall", error);
+      });
+  };
+
   // add project manager api call
   const addProjectManagerAPICall = () => {
     setLoading(true);
@@ -956,6 +1114,7 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
+          message.success(response.data.message);
           getProjectManagerAPICall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -981,10 +1140,12 @@ function ContentPageLogic() {
         }
       })
       .catch((error) => {
+        message.error("error");
         console.error("There was an error!- getUsersAPIcall", error);
       });
   };
 
+  //
   const getConstructionCompanyAPIcall = () => {
     setLoading(true);
     handler
@@ -1004,7 +1165,8 @@ function ContentPageLogic() {
         );
       });
   };
-  // get calls
+
+  // get calls getAllData() getTblData()
   const getCall = (pageName) => {
     switch (pageName) {
       case "user":
@@ -1029,6 +1191,8 @@ function ContentPageLogic() {
     }
   };
 
+  // get list of Construction Company for Project Manager.
+  // we will fill select component using below method
   const getCCforPM = () => {
     setLoading(true);
     handler
@@ -1059,12 +1223,13 @@ function ContentPageLogic() {
     };
 
     handler
-      .dataPost("/api/auth/updateUser", updatebleData, {})
+      .dataPost("/user/updateUser", updatebleData, {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
           //handleOk();
-          // getUsersAPIcall();
+          message.success(response.data.message);
+          getUsersAPIcall();
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -1079,7 +1244,7 @@ function ContentPageLogic() {
     const formData = new FormData();
     formData.append("image", file);
     handler
-      .dataPost("/api/auth/upload", formData, {})
+      .dataPost("/auth/upload", formData, {})
       .then((response) => {
         setLoading(true);
         if (response.data.status == 200) {
@@ -1122,7 +1287,6 @@ function ContentPageLogic() {
     setTblHeaders,
     handleChangeData,
     resetStates,
-    deleteUserApiCall,
     handleChange,
     handleOk,
     getCall,

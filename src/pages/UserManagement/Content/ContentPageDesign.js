@@ -63,7 +63,6 @@ function ContentPageDesign(props) {
 
         <div>
           <Table size="small" columns={tblHeaders} dataSource={dataSource} />
-          <h1>{isModalVisible}</h1>
         </div>
 
         <div>{renderModal(pageName, generalFields)}</div>
