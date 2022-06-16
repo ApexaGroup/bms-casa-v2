@@ -85,6 +85,26 @@ function ContentPageLogic() {
     notes: "",
   });
 
+  const [otData, setOtData] = useState({
+    title: "",
+    price: "",
+    unit: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "",
+    isActive: true,
+  });
+
+  const [premiumRatesData, setPremiumRatesData] = useState({
+    title: "",
+    truckHireFee: "",
+    plantOpeningFee: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "",
+    isActive: true,
+  });
+
   // table headers
   const userTblHeaders = [
     {
@@ -280,6 +300,135 @@ function ContentPageLogic() {
     },
   ];
 
+  const otTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Unit",
+      dataIndex: "unit",
+      key: "unit",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setOtData({
+                title: record.title,
+                price: record.price,
+                unit: record.unit,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("over_time_fees", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const prTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Truck Hire Fee",
+      dataIndex: "truckHireFee",
+      key: "truckHireFee",
+    },
+    {
+      title: "Plant Opening Fee",
+      dataIndex: "plantOpeningFee",
+      key: "plantOpeningFee",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              console.log(record);
+              setPremiumRatesData({
+                title: record.title,
+                truckHireFee: record.truckHireFee,
+                plantOpeningFee: record.plantOpeningFee,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("premium_rates", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
@@ -307,15 +456,38 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+
+    if (pageName === "over_time_fees") {
+      setOtData({
+        ...otData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "premium_rates") {
+      setPremiumRatesData({
+        ...premiumRatesData,
+        [evt.target.name]: value,
+      });
+    }
   };
 
   // select handler
   const selectHandleChange = (value) => {
     // alert(value);
-    setPmData({
-      ...pmData,
-      construction_company_id: value,
-    });
+    if (pageName === "project_manager") {
+      setPmData({
+        ...pmData,
+        construction_company_id: value,
+      });
+    }
+
+    if (pageName === "over_time_fees") {
+      setOtData({
+        ...otData,
+        plantid: value,
+      });
+    }
   };
 
   // reset states
@@ -404,7 +576,6 @@ function ContentPageLogic() {
           addAPICalls("construction_company");
         } else {
           updateAPICalls("construction_company");
-          resetCCstates();
         }
         break;
 
@@ -413,7 +584,22 @@ function ContentPageLogic() {
           addAPICalls("project_manager");
         } else {
           updateAPICalls("project_manager");
-          resetPMstates();
+        }
+        break;
+
+      case "over_time_fees":
+        if (!isEdit) {
+          addAPICalls("over_time_fees");
+        } else {
+          updateAPICalls("over_time_fees");
+        }
+        break;
+
+      case "premium_rates":
+        if (!isEdit) {
+          addAPICalls("premium_rates");
+        } else {
+          updateAPICalls("premium_rates");
         }
         break;
 
@@ -798,6 +984,148 @@ function ContentPageLogic() {
     },
   ];
 
+  const overtimefeesFields = [
+    {
+      name: "plant_id",
+      typeofinput: "select",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: otData.plantid,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "title",
+      typeofinput: "input",
+      placeholder: "Title",
+      type: "text",
+      className: "input-style",
+      value: otData.title,
+      method: handleChangeData,
+    },
+
+    {
+      name: "price",
+      typeofinput: "input",
+      placeholder: "Price",
+      type: "text",
+      className: "input-style",
+      value: otData.price,
+      method: handleChangeData,
+    },
+    {
+      name: "unit",
+      typeofinput: "input",
+      placeholder: "unit",
+      type: "text",
+      className: "input-style",
+      value: otData.unit,
+      method: handleChangeData,
+    },
+
+    {
+      name: "quoteNote",
+      typeofinput: "textarea",
+      placeholder: "Quote Notes",
+      type: "text",
+      className: "input-style",
+      value: otData.quoteNote,
+      method: handleChangeData,
+    },
+
+    {
+      name: "fieldDescription",
+      typeofinput: "textarea",
+      placeholder: "Field Description",
+      type: "text",
+      className: "input-style",
+      value: otData.fieldDescription,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: otData.isActive,
+      method: handleChangeData,
+    },
+  ];
+
+  const premiumRatesFields = [
+    {
+      name: "plant_id",
+      typeofinput: "select",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.plantid,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "title",
+      typeofinput: "input",
+      placeholder: "Title",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.title,
+      method: handleChangeData,
+    },
+
+    {
+      name: "truckHireFee",
+      typeofinput: "input",
+      placeholder: "Truck Hire Fee",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.truckHireFee,
+      method: handleChangeData,
+    },
+    {
+      name: "plantOpeningFee",
+      typeofinput: "input",
+      placeholder: "Plant Opening Fee",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.plantOpeningFee,
+      method: handleChangeData,
+    },
+
+    {
+      name: "quoteNote",
+      typeofinput: "textarea",
+      placeholder: "Quote Notes",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.quoteNote,
+      method: handleChangeData,
+    },
+
+    {
+      name: "fieldDescription",
+      typeofinput: "textarea",
+      placeholder: "Field Description",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.fieldDescription,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: premiumRatesData.isActive,
+      method: handleChangeData,
+    },
+  ];
+
   // user modal for add and edit
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -810,6 +1138,14 @@ function ContentPageLogic() {
 
     if (pageName === "project_manager") {
       generalFields = pmFields;
+    }
+
+    if (pageName === "over_time_fees") {
+      generalFields = overtimefeesFields;
+    }
+
+    if (pageName === "premium_rates") {
+      generalFields = premiumRatesFields;
     }
 
     const UserModal = (
@@ -945,7 +1281,7 @@ function ContentPageLogic() {
             }
           })
           .catch((error) => {
-            console.error("There was an error!- updateUserAPICall", error);
+            console.error("There was an error!- deleteUser", error);
           });
         break;
 
@@ -967,7 +1303,7 @@ function ContentPageLogic() {
             }
           })
           .catch((error) => {
-            console.error("There was an error!- updateUserAPICall", error);
+            console.error("There was an error!- deleteCC", error);
           });
         break;
       case "project_manager":
@@ -980,6 +1316,42 @@ function ContentPageLogic() {
             if (response.status == 200) {
               message.success(response.data.message);
               getProjectManagerAPICall();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deletePM", error);
+          });
+        break;
+      case "over_time_fees":
+        setLoading(true);
+
+        handler
+          .dataPost("/over-time-fees/deleteOvertimeFees", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getOvertimeFeesAPICall();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteOvertimeFees", error);
+          });
+        break;
+      case "premium_rates":
+        setLoading(true);
+
+        handler
+          .dataPost("premium-rates/deletePremiumRates", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getPremiumRatesAPICall();
             } else if (response.status == 400) {
               message.warning(response.data.message);
             }
@@ -1049,7 +1421,7 @@ function ContentPageLogic() {
             }
           })
           .catch((error) => {
-            console.error("There was an error!- updateUserAPICall", error);
+            console.error("There was an error!- updateCC", error);
           });
         break;
 
@@ -1077,7 +1449,59 @@ function ContentPageLogic() {
             }
           })
           .catch((error) => {
-            console.error("There was an error!- updateUserAPICall", error);
+            console.error("There was an error!- updatePM", error);
+          });
+        break;
+
+      case "over_time_fees":
+        setLoading(true);
+
+        let updatableDataforOtf = {
+          ...otData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/over-time-fees/updateOvertimeFees",
+            updatableDataforOtf,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getOvertimeFeesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateOvertimeFees", error);
+          });
+        break;
+
+      case "premium_rates":
+        setLoading(true);
+
+        let updatableDataforPr = {
+          ...premiumRatesData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/premium-rates/updatePremiumRates", updatableDataforPr, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getPremiumRatesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updatePremiumRates", error);
           });
         break;
 
@@ -1154,7 +1578,42 @@ function ContentPageLogic() {
             );
           });
         break;
+      case "over_time_fees":
+        setLoading(true);
 
+        handler
+          .dataPost("/over-time-fees/addOvertimeFees", otData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getOvertimeFeesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addOvertimeFeesAPICall", error);
+          });
+        break;
+      case "premium_rates":
+        setLoading(true);
+
+        handler
+          .dataPost("/premium-rates/addPremiumRates", premiumRatesData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getPremiumRatesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addOvertimeFeesAPICall", error);
+          });
+        break;
       default:
         break;
     }
@@ -1165,6 +1624,48 @@ function ContentPageLogic() {
     setLoading(true);
     handler
       .dataGet("/project-manager/getPMs", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  // get over time fees list api call
+  const getOvertimeFeesAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/over-time-fees/getOvertimeFees", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  // get premium rates list api call
+  const getPremiumRatesAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/premium-rates/getPremiumRates", {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
@@ -1240,6 +1741,16 @@ function ContentPageLogic() {
       case "project_manager":
         getConstructionCompanyForProjectManager();
         getProjectManagerAPICall();
+        break;
+
+      case "over_time_fees":
+        getConstructionCompanyForProjectManager();
+        getOvertimeFeesAPICall();
+        break;
+
+      case "premium_rates":
+        getConstructionCompanyForProjectManager();
+        getPremiumRatesAPICall();
         break;
 
       default:
@@ -1333,6 +1844,8 @@ function ContentPageLogic() {
     ccTblHeaders,
     setTblHeaders,
     pmTblHeaders,
+    otTblHeaders,
+    prTblHeaders,
   };
 
   return StatesContainer;

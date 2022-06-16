@@ -31,6 +31,8 @@ function ContentPageDesign(props) {
     userTblHeaders,
     setTblHeaders,
     pmTblHeaders,
+    otTblHeaders,
+    prTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -48,6 +50,14 @@ function ContentPageDesign(props) {
 
     if (data.page === "project_manager") {
       setTblHeaders(pmTblHeaders);
+    }
+
+    if (data.page === "over_time_fees") {
+      setTblHeaders(otTblHeaders);
+    }
+
+    if (data.page === "premium_rates") {
+      setTblHeaders(prTblHeaders);
     }
   }, [data.page]);
 

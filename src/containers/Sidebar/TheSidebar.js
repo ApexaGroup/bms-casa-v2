@@ -71,10 +71,32 @@ function TheSidebar() {
             <Link to={"/client-master/project-manager"} />
           </Menu.Item>
         </SubMenu>
-        <Menu.Item key="3">
-          <LogoutOutlined />
-          <span>Logout</span>
-        </Menu.Item>
+        <SubMenu
+          key="3"
+          title={"Extra Charges Section"}
+          icon={<DesktopOutlined />}
+        >
+          <Menu.Item key="22">
+            <SolutionOutlined />
+            <span>Extra Charges</span>
+            <Link to={"/extra-charges-section/extra-charges"} />
+          </Menu.Item>
+          <Menu.Item key="23">
+            <ProjectOutlined />
+            <span>Over Time Fees</span>
+            <Link to={"/extra-charges-section/over-time-fees"} />
+          </Menu.Item>
+          <Menu.Item key="24">
+            <ProjectOutlined />
+            <span>Short Load Charges</span>
+            <Link to={"/extra-charges-section/short-load-charges"} />
+          </Menu.Item>
+          <Menu.Item key="25">
+            <ProjectOutlined />
+            <span>Premium Rates</span>
+            <Link to={"/extra-charges-section/premium-rates"} />
+          </Menu.Item>
+        </SubMenu>
       </Menu>
       <Modal
         title="Version 2.0.0"

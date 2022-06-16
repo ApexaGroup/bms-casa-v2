@@ -10,7 +10,16 @@ import Content from "../pages/UserManagement/Content/ContentPageDesign";
 import { pageData } from "../pages/UserManagement/PageData/PageData";
 
 export default function () {
-  const { user, role, construction_company, project_manager } = pageData();
+  const {
+    user,
+    role,
+    construction_company,
+    project_manager,
+    extra_charges,
+    over_time_fees,
+    short_load_charges,
+    premium_rates,
+  } = pageData();
 
   return (
     <Router>
@@ -36,6 +45,25 @@ export default function () {
             <Route
               path="project-manager"
               element={<Content data={project_manager} />}
+            />
+          </Route>
+
+          <Route path="extra-charges-section" element={<TheContent />}>
+            <Route
+              path="extra-charges"
+              element={<Content data={extra_charges} />}
+            />
+            <Route
+              path="over-time-fees"
+              element={<Content data={over_time_fees} />}
+            />
+            <Route
+              path="short-load-charges"
+              element={<Content data={short_load_charges} />}
+            />
+            <Route
+              path="premium-rates"
+              element={<Content data={premium_rates} />}
             />
           </Route>
         </Route>

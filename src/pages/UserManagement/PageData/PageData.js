@@ -254,6 +254,22 @@ const pageData = () => {
         },
       ],
     },
+    extra_charges: {
+      page: "extra_charges",
+      buttonText: "Add Extra Charges",
+    },
+    over_time_fees: {
+      page: "over_time_fees",
+      buttonText: "Add Overtime fees",
+    },
+    short_load_charges: {
+      page: "short_load_charges",
+      buttonText: "Add Short Load Charges",
+    },
+    premium_rates: {
+      page: "premium_rates",
+      buttonText: "Add premium rates",
+    },
   };
 
   return data;
