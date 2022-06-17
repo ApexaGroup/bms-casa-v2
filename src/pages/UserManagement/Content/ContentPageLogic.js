@@ -114,6 +114,16 @@ function ContentPageLogic() {
     isActive: true,
   });
 
+  const [extraChargesData, setExtraChargesData] = useState({
+    title: "",
+    price: "",
+    unit: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "",
+    isActive: true,
+  });
+
   // table headers
   const userTblHeaders = [
     {
@@ -494,6 +504,71 @@ function ContentPageLogic() {
     },
   ];
 
+  const ecTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Unit",
+      dataIndex: "unit",
+      key: "unit",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setCompanyId(record.plantid);
+              setExtraChargesData({
+                title: record.title,
+                price: record.price,
+                unit: record.unit,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("extra_charges", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
@@ -542,6 +617,13 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+
+    if (pageName === "extra_charges") {
+      setExtraChargesData({
+        ...extraChargesData,
+        [evt.target.name]: value,
+      });
+    }
   };
 
   // select handler
@@ -570,6 +652,13 @@ function ContentPageLogic() {
     if (pageName === "short_load_charges") {
       setShortLoadData({
         ...shortLoadData,
+        plantid: value,
+      });
+    }
+
+    if (pageName === "extra_charges") {
+      setExtraChargesData({
+        ...extraChargesData,
         plantid: value,
       });
     }
@@ -631,6 +720,60 @@ function ContentPageLogic() {
       state: "",
       zipcode: "",
       notes: "",
+    });
+  };
+
+  // reset overtime states
+  const resetOtStates = () => {
+    setIsEdit(false);
+    setOtData({
+      title: "",
+      price: "",
+      unit: "",
+      quoteNote: "",
+      fieldDescription: "",
+      plantid: "",
+      isActive: true,
+    });
+  };
+
+  // reset premium rates states
+  const resetPrStates = () => {
+    setIsEdit(false);
+    setPremiumRatesData({
+      title: "",
+      truckHireFee: "",
+      plantOpeningFee: "",
+      quoteNote: "",
+      fieldDescription: "",
+      plantid: "",
+      isActive: true,
+    });
+  };
+
+  // reset short load states
+  const resetSlStates = () => {
+    setIsEdit(false);
+    setShortLoadData({
+      title: "",
+      quoteNote: "",
+      fieldDescription: "",
+      plantid: "",
+      isActive: true,
+    });
+  };
+
+  // reset extra charges states
+  const resetEcStates = () => {
+    setIsEdit(false);
+    setExtraChargesData({
+      title: "",
+      price: "",
+      unit: "",
+      quoteNote: "",
+      fieldDescription: "",
+      plantid: "",
+      isActive: true,
     });
   };
 
@@ -696,6 +839,14 @@ function ContentPageLogic() {
         }
         break;
 
+      case "extra_charges":
+        if (!isEdit) {
+          addAPICalls("extra_charges");
+        } else {
+          updateAPICalls("extra_charges");
+        }
+        break;
+
       default:
         break;
     }
@@ -707,6 +858,10 @@ function ContentPageLogic() {
     resetStates();
     resetCCstates();
     resetPMstates();
+    resetOtStates();
+    resetPrStates();
+    resetSlStates();
+    resetEcStates();
   };
 
   // handle file pick change
@@ -1271,6 +1426,77 @@ function ContentPageLogic() {
     },
   ];
 
+  const extraChargesFields = [
+    {
+      name: "plant_id",
+      typeofinput: "select",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.plantid,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "title",
+      typeofinput: "input",
+      placeholder: "Title",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.title,
+      method: handleChangeData,
+    },
+
+    {
+      name: "price",
+      typeofinput: "input",
+      placeholder: "Price",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.price,
+      method: handleChangeData,
+    },
+    {
+      name: "unit",
+      typeofinput: "input",
+      placeholder: "unit",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.unit,
+      method: handleChangeData,
+    },
+
+    {
+      name: "quoteNote",
+      typeofinput: "textarea",
+      placeholder: "Quote Notes",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.quoteNote,
+      method: handleChangeData,
+    },
+
+    {
+      name: "fieldDescription",
+      typeofinput: "textarea",
+      placeholder: "Field Description",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.fieldDescription,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: extraChargesData.isActive,
+      method: handleChangeData,
+    },
+  ];
+
   // user modal for add and edit
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -1295,6 +1521,10 @@ function ContentPageLogic() {
 
     if (pageName === "short_load_charges") {
       generalFields = shortLoadFields;
+    }
+
+    if (pageName === "extra_charges") {
+      generalFields = extraChargesFields;
     }
 
     const UserModal = (
@@ -1524,6 +1754,24 @@ function ContentPageLogic() {
           });
         break;
 
+      case "extra_charges":
+        setLoading(true);
+        handler
+          .dataPost("/extra-charges/deleteExtraCharge", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getExtraChargeAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteExtraCharge", error);
+          });
+        break;
+
       default:
         break;
     }
@@ -1696,6 +1944,29 @@ function ContentPageLogic() {
           });
         break;
 
+      case "extra_charges":
+        setLoading(true);
+
+        let updatableDataforEc = {
+          ...extraChargesData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/extra-charges/updateExtraCharge", updatableDataforEc, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getExtraChargeAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateExtraCharge", error);
+          });
+        break;
       default:
         break;
     }
@@ -1824,6 +2095,25 @@ function ContentPageLogic() {
             console.error("There was an error!- addShortLoad", error);
           });
         break;
+
+      case "extra_charges":
+        setLoading(true);
+
+        handler
+          .dataPost("/extra-charges/addExtraCharge", extraChargesData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getExtraChargeAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addExtraCharge", error);
+          });
+        break;
       default:
         break;
     }
@@ -1910,6 +2200,24 @@ function ContentPageLogic() {
       });
   };
 
+  // get extra charge list api call
+  const getExtraChargeAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/extra-charges/getExtraCharges", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getExtraChargeAPICall", error);
+      });
+  };
+
   // get user list api call
   const getUsersAPIcall = () => {
     setLoading(true);
@@ -1984,6 +2292,11 @@ function ContentPageLogic() {
       case "short_load_charges":
         getConstructionCompanyForProjectManager();
         getShortLoadChargesAPICall();
+        break;
+
+      case "extra_charges":
+        getConstructionCompanyForProjectManager();
+        getExtraChargeAPICall();
         break;
 
       default:
@@ -2080,6 +2393,7 @@ function ContentPageLogic() {
     otTblHeaders,
     prTblHeaders,
     slTblHeaders,
+    ecTblHeaders,
   };
 
   return StatesContainer;

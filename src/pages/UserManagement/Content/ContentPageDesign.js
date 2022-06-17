@@ -34,6 +34,7 @@ function ContentPageDesign(props) {
     otTblHeaders,
     prTblHeaders,
     slTblHeaders,
+    ecTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -63,6 +64,10 @@ function ContentPageDesign(props) {
 
     if (data.page === "short_load_charges") {
       setTblHeaders(slTblHeaders);
+    }
+
+    if (data.page === "extra_charges") {
+      setTblHeaders(ecTblHeaders);
     }
   }, [data.page]);
 
