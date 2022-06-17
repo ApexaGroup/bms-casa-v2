@@ -37,6 +37,7 @@ function ContentPageLogic() {
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [id, setId] = useState("");
+  const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [userData, setUserData] = useState({
     username: "",
@@ -99,6 +100,14 @@ function ContentPageLogic() {
     title: "",
     truckHireFee: "",
     plantOpeningFee: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "",
+    isActive: true,
+  });
+
+  const [shortLoadData, setShortLoadData] = useState({
+    title: "",
     quoteNote: "",
     fieldDescription: "",
     plantid: "",
@@ -270,6 +279,7 @@ function ContentPageLogic() {
               setIsModalVisible(true);
               setIsEdit(true);
               setId(record.id);
+              setCompanyId(record.construction_company_id);
               setPmData({
                 construction_company_id: record.construction_company_id,
                 project_manager_name: record.project_manager_name,
@@ -340,6 +350,7 @@ function ContentPageLogic() {
               setIsModalVisible(true);
               setIsEdit(true);
               setId(record.id);
+              setCompanyId(record.plantid);
               setOtData({
                 title: record.title,
                 price: record.price,
@@ -405,6 +416,7 @@ function ContentPageLogic() {
               setIsEdit(true);
               setId(record.id);
               console.log(record);
+              setCompanyId(record.plantid);
               setPremiumRatesData({
                 title: record.title,
                 truckHireFee: record.truckHireFee,
@@ -421,6 +433,59 @@ function ContentPageLogic() {
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => deleteAPICalls("premium_rates", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const slTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              console.log(record);
+              setCompanyId(record.plantid);
+              setShortLoadData({
+                title: record.title,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("short_load_charges", record.id)}
           >
             <a>Delete</a>
           </Popconfirm>
@@ -470,6 +535,13 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+
+    if (pageName === "short_load_charges") {
+      setShortLoadData({
+        ...shortLoadData,
+        [evt.target.name]: value,
+      });
+    }
   };
 
   // select handler
@@ -485,6 +557,19 @@ function ContentPageLogic() {
     if (pageName === "over_time_fees") {
       setOtData({
         ...otData,
+        plantid: value,
+      });
+    }
+    if (pageName === "premium_rates") {
+      setPremiumRatesData({
+        ...premiumRatesData,
+        plantid: value,
+      });
+    }
+
+    if (pageName === "short_load_charges") {
+      setShortLoadData({
+        ...shortLoadData,
         plantid: value,
       });
     }
@@ -600,6 +685,14 @@ function ContentPageLogic() {
           addAPICalls("premium_rates");
         } else {
           updateAPICalls("premium_rates");
+        }
+        break;
+
+      case "short_load_charges":
+        if (!isEdit) {
+          addAPICalls("short_load_charges");
+        } else {
+          updateAPICalls("short_load_charges");
         }
         break;
 
@@ -1126,6 +1219,58 @@ function ContentPageLogic() {
     },
   ];
 
+  const shortLoadFields = [
+    {
+      name: "plant_id",
+      typeofinput: "select",
+      placeholder: "",
+      type: "text",
+      className: "input-style",
+      value: shortLoadData.plantid,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "title",
+      typeofinput: "input",
+      placeholder: "Title",
+      type: "text",
+      className: "input-style",
+      value: shortLoadData.title,
+      method: handleChangeData,
+    },
+
+    {
+      name: "quoteNote",
+      typeofinput: "textarea",
+      placeholder: "Quote Notes",
+      type: "text",
+      className: "input-style",
+      value: shortLoadData.quoteNote,
+      method: handleChangeData,
+    },
+
+    {
+      name: "fieldDescription",
+      typeofinput: "textarea",
+      placeholder: "Field Description",
+      type: "text",
+      className: "input-style",
+      value: shortLoadData.fieldDescription,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: shortLoadData.isActive,
+      method: handleChangeData,
+    },
+  ];
+
   // user modal for add and edit
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -1146,6 +1291,10 @@ function ContentPageLogic() {
 
     if (pageName === "premium_rates") {
       generalFields = premiumRatesFields;
+    }
+
+    if (pageName === "short_load_charges") {
+      generalFields = shortLoadFields;
     }
 
     const UserModal = (
@@ -1191,11 +1340,7 @@ function ContentPageLogic() {
                     <Col span={12}>
                       <Select
                         style={{ width: "100%" }}
-                        defaultValue={
-                          isEdit
-                            ? pmData.construction_company_id
-                            : "Select Company"
-                        }
+                        defaultValue={isEdit ? companyId : "Select Company"}
                         onChange={selectHandleChange}
                       >
                         {cc.map((item) => {
@@ -1361,6 +1506,24 @@ function ContentPageLogic() {
           });
         break;
 
+      case "short_load_charges":
+        setLoading(true);
+        handler
+          .dataPost("/short-load-charges/deleteShortLoad", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getShortLoadChargesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteShortLoad", error);
+          });
+        break;
+
       default:
         break;
     }
@@ -1505,6 +1668,34 @@ function ContentPageLogic() {
           });
         break;
 
+      case "short_load_charges":
+        setLoading(true);
+
+        let updatableDataforSl = {
+          ...shortLoadData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/short-load-charges/updateShortLoad",
+            updatableDataforSl,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getShortLoadChargesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateShortLoad", error);
+          });
+        break;
+
       default:
         break;
     }
@@ -1614,6 +1805,25 @@ function ContentPageLogic() {
             console.error("There was an error!- addOvertimeFeesAPICall", error);
           });
         break;
+
+      case "short_load_charges":
+        setLoading(true);
+
+        handler
+          .dataPost("/short-load-charges/addShortLoad", shortLoadData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getShortLoadChargesAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addShortLoad", error);
+          });
+        break;
       default:
         break;
     }
@@ -1679,6 +1889,24 @@ function ContentPageLogic() {
           "There was an error!- getConstructionCompanyAPIcall",
           error
         );
+      });
+  };
+
+  // get project manager api call
+  const getShortLoadChargesAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/short-load-charges/getShortLoad", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getShortLoadChargesAPICall", error);
       });
   };
 
@@ -1751,6 +1979,11 @@ function ContentPageLogic() {
       case "premium_rates":
         getConstructionCompanyForProjectManager();
         getPremiumRatesAPICall();
+        break;
+
+      case "short_load_charges":
+        getConstructionCompanyForProjectManager();
+        getShortLoadChargesAPICall();
         break;
 
       default:
@@ -1846,6 +2079,7 @@ function ContentPageLogic() {
     pmTblHeaders,
     otTblHeaders,
     prTblHeaders,
+    slTblHeaders,
   };
 
   return StatesContainer;

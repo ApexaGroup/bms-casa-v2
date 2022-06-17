@@ -33,6 +33,7 @@ function ContentPageDesign(props) {
     pmTblHeaders,
     otTblHeaders,
     prTblHeaders,
+    slTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -58,6 +59,10 @@ function ContentPageDesign(props) {
 
     if (data.page === "premium_rates") {
       setTblHeaders(prTblHeaders);
+    }
+
+    if (data.page === "short_load_charges") {
+      setTblHeaders(slTblHeaders);
     }
   }, [data.page]);
 
