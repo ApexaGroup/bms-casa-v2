@@ -97,6 +97,18 @@ function TheSidebar() {
             <Link to={"/extra-charges-section/premium-rates"} />
           </Menu.Item>
         </SubMenu>
+        <SubMenu key="4" title={"Company Master"} icon={<DesktopOutlined />}>
+          <Menu.Item key="26">
+            <SolutionOutlined />
+            <span>House Mix Design</span>
+            <Link to={"/company-master/house-mix-design"} />
+          </Menu.Item>
+          <Menu.Item key="27">
+            <ProjectOutlined />
+            <span>Special Mix Design</span>
+            <Link to={"/company-master/special-mix-design"} />
+          </Menu.Item>
+        </SubMenu>
       </Menu>
       <Modal
         title="Version 2.0.0"

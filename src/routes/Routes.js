@@ -19,6 +19,8 @@ export default function () {
     over_time_fees,
     short_load_charges,
     premium_rates,
+    house_mix_design,
+    special_mix_design,
   } = pageData();
 
   return (
@@ -64,6 +66,17 @@ export default function () {
             <Route
               path="premium-rates"
               element={<Content data={premium_rates} />}
+            />
+          </Route>
+
+          <Route path="company-master" element={<TheContent />}>
+            <Route
+              path="house-mix-design"
+              element={<Content data={house_mix_design} />}
+            />
+            <Route
+              path="special-mix-design"
+              element={<Content data={special_mix_design} />}
             />
           </Route>
         </Route>

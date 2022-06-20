@@ -865,9 +865,16 @@ function ContentPageLogic() {
   };
 
   // handle file pick change
-  const handleChange = (info) => {
+  const handleChange = (info, pageName) => {
     if (info.file.originFileObj) {
-      uploadAPICall(info.file.originFileObj);
+      switch (pageName) {
+        case "user":
+          uploadAPICall(info.file.originFileObj, "profile");
+          break;
+
+        default:
+          break;
+      }
     }
   };
 
@@ -886,7 +893,6 @@ function ContentPageLogic() {
   );
 
   // Construction Company form data // generalFields
-
   const ccFields = [
     {
       name: "construction_company_name",
@@ -2327,9 +2333,25 @@ function ContentPageLogic() {
   };
 
   // upload api call
-  const uploadAPICall = (file) => {
+  const uploadAPICall = (file, destination) => {
     const formData = new FormData();
     formData.append("image", file);
+    if (destination === "user") {
+      formData.append("destination", "profile");
+    }
+
+    if (destination === "logo") {
+      formData.append("destination", "logo");
+    }
+
+    if (destination === "houseMixDesign") {
+      formData.append("destination", "houseMixDesign");
+    }
+
+    if (destination === "specialMixDesign") {
+      formData.append("destination", "specialMixDesign");
+    }
+
     handler
       .dataPost("/auth/upload", formData, {})
       .then((response) => {

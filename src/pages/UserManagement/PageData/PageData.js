@@ -31,228 +31,18 @@ const pageData = () => {
     user: {
       page: "user",
       buttonText: "Add User",
-      tableColumns: [
-        {
-          title: "Profile Image",
-          dataIndex: "userProfileImage",
-          key: "userProfileImage",
-          render: (userProfileImage) => (
-            <img src={userProfileImage} className="userProfileImage" />
-          ),
-        },
-        {
-          title: "Username",
-          dataIndex: "username",
-          key: "username",
-        },
-        {
-          title: "FirstName",
-          dataIndex: "firstName",
-          key: "firstName",
-        },
-        {
-          title: "LastName",
-          dataIndex: "lastName",
-          key: "lastName",
-        },
-
-        {
-          title: "Contact No",
-          dataIndex: "contactNo",
-          key: "contactNo",
-        },
-
-        {
-          title: "Action",
-          key: "action",
-          render: (_, record) => (
-            <Space size="middle">
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsModalVisible(true);
-                }}
-              >
-                Edit
-              </Button>
-              <a>Delete</a>
-            </Space>
-          ),
-        },
-
-        // {
-        //   title: "Action",
-        //   key: "action",
-        //   render: (_, record) => (
-        //     <Space size="middle">
-        //       <a
-        //         onClick={() => {
-        //           setIsEdit(true);
-        //           setId(record.id);
-        //           setIsModalVisible(true);
-        //           setImageUrl(record.userProfileImage);
-        // setUserData({
-        //   username: record.username,
-        //   password: record.password,
-        //   firstName: record.firstName,
-        //   lastName: record.lastName,
-        //   contactNo: record.contactNo,
-        //   address: record.address,
-        //   alternateNo: record.alternateNo,
-        //   userProfileImage: record.userProfileImage,
-        //   isActive: true,
-        //   defaultCompanyId: record.defaultCompanyId,
-        //   city: record.city,
-        //   state: record.state,
-        //   zipcode: record.zipcode,
-        // });
-        //         }}
-        //       >
-        //         Edit
-        //       </a>
-        //       <a>Delete</a>
-        //     </Space>
-        //   ),
-        // },
-      ],
     },
     role: {
       page: "role",
       buttonText: "Add Role",
-      tableColumns: [
-        {
-          title: "Profile Image",
-          dataIndex: "userProfileImage",
-          key: "userProfileImage",
-          render: (userProfileImage) => (
-            <img src={userProfileImage} className="userProfileImage" />
-          ),
-        },
-        {
-          title: "Username",
-          dataIndex: "username",
-          key: "username",
-        },
-        {
-          title: "FirstName",
-          dataIndex: "firstName",
-          key: "firstName",
-        },
-        {
-          title: "LastName",
-          dataIndex: "lastName",
-          key: "lastName",
-        },
-
-        {
-          title: "Contact No",
-          dataIndex: "contactNo",
-          key: "contactNo",
-        },
-
-        {
-          title: "Action",
-          key: "action",
-          render: (_, record) => (
-            <Space size="middle">
-              <a>Edit</a>
-              <a>Delete</a>
-            </Space>
-          ),
-        },
-      ],
     },
     construction_company: {
       page: "construction_company",
       buttonText: "Add Construction Company",
-      tableColumns: [
-        {
-          title: "Profile Image",
-          dataIndex: "userProfileImage",
-          key: "userProfileImage",
-          render: (userProfileImage) => (
-            <img src={userProfileImage} className="userProfileImage" />
-          ),
-        },
-        {
-          title: "Username",
-          dataIndex: "username",
-          key: "username",
-        },
-        {
-          title: "FirstName",
-          dataIndex: "firstName",
-          key: "firstName",
-        },
-        {
-          title: "LastName",
-          dataIndex: "lastName",
-          key: "lastName",
-        },
-
-        {
-          title: "Contact No",
-          dataIndex: "contactNo",
-          key: "contactNo",
-        },
-
-        {
-          title: "Action",
-          key: "action",
-          render: (_, record) => (
-            <Space size="middle">
-              <a>Edit</a>
-              <a>Delete</a>
-            </Space>
-          ),
-        },
-      ],
     },
     project_manager: {
       page: "project_manager",
       buttonText: "Add Project Manager",
-      tableColumns: [
-        {
-          title: "Profile Image",
-          dataIndex: "userProfileImage",
-          key: "userProfileImage",
-          render: (userProfileImage) => (
-            <img src={userProfileImage} className="userProfileImage" />
-          ),
-        },
-        {
-          title: "Username",
-          dataIndex: "username",
-          key: "username",
-        },
-        {
-          title: "FirstName",
-          dataIndex: "firstName",
-          key: "firstName",
-        },
-        {
-          title: "LastName",
-          dataIndex: "lastName",
-          key: "lastName",
-        },
-
-        {
-          title: "Contact No",
-          dataIndex: "contactNo",
-          key: "contactNo",
-        },
-
-        {
-          title: "Action",
-          key: "action",
-          render: (_, record) => (
-            <Space size="middle">
-              <a>Edit</a>
-              <a>Delete</a>
-            </Space>
-          ),
-        },
-      ],
     },
     extra_charges: {
       page: "extra_charges",
@@ -269,6 +59,14 @@ const pageData = () => {
     premium_rates: {
       page: "premium_rates",
       buttonText: "Add premium rates",
+    },
+    house_mix_design: {
+      page: "house_mix_design",
+      buttonText: "Add house mix design",
+    },
+    special_mix_design: {
+      page: "special_mix_design",
+      buttonText: "Add special mix design",
     },
   };
 
