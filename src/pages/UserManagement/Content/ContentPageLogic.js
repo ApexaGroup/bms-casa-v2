@@ -23,6 +23,9 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 
+// constant data import
+import { Constant } from "../../../Utils/Constant";
+
 // network handler
 import handler from "../../../handlers/generalHandler";
 
@@ -39,6 +42,9 @@ function ContentPageLogic() {
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [documentId, setDocumentId] = useState("");
+  const { Type, AirType, StoneType } = Constant();
+
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -121,6 +127,44 @@ function ContentPageLogic() {
     quoteNote: "",
     fieldDescription: "",
     plantid: "",
+    isActive: true,
+  });
+
+  const [mixDesignData, setMixDesignData] = useState({
+    mixDesignName: "",
+    mixDesignCode: "",
+    wcRatio: "",
+    documentPath: "",
+    minRate: "",
+    stoneType: "",
+    airType: "",
+    proportions: "",
+    status: "status",
+    internalDesignType: "",
+    pumpMixtestingLabName: "",
+    expirationDate: "",
+    psi: "",
+    mixType: "",
+    plantid: "1",
+    isActive: true,
+  });
+
+  const [specialMixDesignData, setSpecialMixDesignData] = useState({
+    mixDesignName: "",
+    mixDesignCode: "",
+    wcRatio: "",
+    documentPath: "",
+    minRate: "",
+    stoneType: "",
+    airType: "",
+    proportions: "",
+    status: "status",
+    internalDesignType: "",
+    pumpMixtestingLabName: "",
+    expirationDate: "",
+    psi: "",
+    mixType: "",
+    plantid: "1",
     isActive: true,
   });
 
@@ -569,6 +613,154 @@ function ContentPageLogic() {
     },
   ];
 
+  const mdTblHeaders = [
+    {
+      title: "Mix Design Name",
+      dataIndex: "mixDesignName",
+      key: "mixDesignName",
+    },
+    {
+      title: "Mix Design Code",
+      dataIndex: "mixDesignCode",
+      key: "mixDesignCode",
+    },
+    {
+      title: "Min Rate",
+      dataIndex: "minRate",
+      key: "minRate",
+    },
+
+    {
+      title: "Stone Type",
+      dataIndex: "stoneType",
+      key: "stoneType",
+    },
+
+    {
+      title: "Air Type",
+      dataIndex: "airType",
+      key: "airType",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setMixDesignData({
+                mixDesignName: record.mixDesignName,
+                mixDesignCode: record.mixDesignCode,
+                wcRatio: record.wcRatio,
+                documentPath: record.documentPath,
+                minRate: record.minRate,
+                stoneType: record.stoneType,
+                airType: record.airType,
+                proportions: record.proportions,
+                status: record.status,
+                internalDesignType: record.internalDesignType,
+                pumpMixtestingLabName: record.pumpMixtestingLabName,
+                expirationDate: record.expirationDate,
+                psi: record.psi,
+                mixType: record.mixType,
+                plantid: record.plantid,
+                isActive: record.isActive,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("house_mix_design", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const smdTblHeaders = [
+    {
+      title: "Mix Design Name",
+      dataIndex: "mixDesignName",
+      key: "mixDesignName",
+    },
+    {
+      title: "Mix Design Code",
+      dataIndex: "mixDesignCode",
+      key: "mixDesignCode",
+    },
+    {
+      title: "Min Rate",
+      dataIndex: "minRate",
+      key: "minRate",
+    },
+
+    {
+      title: "Stone Type",
+      dataIndex: "stoneType",
+      key: "stoneType",
+    },
+
+    {
+      title: "Air Type",
+      dataIndex: "airType",
+      key: "airType",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setSpecialMixDesignData({
+                mixDesignName: record.mixDesignName,
+                mixDesignCode: record.mixDesignCode,
+                wcRatio: record.wcRatio,
+                documentPath: record.documentPath,
+                minRate: record.minRate,
+                stoneType: record.stoneType,
+                airType: record.airType,
+                proportions: record.proportions,
+                status: record.status,
+                internalDesignType: record.internalDesignType,
+                pumpMixtestingLabName: record.pumpMixtestingLabName,
+                expirationDate: record.expirationDate,
+                psi: record.psi,
+                mixType: record.mixType,
+                plantid: record.plantid,
+                isActive: record.isActive,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("special_mix_design", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
@@ -624,10 +816,26 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+
+    if (pageName === "house_mix_design") {
+      setMixDesignData({
+        ...mixDesignData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "special_mix_design") {
+      console.log([evt.target.name] + " " + value);
+      setSpecialMixDesignData({
+        ...specialMixDesignData,
+        [evt.target.name]: value,
+      });
+    }
   };
 
   // select handler
-  const selectHandleChange = (value) => {
+  const selectHandleChange = (value, name) => {
+    console.log(value);
     // alert(value);
     if (pageName === "project_manager") {
       setPmData({
@@ -661,6 +869,63 @@ function ContentPageLogic() {
         ...extraChargesData,
         plantid: value,
       });
+    }
+
+    if (pageName === "house_mix_design") {
+      console.log(name);
+      switch (name) {
+        case "internalDesignType":
+          setMixDesignData({
+            ...mixDesignData,
+            internalDesignType: value,
+          });
+          break;
+
+        case "stoneType":
+          setMixDesignData({
+            ...mixDesignData,
+            stoneType: value,
+          });
+          break;
+
+        case "airType":
+          setMixDesignData({
+            ...mixDesignData,
+            airType: value,
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    if (pageName === "special_mix_design") {
+      switch (name) {
+        case "internalDesignType":
+          setSpecialMixDesignData({
+            ...specialMixDesignData,
+            internalDesignType: value,
+          });
+          break;
+
+        case "stoneType":
+          setSpecialMixDesignData({
+            ...specialMixDesignData,
+            stoneType: value,
+          });
+          break;
+
+        case "airType":
+          setSpecialMixDesignData({
+            ...specialMixDesignData,
+            airType: value,
+          });
+          break;
+
+        default:
+          break;
+      }
     }
   };
 
@@ -777,6 +1042,50 @@ function ContentPageLogic() {
     });
   };
 
+  // reset mix design states
+  const resetMdStates = () => {
+    setMixDesignData({
+      mixDesignName: "",
+      mixDesignCode: "",
+      wcRatio: "",
+      documentPath: "",
+      minRate: "",
+      stoneType: "",
+      airType: "",
+      proportions: "",
+      status: "",
+      internalDesignType: "",
+      pumpMixtestingLabName: "",
+      expirationDate: "",
+      psi: "",
+      mixType: "",
+      plantid: "",
+      isActive: true,
+    });
+  };
+
+  // reset special mix design states
+  const resetSMdStates = () => {
+    setSpecialMixDesignData({
+      mixDesignName: "",
+      mixDesignCode: "",
+      wcRatio: "",
+      documentPath: "",
+      minRate: "",
+      stoneType: "",
+      airType: "",
+      proportions: "",
+      status: "",
+      internalDesignType: "",
+      pumpMixtestingLabName: "",
+      expirationDate: "",
+      psi: "",
+      mixType: "",
+      plantid: "",
+      isActive: true,
+    });
+  };
+
   // method for showing modal
   const showModal = () => {
     setIsModalVisible(true);
@@ -847,6 +1156,22 @@ function ContentPageLogic() {
         }
         break;
 
+      case "house_mix_design":
+        if (!isEdit) {
+          addAPICalls("house_mix_design");
+        } else {
+          updateAPICalls("house_mix_design");
+        }
+        break;
+
+      case "special_mix_design":
+        if (!isEdit) {
+          addAPICalls("special_mix_design");
+        } else {
+          updateAPICalls("special_mix_design");
+        }
+        break;
+
       default:
         break;
     }
@@ -862,6 +1187,8 @@ function ContentPageLogic() {
     resetPrStates();
     resetSlStates();
     resetEcStates();
+    resetMdStates();
+    resetSMdStates();
   };
 
   // handle file pick change
@@ -870,6 +1197,15 @@ function ContentPageLogic() {
       switch (pageName) {
         case "user":
           uploadAPICall(info.file.originFileObj, "profile");
+          break;
+
+        case "house_mix_design":
+          console.log("uploa");
+          uploadAPICall(info.file.originFileObj, "houseMixDesign");
+          break;
+
+        case "special_mix_design":
+          uploadAPICall(info.file.originFileObj, "specialMixDesign");
           break;
 
         default:
@@ -887,7 +1223,7 @@ function ContentPageLogic() {
           marginTop: 8,
         }}
       >
-        Upload Image
+        {pageName === "user" ? "Upload Image" : "Design Document"}
       </div>
     </div>
   );
@@ -1503,6 +1839,248 @@ function ContentPageLogic() {
     },
   ];
 
+  const mixDesignFields = [
+    {
+      name: "mixDesignName",
+      typeofinput: "input",
+      placeholder: "Mix Design Name",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.mixDesignName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "pumpMixtestingLabName",
+      typeofinput: "input",
+      placeholder: "Pump Mix testing Lab Name",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.pumpMixtestingLabName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "minRate",
+      typeofinput: "input",
+      placeholder: "Min Rate",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.minRate,
+      method: handleChangeData,
+    },
+
+    {
+      name: "expirationDate",
+      typeofinput: "input",
+      placeholder: "Expiration Date",
+      type: "date",
+      className: "input-style",
+      value: mixDesignData.expirationDate,
+      method: handleChangeData,
+    },
+    {
+      name: "internalDesignType",
+      typeofinput: "select",
+      placeholder: "Internal Design Type",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.internalDesignType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "mixDesignCode",
+      typeofinput: "input",
+      placeholder: "Mix Code",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.mixDesignCode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "stoneType",
+      typeofinput: "select",
+      placeholder: "Stone Type",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.stoneType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "airType",
+      typeofinput: "select",
+      placeholder: "Air Type",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.airType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "psi",
+      typeofinput: "input",
+      placeholder: "PSI",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.psi,
+      method: handleChangeData,
+    },
+
+    {
+      name: "wcRatio",
+      typeofinput: "input",
+      placeholder: "W/C Ratio",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.wcRatio,
+      method: handleChangeData,
+    },
+
+    {
+      name: "proportions",
+      typeofinput: "input",
+      placeholder: "Proportions",
+      type: "text",
+      className: "input-style",
+      value: mixDesignData.proportions,
+      method: handleChangeData,
+    },
+
+    {
+      name: "avatar",
+      typeofinput: "upload",
+      placeholder: "Upload Document",
+      type: "upload",
+      className: "avatar-uploader",
+      value: mixDesignData.documentPath,
+      method: handleChange,
+    },
+  ];
+
+  const specialMixDesignFields = [
+    {
+      name: "mixDesignName",
+      typeofinput: "input",
+      placeholder: "Mix Design Name",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.mixDesignName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "pumpMixtestingLabName",
+      typeofinput: "input",
+      placeholder: "Pump Mix testing Lab Name",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.pumpMixtestingLabName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "minRate",
+      typeofinput: "input",
+      placeholder: "Min Rate",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.minRate,
+      method: handleChangeData,
+    },
+
+    {
+      name: "expirationDate",
+      typeofinput: "input",
+      placeholder: "Expiration Date",
+      type: "date",
+      className: "input-style",
+      value: specialMixDesignData.expirationDate,
+      method: handleChangeData,
+    },
+    {
+      name: "internalDesignType",
+      typeofinput: "select",
+      placeholder: "Internal Design Type",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.internalDesignType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "mixDesignCode",
+      typeofinput: "input",
+      placeholder: "Mix Code",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.mixDesignCode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "stoneType",
+      typeofinput: "select",
+      placeholder: "Stone Type",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.stoneType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "airType",
+      typeofinput: "select",
+      placeholder: "Air Type",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.airType,
+      method: selectHandleChange,
+    },
+
+    {
+      name: "psi",
+      typeofinput: "input",
+      placeholder: "PSI",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.psi,
+      method: handleChangeData,
+    },
+
+    {
+      name: "wcRatio",
+      typeofinput: "input",
+      placeholder: "W/C Ratio",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.wcRatio,
+      method: handleChangeData,
+    },
+
+    {
+      name: "proportions",
+      typeofinput: "input",
+      placeholder: "Proportions",
+      type: "text",
+      className: "input-style",
+      value: specialMixDesignData.proportions,
+      method: handleChangeData,
+    },
+
+    {
+      name: "avatar",
+      typeofinput: "upload",
+      placeholder: "Upload Document",
+      type: "upload",
+      className: "avatar-uploader",
+      value: specialMixDesignData.documentPath,
+      method: handleChange,
+    },
+  ];
+
   // user modal for add and edit
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -1533,6 +2111,14 @@ function ContentPageLogic() {
       generalFields = extraChargesFields;
     }
 
+    if (pageName === "house_mix_design") {
+      generalFields = mixDesignFields;
+    }
+
+    if (pageName === "special_mix_design") {
+      generalFields = specialMixDesignFields;
+    }
+
     const UserModal = (
       <div>
         <Modal
@@ -1547,48 +2133,118 @@ function ContentPageLogic() {
             {generalFields.map((record) => {
               switch (record.typeofinput) {
                 case "upload":
-                  return (
-                    <Col span={24}>
-                      <Upload
-                        name={record.name}
-                        listType="picture-card"
-                        className={record.className}
-                        showUploadList={false}
-                        onChange={record.method}
-                      >
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt="avatar"
-                            style={{
-                              width: "100%",
-                            }}
-                          />
-                        ) : (
-                          uploadButton
-                        )}
-                      </Upload>
-                    </Col>
-                  );
+                  if (pageName === "houseMixDesign" || "specialMixDesign") {
+                    return (
+                      <Col span={24}>
+                        <Upload
+                          name={record.name}
+                          listType="picture-card"
+                          className={record.className}
+                          showUploadList={false}
+                          onChange={(file) => {
+                            record.method(file, pageName);
+                          }}
+                        >
+                          {mixDesignData.documentPath ? (
+                            <img
+                              src={mixDesignData.documentPath}
+                              alt="avatar"
+                              style={{
+                                width: "100%",
+                              }}
+                            />
+                          ) : (
+                            uploadButton
+                          )}
+                        </Upload>
+                      </Col>
+                    );
+                  } else {
+                    return (
+                      <Col span={24}>
+                        <Upload
+                          name={record.name}
+                          listType="picture-card"
+                          className={record.className}
+                          showUploadList={false}
+                          onChange={(file) => {
+                            record.method(file, pageName);
+                          }}
+                        >
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt="avatar"
+                              style={{
+                                width: "100%",
+                              }}
+                            />
+                          ) : (
+                            uploadButton
+                          )}
+                        </Upload>
+                      </Col>
+                    );
+                  }
 
                 case "select":
-                  return (
-                    <Col span={12}>
-                      <Select
-                        style={{ width: "100%" }}
-                        defaultValue={isEdit ? companyId : "Select Company"}
-                        onChange={selectHandleChange}
-                      >
-                        {cc.map((item) => {
-                          return (
-                            <Option value={item.id}>
-                              {item.construction_company_name}
-                            </Option>
-                          );
-                        })}
-                      </Select>
-                    </Col>
-                  );
+                  if (pageName === "house_mix_design" || "specialMixDesign") {
+                    return (
+                      <Col span={12}>
+                        <Select
+                          style={{ width: "100%" }}
+                          defaultValue={
+                            !isEdit
+                              ? "Select " + record.placeholder
+                              : record.value
+                          }
+                          onChange={(value) => {
+                            selectHandleChange(value, record.name);
+                          }}
+                        >
+                          {(() => {
+                            if (record.name === "internalDesignType") {
+                              return Type.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            } else if (record.name === "airType") {
+                              return AirType.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            } else if (record.name === "stoneType") {
+                              return StoneType.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            }
+                          })()}
+                        </Select>
+                      </Col>
+                    );
+                  } else {
+                    return (
+                      <Col span={12}>
+                        <Select
+                          style={{ width: "100%" }}
+                          defaultValue={isEdit ? companyId : "Select Company"}
+                          onChange={selectHandleChange}
+                        >
+                          {cc.map((item) => {
+                            return (
+                              <Option value={item.id}>
+                                {item.construction_company_name}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      </Col>
+                    );
+                  }
 
                 case "switch":
                   return (
@@ -1775,6 +2431,42 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- deleteExtraCharge", error);
+          });
+        break;
+
+      case "house_mix_design":
+        setLoading(true);
+        handler
+          .dataPost("/mix-design/deleteMixDesign", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getMixDesigns("house_mix_Design");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteMixDesign", error);
+          });
+        break;
+
+      case "special_mix_design":
+        setLoading(true);
+        handler
+          .dataPost("/mix-design/deleteMixDesign", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getMixDesigns("special_mix_Design");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteMixDesign", error);
           });
         break;
 
@@ -1973,6 +2665,54 @@ function ContentPageLogic() {
             console.error("There was an error!- updateExtraCharge", error);
           });
         break;
+
+      case "house_mix_design":
+        setLoading(true);
+
+        let updatableDataforhmd = {
+          ...mixDesignData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/mix-design/updateMixDesign", updatableDataforhmd, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getMixDesigns("house_mix_design");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateMixDesign", error);
+          });
+        break;
+
+      case "special_mix_design":
+        setLoading(true);
+
+        let updatableDataforsmd = {
+          ...mixDesignData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/mix-design/updateMixDesign", updatableDataforsmd, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getMixDesigns("special_mix_design");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateMixDesign", error);
+          });
+        break;
       default:
         break;
     }
@@ -2120,6 +2860,53 @@ function ContentPageLogic() {
             console.error("There was an error!- addExtraCharge", error);
           });
         break;
+
+      case "house_mix_design":
+        setLoading(true);
+
+        let data = {
+          ...mixDesignData,
+          mixType: "house_mix_design",
+        };
+
+        handler
+          .dataPost("/mix-design/addMixDesign", data, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getMixDesigns(data.mixType);
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addMixDesign", error);
+          });
+        break;
+      case "special_mix_design":
+        setLoading(true);
+
+        let datasmd = {
+          ...specialMixDesignData,
+          mixType: "special_mix_design",
+        };
+
+        handler
+          .dataPost("/mix-design/addMixDesign", datasmd, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getMixDesigns(datasmd.mixType);
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addMixDesign", error);
+          });
+        break;
       default:
         break;
     }
@@ -2224,6 +3011,25 @@ function ContentPageLogic() {
       });
   };
 
+  // get mix design list api call
+  const getMixDesigns = (type) => {
+    setLoading(true);
+
+    handler
+      .dataGet("/mix-design/getMixDesigns?mixType=" + type, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getMixDesigns", error);
+      });
+  };
+
   // get user list api call
   const getUsersAPIcall = () => {
     setLoading(true);
@@ -2305,6 +3111,16 @@ function ContentPageLogic() {
         getExtraChargeAPICall();
         break;
 
+      case "house_mix_design":
+        getConstructionCompanyForProjectManager();
+        getMixDesigns("house_mix_design");
+        break;
+
+      case "special_mix_design":
+        getConstructionCompanyForProjectManager();
+        getMixDesigns("special_mix_design");
+        break;
+
       default:
         break;
     }
@@ -2335,7 +3151,7 @@ function ContentPageLogic() {
   // upload api call
   const uploadAPICall = (file, destination) => {
     const formData = new FormData();
-    formData.append("image", file);
+
     if (destination === "user") {
       formData.append("destination", "profile");
     }
@@ -2352,6 +3168,8 @@ function ContentPageLogic() {
       formData.append("destination", "specialMixDesign");
     }
 
+    formData.append("image", file);
+
     handler
       .dataPost("/auth/upload", formData, {})
       .then((response) => {
@@ -2361,6 +3179,11 @@ function ContentPageLogic() {
           // setUserData({ userProfileImage: response.data.imageRef });
           userData.userProfileImage = response.data.imageRef;
           setImageUrl(response.data.imageRef);
+          setDocumentId(response.data.imageRef);
+          setMixDesignData({
+            ...mixDesignData,
+            documentPath: response.data.imageRef,
+          });
           message.success(response.data.message, {
             position: "bottom-center",
           });
@@ -2416,6 +3239,8 @@ function ContentPageLogic() {
     prTblHeaders,
     slTblHeaders,
     ecTblHeaders,
+    mdTblHeaders,
+    smdTblHeaders,
   };
 
   return StatesContainer;

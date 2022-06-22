@@ -35,6 +35,8 @@ function ContentPageDesign(props) {
     prTblHeaders,
     slTblHeaders,
     ecTblHeaders,
+    mdTblHeaders,
+    smdTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -69,16 +71,27 @@ function ContentPageDesign(props) {
     if (data.page === "extra_charges") {
       setTblHeaders(ecTblHeaders);
     }
+
+    if (data.page === "house_mix_design") {
+      setTblHeaders(mdTblHeaders);
+    }
+
+    if (data.page === "special_mix_design") {
+      setTblHeaders(smdTblHeaders);
+    }
   }, [data.page]);
 
   return (
     <div>
       <div>
-        <div className="div-page-header">
-          <Search placeholder="Search" className="div-search" />
-          <Button className="button-add-user" onClick={showModal}>
-            {data.buttonText}
-          </Button>
+        <div className="div-page-header-parent">
+          <h3>{pageName.toUpperCase().replaceAll("_", " ")}</h3>
+          <div className="div-page-header">
+            <Search placeholder="Search" className="div-search" />
+            <Button className="button-add-user" onClick={showModal}>
+              {data.buttonText}
+            </Button>
+          </div>
         </div>
 
         <div>

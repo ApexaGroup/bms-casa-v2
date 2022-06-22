@@ -1,3 +1,10 @@
+.div-page-header-parent{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .div-page-header{
     padding: 10px;
     display: flex;
@@ -22,3 +29,4 @@
     background-color: #ff5500;
     color: white;
 }
+
