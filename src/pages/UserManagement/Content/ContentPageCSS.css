@@ -5,6 +5,10 @@
     justify-content: space-between;
 }
 
+label{
+   font-weight: bold; 
+}
+
 .div-page-header{
     padding: 10px;
     display: flex;

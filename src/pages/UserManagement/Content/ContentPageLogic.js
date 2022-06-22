@@ -2122,7 +2122,13 @@ function ContentPageLogic() {
     const UserModal = (
       <div>
         <Modal
-          title={isEdit ? `Edit ${pageName}` : `Add new ${pageName}`}
+          title={
+            isEdit ? (
+              <h2>Edit {pageName.replaceAll("_", " ")}</h2>
+            ) : (
+              <h2>Add new {pageName.replaceAll("_", " ")}</h2>
+            )
+          }
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -2191,6 +2197,7 @@ function ContentPageLogic() {
                   if (pageName === "house_mix_design" || "specialMixDesign") {
                     return (
                       <Col span={12}>
+                        <label>{"Select " + record.placeholder}</label>
                         <Select
                           style={{ width: "100%" }}
                           defaultValue={
@@ -2229,6 +2236,7 @@ function ContentPageLogic() {
                   } else {
                     return (
                       <Col span={12}>
+                        <label>{"Select Company"}</label>
                         <Select
                           style={{ width: "100%" }}
                           defaultValue={isEdit ? companyId : "Select Company"}
@@ -2261,6 +2269,7 @@ function ContentPageLogic() {
                 case "input":
                   return (
                     <Col span={12}>
+                      <label>{record.placeholder}</label>
                       <Input
                         placeholder={record.placeholder}
                         name={record.name}
@@ -2275,6 +2284,7 @@ function ContentPageLogic() {
                 case "textarea":
                   return (
                     <Col span={12}>
+                      <label>{record.placeholder}</label>
                       <TextArea
                         rows={4}
                         placeholder={record.placeholder}
@@ -2291,6 +2301,12 @@ function ContentPageLogic() {
               }
             })}
           </Row>
+
+          {isEdit ? (
+            <span style={{ color: "red" }}>
+              Note: Click on the Image to update the image
+            </span>
+          ) : null}
         </Modal>
       </div>
     );
