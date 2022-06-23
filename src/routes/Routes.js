@@ -21,6 +21,8 @@ export default function () {
     premium_rates,
     house_mix_design,
     special_mix_design,
+    address,
+    lead,
   } = pageData();
 
   return (
@@ -78,6 +80,11 @@ export default function () {
               path="special-mix-design"
               element={<Content data={special_mix_design} />}
             />
+          </Route>
+
+          <Route path="lead-section" element={<TheContent />}>
+            <Route path="address" element={<Content data={address} />} />
+            <Route path="lead" element={<Content data={lead} />} />
           </Route>
         </Route>
       </Routes>

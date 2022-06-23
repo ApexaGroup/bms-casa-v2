@@ -168,6 +168,15 @@ function ContentPageLogic() {
     isActive: true,
   });
 
+  const [addressData, setAddressData] = useState({
+    address: "",
+    cross_street: "",
+    borough: "",
+    state: "",
+    zipcode: "",
+    isActive: true,
+  });
+
   // table headers
   const userTblHeaders = [
     {
@@ -761,6 +770,70 @@ function ContentPageLogic() {
     },
   ];
 
+  const addressTblHeaders = [
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Cross Sreet",
+      dataIndex: "cross_street",
+      key: "cross_street",
+    },
+    {
+      title: "Borough",
+      dataIndex: "borough",
+      key: "borough",
+    },
+
+    {
+      title: "State",
+      dataIndex: "state",
+      key: "state",
+    },
+
+    {
+      title: "Zipcode",
+      dataIndex: "zipcode",
+      key: "zipcode",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setAddressData({
+                address: record.address,
+                cross_street: record.cross_street,
+                borough: record.borough,
+                state: record.state,
+                zipcode: record.zipcode,
+                isActive: record.isActive,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("address", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
@@ -825,9 +898,15 @@ function ContentPageLogic() {
     }
 
     if (pageName === "special_mix_design") {
-      console.log([evt.target.name] + " " + value);
       setSpecialMixDesignData({
         ...specialMixDesignData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "address") {
+      setAddressData({
+        ...addressData,
         [evt.target.name]: value,
       });
     }
@@ -1086,6 +1165,18 @@ function ContentPageLogic() {
     });
   };
 
+  // reset address states
+  const resetAddressStates = () => {
+    setAddressData({
+      address: "",
+      cross_street: "",
+      borough: "",
+      state: "",
+      zipcode: "",
+      isActive: true,
+    });
+  };
+
   // method for showing modal
   const showModal = () => {
     setIsModalVisible(true);
@@ -1172,6 +1263,14 @@ function ContentPageLogic() {
         }
         break;
 
+      case "address":
+        if (!isEdit) {
+          addAPICalls("address");
+        } else {
+          updateAPICalls("address");
+        }
+        break;
+
       default:
         break;
     }
@@ -1189,6 +1288,7 @@ function ContentPageLogic() {
     resetEcStates();
     resetMdStates();
     resetSMdStates();
+    resetAddressStates();
   };
 
   // handle file pick change
@@ -2081,6 +2181,67 @@ function ContentPageLogic() {
     },
   ];
 
+  const addressFields = [
+    {
+      name: "address",
+      typeofinput: "input",
+      placeholder: "Address",
+      type: "text",
+      className: "input-style",
+      value: addressData.address,
+      method: handleChangeData,
+    },
+
+    {
+      name: "cross_street",
+      typeofinput: "input",
+      placeholder: "Cross Street",
+      type: "text",
+      className: "input-style",
+      value: addressData.cross_street,
+      method: handleChangeData,
+    },
+
+    {
+      name: "borough",
+      typeofinput: "input",
+      placeholder: "Borough",
+      type: "text",
+      className: "input-style",
+      value: addressData.borough,
+      method: handleChangeData,
+    },
+
+    {
+      name: "state",
+      typeofinput: "input",
+      placeholder: "State",
+      type: "text",
+      className: "input-style",
+      value: addressData.state,
+      method: handleChangeData,
+    },
+    {
+      name: "zipcode",
+      typeofinput: "input",
+      placeholder: "Zipcode",
+      type: "text",
+      className: "input-style",
+      value: addressData.zipcode,
+      method: handleChangeData,
+    },
+
+    {
+      name: "isActive",
+      typeofinput: "switch",
+      placeholder: "isActive",
+      type: "text",
+      className: "input-style",
+      value: addressData.isActive,
+      method: handleChangeData,
+    },
+  ];
+
   // user modal for add and edit
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -2117,6 +2278,10 @@ function ContentPageLogic() {
 
     if (pageName === "special_mix_design") {
       generalFields = specialMixDesignFields;
+    }
+
+    if (pageName === "address") {
+      generalFields = addressFields;
     }
 
     const UserModal = (
@@ -2486,6 +2651,24 @@ function ContentPageLogic() {
           });
         break;
 
+      case "address":
+        setLoading(true);
+        handler
+          .dataPost("/lead-section/deleteAddress", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getAddresses();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteMixDesign", error);
+          });
+        break;
+
       default:
         break;
     }
@@ -2729,6 +2912,29 @@ function ContentPageLogic() {
             console.error("There was an error!- updateMixDesign", error);
           });
         break;
+      case "address":
+        setLoading(true);
+
+        let updatableDataforaddress = {
+          ...addressData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/lead-section/updateAddress", updatableDataforaddress, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getAddresses();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateAddress", error);
+          });
+        break;
       default:
         break;
     }
@@ -2923,6 +3129,29 @@ function ContentPageLogic() {
             console.error("There was an error!- addMixDesign", error);
           });
         break;
+
+      case "address":
+        setLoading(true);
+
+        let addressdata = {
+          ...addressData,
+        };
+
+        handler
+          .dataPost("/lead-section/addAddress", addressData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              getAddresses();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addMixDesign", error);
+          });
+        break;
       default:
         break;
     }
@@ -2933,6 +3162,27 @@ function ContentPageLogic() {
     setLoading(true);
     handler
       .dataGet("/project-manager/getPMs", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  // get project manager api call
+  const getAddresses = () => {
+    setLoading(true);
+    handler
+      .dataGet("/lead-section/getAdresses", {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
@@ -3137,6 +3387,10 @@ function ContentPageLogic() {
         getMixDesigns("special_mix_design");
         break;
 
+      case "address":
+        getAddresses();
+        break;
+
       default:
         break;
     }
@@ -3257,6 +3511,7 @@ function ContentPageLogic() {
     ecTblHeaders,
     mdTblHeaders,
     smdTblHeaders,
+    addressTblHeaders,
   };
 
   return StatesContainer;

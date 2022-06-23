@@ -37,6 +37,7 @@ function ContentPageDesign(props) {
     ecTblHeaders,
     mdTblHeaders,
     smdTblHeaders,
+    addressTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -78,6 +79,10 @@ function ContentPageDesign(props) {
 
     if (data.page === "special_mix_design") {
       setTblHeaders(smdTblHeaders);
+    }
+
+    if (data.page === "address") {
+      setTblHeaders(addressTblHeaders);
     }
   }, [data.page]);
 

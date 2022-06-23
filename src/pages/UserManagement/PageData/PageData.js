@@ -68,6 +68,15 @@ const pageData = () => {
       page: "special_mix_design",
       buttonText: "Add special mix design",
     },
+
+    address: {
+      page: "address",
+      buttonText: "Add address",
+    },
+    lead: {
+      page: "lead",
+      buttonText: "Add lead",
+    },
   };
 
   return data;

@@ -109,6 +109,19 @@ function TheSidebar() {
             <Link to={"/company-master/special-mix-design"} />
           </Menu.Item>
         </SubMenu>
+
+        <SubMenu key="5" title={"Lead Section"} icon={<DesktopOutlined />}>
+          <Menu.Item key="28">
+            <SolutionOutlined />
+            <span>Address</span>
+            <Link to={"/lead-section/address"} />
+          </Menu.Item>
+          <Menu.Item key="29">
+            <ProjectOutlined />
+            <span>Lead</span>
+            <Link to={"/lead-section/lead"} />
+          </Menu.Item>
+        </SubMenu>
       </Menu>
       <Modal
         title="Version 2.0.0"
