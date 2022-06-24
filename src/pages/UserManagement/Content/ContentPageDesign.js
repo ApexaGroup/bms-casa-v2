@@ -38,6 +38,8 @@ function ContentPageDesign(props) {
     mdTblHeaders,
     smdTblHeaders,
     addressTblHeaders,
+    leadInfoTblHeaders,
+    renderLeadModal,
   } = ContentPageLogic();
 
   // useeffect
@@ -84,6 +86,10 @@ function ContentPageDesign(props) {
     if (data.page === "address") {
       setTblHeaders(addressTblHeaders);
     }
+
+    if (data.page === "lead") {
+      setTblHeaders(leadInfoTblHeaders);
+    }
   }, [data.page]);
 
   return (
@@ -104,6 +110,7 @@ function ContentPageDesign(props) {
         </div>
 
         <div>{renderModal(pageName, generalFields)}</div>
+        <div>{renderLeadModal()}</div>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   Select,
   Switch,
   Popconfirm,
+  Tabs,
 } from "antd";
 
 //antd icons import
@@ -33,12 +34,14 @@ function ContentPageLogic() {
   // useStates
   const { Option } = Select;
   const { TextArea } = Input;
+  const { TabPane } = Tabs;
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [cc, setCC] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [leadModalVisible, setLeadModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -176,6 +179,44 @@ function ContentPageLogic() {
     zipcode: "",
     isActive: true,
   });
+
+  const [leadInformationData, setLeadInformationData] = useState({
+    leadTitle: "",
+    address: "",
+    status: "",
+    startDate: "",
+    endDate: "",
+    BidDueDate: "",
+    estimatedYards: "",
+    notes: "",
+    isActive: true,
+  });
+
+  const [leadStatusData, setLeadStatusData] = useState([
+    {
+      title: "Out to Bid",
+    },
+    {
+      title: "Low Bidder",
+    },
+    {
+      title: "Pending Award",
+    },
+    {
+      title: "Notice to Proceed",
+    },
+    {
+      title: "Close",
+    },
+    {
+      title: "Opportunity Created",
+    },
+    {
+      title: "Open",
+    },
+  ]);
+
+  const [addresslist, setaddressList] = useState([]);
 
   // table headers
   const userTblHeaders = [
@@ -834,8 +875,86 @@ function ContentPageLogic() {
     },
   ];
 
+  const leadInfoTblHeaders = [
+    {
+      title: "Lead",
+      dataIndex: "leadTitle",
+      key: "leadTitle",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+
+    {
+      title: "Start Date",
+      dataIndex: "startDate",
+      key: "startDate",
+    },
+
+    {
+      title: "End Date",
+      dataIndex: "endDate",
+      key: "endDate",
+    },
+
+    {
+      title: "Bid Due Date",
+      dataIndex: "BidDueDate",
+      key: "BidDueDate",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setLeadModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setLeadInformationData({
+                leadTitle: record.leadTitle,
+                address: record.address,
+                status: record.status,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                BidDueDate: record.BidDueDate,
+                estimatedYards: record.estimatedYards,
+                notes: record.notes,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("lead", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
+
+  // tab change listner
+  const onChange = (key) => {
+    console.log(key);
+  };
 
   // form handler
   const handleChangeData = (evt) => {
@@ -907,6 +1026,13 @@ function ContentPageLogic() {
     if (pageName === "address") {
       setAddressData({
         ...addressData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "lead") {
+      setLeadInformationData({
+        ...leadInformationData,
         [evt.target.name]: value,
       });
     }
@@ -999,6 +1125,27 @@ function ContentPageLogic() {
           setSpecialMixDesignData({
             ...specialMixDesignData,
             airType: value,
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    if (pageName === "lead") {
+      switch (name) {
+        case "select_address":
+          setLeadInformationData({
+            ...leadInformationData,
+            address: value,
+          });
+          break;
+
+        case "select_status":
+          setLeadInformationData({
+            ...leadInformationData,
+            status: value,
           });
           break;
 
@@ -1177,16 +1324,36 @@ function ContentPageLogic() {
     });
   };
 
+  // reset lead-information states
+  const resetLeadInfoStates = () => {
+    setLeadInformationData({
+      leadTitle: "",
+      address: "",
+      status: "",
+      startDate: "",
+      endDate: "",
+      BidDueDate: "",
+      estimatedYards: "",
+      notes: "",
+      isActive: true,
+    });
+  };
+
   // method for showing modal
   const showModal = () => {
-    setIsModalVisible(true);
+    if (pageName === "lead") {
+      setLeadModalVisible(true);
+    } else {
+      setIsModalVisible(true);
+    }
+
     resetStates();
   };
 
   // method to be called when modal ok is clicked
   const handleOk = () => {
     setIsModalVisible(false);
-
+    setLeadModalVisible(false);
     switch (pageName) {
       case "user":
         if (!isEdit) {
@@ -1271,6 +1438,13 @@ function ContentPageLogic() {
         }
         break;
 
+      case "lead":
+        if (!isEdit) {
+          addAPICalls("lead");
+        } else {
+          updateAPICalls("lead");
+        }
+        break;
       default:
         break;
     }
@@ -1279,6 +1453,7 @@ function ContentPageLogic() {
   // method to be called when modal cancel is clicked
   const handleCancel = () => {
     setIsModalVisible(false);
+    setLeadModalVisible(false);
     resetStates();
     resetCCstates();
     resetPMstates();
@@ -1289,6 +1464,7 @@ function ContentPageLogic() {
     resetMdStates();
     resetSMdStates();
     resetAddressStates();
+    resetLeadInfoStates();
   };
 
   // handle file pick change
@@ -2479,6 +2655,142 @@ function ContentPageLogic() {
     return UserModal;
   };
 
+  const renderLeadModal = () => {
+    const LeadModal = (
+      <div>
+        <Modal
+          title={"Lead"}
+          visible={leadModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1000}
+          destroyOnClose
+        >
+          <Tabs defaultActiveKey="1" onChange={onChange}>
+            <TabPane tab="Lead Information" key="1">
+              <Row gutter={6}>
+                <Col span={12}>
+                  <label>Lead</label>
+                  <Input
+                    placeholder={"Lead"}
+                    name={"leadTitle"}
+                    value={leadInformationData.leadTitle}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Select Address"}</label>
+                  <Select
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? leadInformationData.address : "Select Address"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_address");
+                    }}
+                  >
+                    {addresslist.map((item) => {
+                      return (
+                        <Option value={item.address}>{item.address}</Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Select Status"}</label>
+                  <Select
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? leadInformationData.status : "Select Status"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_status");
+                    }}
+                  >
+                    {leadStatusData.map((item) => {
+                      return <Option value={item.title}>{item.title}</Option>;
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>Start Date</label>
+                  <Input
+                    placeholder={"Start Date"}
+                    name={"startDate"}
+                    value={leadInformationData.startDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>End Date</label>
+                  <Input
+                    placeholder={"End Date"}
+                    name={"endDate"}
+                    value={leadInformationData.endDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>Bid Due Date</label>
+                  <Input
+                    placeholder={"Bid Due Date"}
+                    name={"BidDueDate"}
+                    value={leadInformationData.BidDueDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>Estimated Yards</label>
+                  <Input
+                    placeholder={"Estimated Yards"}
+                    name={"estimatedYards"}
+                    value={leadInformationData.estimatedYards}
+                    type={"number"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={24}>
+                  <label>Notes</label>
+                  <TextArea
+                    placeholder={"Notes"}
+                    name={"notes"}
+                    value={leadInformationData.notes}
+                    type={"text"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tab="Follow up" key="2">
+              Content of Tab Pane 2
+            </TabPane>
+            <TabPane tab="Audit Logs" key="3">
+              Content of Tab Pane 3
+            </TabPane>
+          </Tabs>
+        </Modal>
+      </div>
+    );
+
+    return LeadModal;
+  };
+
   // delete API calls
   const deleteAPICalls = (pageName, id) => {
     const updatebleData = {
@@ -2666,6 +2978,24 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- deleteMixDesign", error);
+          });
+        break;
+
+      case "lead":
+        setLoading(true);
+        handler
+          .dataPost("/lead-information/deleteLeadInfo", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getLeads();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteLeadInfo", error);
           });
         break;
 
@@ -2935,6 +3265,34 @@ function ContentPageLogic() {
             console.error("There was an error!- updateAddress", error);
           });
         break;
+
+      case "lead":
+        setLoading(true);
+
+        let updatableDataforlead = {
+          ...leadInformationData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/lead-information/updateLeadInfo",
+            updatableDataforlead,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getLeads();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateLeadInfo", error);
+          });
+        break;
       default:
         break;
     }
@@ -3133,12 +3491,12 @@ function ContentPageLogic() {
       case "address":
         setLoading(true);
 
-        let addressdata = {
+        let addressdata_ = {
           ...addressData,
         };
 
         handler
-          .dataPost("/lead-section/addAddress", addressData, {})
+          .dataPost("/lead-section/addAddress", addressdata_, {})
           .then((response) => {
             setLoading(false);
             if (response.status == 201) {
@@ -3150,6 +3508,30 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- addMixDesign", error);
+          });
+        break;
+
+      case "lead":
+        setLoading(true);
+
+        let leaddata = {
+          ...leadInformationData,
+        };
+
+        handler
+          .dataPost("/lead-information/addLeadInfo", leaddata, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              resetLeadInfoStates();
+              message.success(response.data.message);
+              getLeads();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addLeadInfo", error);
           });
         break;
       default:
@@ -3178,11 +3560,36 @@ function ContentPageLogic() {
       });
   };
 
-  // get project manager api call
-  const getAddresses = () => {
+  // get addresses api call
+  const getAddresses = (pageName) => {
     setLoading(true);
     handler
       .dataGet("/lead-section/getAdresses", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          if (pageName === "lead") {
+            setaddressList(response.data.data);
+          } else {
+            setDataSource(response.data.data);
+          }
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  // get addresses api call
+  const getLeads = () => {
+    setLoading(true);
+    handler
+      .dataGet("/lead-information/getLeadInfo", {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
@@ -3391,6 +3798,11 @@ function ContentPageLogic() {
         getAddresses();
         break;
 
+      case "lead":
+        getLeads();
+        getAddresses("lead");
+        break;
+
       default:
         break;
     }
@@ -3512,6 +3924,8 @@ function ContentPageLogic() {
     mdTblHeaders,
     smdTblHeaders,
     addressTblHeaders,
+    leadInfoTblHeaders,
+    renderLeadModal,
   };
 
   return StatesContainer;
