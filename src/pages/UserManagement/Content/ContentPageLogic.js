@@ -14,6 +14,7 @@ import {
   Switch,
   Popconfirm,
   Tabs,
+  Table,
 } from "antd";
 
 //antd icons import
@@ -42,12 +43,13 @@ function ContentPageLogic() {
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [leadModalVisible, setLeadModalVisible] = useState(false);
+  const [followupModalVisible, setFollowupModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [documentId, setDocumentId] = useState("");
   const { Type, AirType, StoneType } = Constant();
-
+  const [childDataSource, setChildDataSource] = useState([]);
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -63,6 +65,8 @@ function ContentPageLogic() {
     state: "",
     zipcode: "",
   });
+
+  const [leads, setLeads] = useState([]);
 
   let [tblHeaders, setTblHeaders] = useState([]);
 
@@ -192,6 +196,19 @@ function ContentPageLogic() {
     isActive: true,
   });
 
+  const [followupData, setFollowupData] = useState({
+    lead_id: "",
+    contactDate: "",
+    contactPersonName: "",
+    description: "",
+    contactNo: "",
+    nextMeetingDate: "",
+    typeOfContact: "",
+    email: "",
+    onSiteVisit: "",
+    section_name: "",
+  });
+
   const [leadStatusData, setLeadStatusData] = useState([
     {
       title: "Out to Bid",
@@ -213,6 +230,18 @@ function ContentPageLogic() {
     },
     {
       title: "Open",
+    },
+  ]);
+
+  const [typeOfContactData, setTypeOfContactData] = useState([
+    {
+      title: "Email",
+    },
+    {
+      title: "Phone",
+    },
+    {
+      title: "Onsite Visit",
     },
   ]);
 
@@ -948,12 +977,90 @@ function ContentPageLogic() {
     },
   ];
 
+  const followupTblHeaders = [
+    {
+      title: "Contact Date",
+      dataIndex: "contactDate",
+      key: "contactDate",
+    },
+    {
+      title: "Contact Person Name",
+      dataIndex: "contactPersonName",
+      key: "contactPersonName",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+
+    {
+      title: "Contact No",
+      dataIndex: "contactNo",
+      key: "contactNo",
+    },
+
+    {
+      title: "Next Meeting Date",
+      dataIndex: "nextMeetingDate",
+      key: "nextMeetingDate",
+    },
+
+    {
+      title: "Type Of Contact",
+      dataIndex: "typeOfContact",
+      key: "typeOfContact",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setFollowupModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setFollowupData({
+                lead_id: record.lead_id,
+                contactDate: record.contactDate,
+                contactPersonName: record.contactPersonName,
+                description: record.description,
+                contactNo: record.contactNo,
+                nextMeetingDate: record.nextMeetingDate,
+                typeOfContact: record.typeOfContact,
+                email: record.email,
+                onSiteVisit: record.onSiteVisit,
+                section_name: record.section_name,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("followup", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
   // tab change listner
   const onChange = (key) => {
-    console.log(key);
+    if (key == 1) {
+    } else if (key == 2) {
+      getFollowups("lead");
+    } else if (key == 3) {
+    }
   };
 
   // form handler
@@ -1036,6 +1143,15 @@ function ContentPageLogic() {
         [evt.target.name]: value,
       });
     }
+  };
+
+  // form handler child
+  const followUpHandleChangeData = (evt) => {
+    const value = evt.target.value;
+    setFollowupData({
+      ...followupData,
+      [evt.target.name]: value,
+    });
   };
 
   // select handler
@@ -1148,6 +1264,19 @@ function ContentPageLogic() {
             status: value,
           });
           break;
+
+        case "select_type_of_contact":
+          setFollowupData({
+            ...followupData,
+            typeOfContact: value,
+          });
+          break;
+
+        case "select_lead":
+          setFollowupData({
+            ...followupData,
+            lead_id: value,
+          });
 
         default:
           break;
@@ -1350,6 +1479,11 @@ function ContentPageLogic() {
     resetStates();
   };
 
+  // method for showing child modal
+  const showChildModal = () => {
+    setFollowupModalVisible(true);
+  };
+
   // method to be called when modal ok is clicked
   const handleOk = () => {
     setIsModalVisible(false);
@@ -1448,6 +1582,21 @@ function ContentPageLogic() {
       default:
         break;
     }
+  };
+
+  // followup handleok
+  const followUpHandleOk = () => {
+    setFollowupModalVisible(false);
+    if (!isEdit) {
+      addAPICalls("followup");
+    } else {
+      updateAPICalls("followup");
+    }
+  };
+
+  // followup handleCancel
+  const followuphandleCancel = () => {
+    setFollowupModalVisible(false);
   };
 
   // method to be called when modal cancel is clicked
@@ -2659,14 +2808,14 @@ function ContentPageLogic() {
     const LeadModal = (
       <div>
         <Modal
-          title={"Lead"}
+          title={<h2>Lead section</h2>}
           visible={leadModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
-          width={1000}
+          width={1920}
           destroyOnClose
         >
-          <Tabs defaultActiveKey="1" onChange={onChange}>
+          <Tabs defaultActiveKey="1" onChange={onChange} size={"large"}>
             <TabPane tab="Lead Information" key="1">
               <Row gutter={6}>
                 <Col span={12}>
@@ -2778,7 +2927,141 @@ function ContentPageLogic() {
               </Row>
             </TabPane>
             <TabPane tab="Follow up" key="2">
-              Content of Tab Pane 2
+              <Button onClick={showChildModal}>Add Follow up</Button>
+              <Table
+                size="small"
+                columns={followupTblHeaders}
+                dataSource={childDataSource}
+              />
+              <Modal
+                title={<h2>Follow up </h2>}
+                visible={followupModalVisible}
+                onOk={followUpHandleOk}
+                onCancel={followuphandleCancel}
+                width={800}
+                destroyOnClose
+              >
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <label>{"Lead"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit ? followupData.lead_id : "Select Lead"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_lead");
+                      }}
+                    >
+                      {leads.map((item) => {
+                        return (
+                          <Option value={item.id}>{item.leadTitle}</Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Date</label>
+                    <Input
+                      placeholder={"Contact Date"}
+                      name={"contactDate"}
+                      type="date"
+                      value={followupData.contactDate}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Person Name</label>
+                    <Input
+                      placeholder={"Contact Person Name"}
+                      name={"contactPersonName"}
+                      value={followupData.contactPersonName}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>{"Type of Contact"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? followupData.typeOfContact
+                          : "Select Type of Contact"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_type_of_contact");
+                      }}
+                    >
+                      {typeOfContactData.map((item) => {
+                        return <Option value={item.title}>{item.title}</Option>;
+                      })}
+                    </Select>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Email</label>
+                    <Input
+                      placeholder={"Email"}
+                      name={"email"}
+                      value={followupData.email}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>On Site Visit</label>
+                    <Input
+                      placeholder={"On Site Visit"}
+                      name={"onSiteVisit"}
+                      value={followupData.onSiteVisit}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Contact No</label>
+                    <Input
+                      placeholder={"Contact No"}
+                      name={"contactNo"}
+                      value={followupData.contactNo}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Next Follow Up Date</label>
+                    <Input
+                      placeholder={"Next Follow Up Date"}
+                      name={"nextMeetingDate"}
+                      value={followupData.nextMeetingDate}
+                      type={"date"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={24}>
+                    <label>Description</label>
+                    <TextArea
+                      placeholder={"Description"}
+                      name={"description"}
+                      value={followupData.description}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                </Row>
+              </Modal>
             </TabPane>
             <TabPane tab="Audit Logs" key="3">
               Content of Tab Pane 3
@@ -2999,6 +3282,23 @@ function ContentPageLogic() {
           });
         break;
 
+      case "followup":
+        setLoading(true);
+        handler
+          .dataPost("/follow-up-section/deleteFollowup", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getLeads();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteFollowup", error);
+          });
+        break;
       default:
         break;
     }
@@ -3293,6 +3593,34 @@ function ContentPageLogic() {
             console.error("There was an error!- updateLeadInfo", error);
           });
         break;
+
+      case "followup":
+        setLoading(true);
+
+        let updatableDataforfollowup = {
+          ...followupData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/follow-up-section/updatefollowup",
+            updatableDataforfollowup,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getFollowups("lead");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updatefollowup", error);
+          });
+        break;
       default:
         break;
     }
@@ -3534,6 +3862,31 @@ function ContentPageLogic() {
             console.error("There was an error!- addLeadInfo", error);
           });
         break;
+
+      case "followup":
+        setLoading(true);
+
+        let followupdata = {
+          ...followupData,
+          section_name: "lead",
+        };
+
+        handler
+          .dataPost("/follow-up-section/addFollowUp", followupdata, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setFollowupModalVisible(false);
+              getFollowups("lead");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
       default:
         break;
     }
@@ -3594,15 +3947,13 @@ function ContentPageLogic() {
         setLoading(false);
         if (response.status == 200) {
           setDataSource(response.data.data);
+          setLeads(response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error(
-          "There was an error!- getConstructionCompanyAPIcall",
-          error
-        );
+        console.error("There was an error!- getLeadInfo", error);
       });
   };
 
@@ -3700,6 +4051,28 @@ function ContentPageLogic() {
       })
       .catch((error) => {
         console.error("There was an error!- getMixDesigns", error);
+      });
+  };
+
+  // get follow-up list api call
+  const getFollowups = (section_name) => {
+    setLoading(true);
+
+    handler
+      .dataGet(
+        "/follow-up-section/getFollowups?section_name=" + section_name,
+        {}
+      )
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setChildDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getFollowups", error);
       });
   };
 
