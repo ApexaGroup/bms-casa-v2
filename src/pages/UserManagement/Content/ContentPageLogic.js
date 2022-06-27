@@ -984,6 +984,11 @@ function ContentPageLogic() {
       key: "contactDate",
     },
     {
+      title: "Lead Name",
+      dataIndex: "lead_name",
+      key: "lead_name",
+    },
+    {
       title: "Contact Person Name",
       dataIndex: "contactPersonName",
       key: "contactPersonName",
@@ -2816,7 +2821,15 @@ function ContentPageLogic() {
           destroyOnClose
         >
           <Tabs defaultActiveKey="1" onChange={onChange} size={"large"}>
-            <TabPane tab="Lead Information" key="1">
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Lead Information
+                </span>
+              }
+              key="1"
+            >
               <Row gutter={6}>
                 <Col span={12}>
                   <label>Lead</label>
@@ -2926,8 +2939,21 @@ function ContentPageLogic() {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane tab="Follow up" key="2">
-              <Button onClick={showChildModal}>Add Follow up</Button>
+            <TabPane
+              tab={
+                <span>
+                  <PlusOutlined />
+                  Follow up
+                </span>
+              }
+              key="2"
+            >
+              <div className="div-page-header">
+                <Button onClick={showChildModal} className="button-add-user">
+                  Add Follow up
+                </Button>
+              </div>
+
               <Table
                 size="small"
                 columns={followupTblHeaders}
@@ -3063,7 +3089,15 @@ function ContentPageLogic() {
                 </Row>
               </Modal>
             </TabPane>
-            <TabPane tab="Audit Logs" key="3">
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Audit Logs
+                </span>
+              }
+              key="3"
+            >
               Content of Tab Pane 3
             </TabPane>
           </Tabs>

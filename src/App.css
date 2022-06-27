@@ -1,11 +1,12 @@
 @import '~antd/dist/antd.css';
+@import './antd.css';
 
 .ant-modal-header{
   background-color: #ff5500;
 }
-.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+/* .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
 	background: transparent;
-}
+} */
 .ant-menu{
   /* background: #ff5500; */
   }
