@@ -44,12 +44,14 @@ function ContentPageLogic() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [leadModalVisible, setLeadModalVisible] = useState(false);
   const [followupModalVisible, setFollowupModalVisible] = useState(false);
+  const [logModalVisible, setLogModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [documentId, setDocumentId] = useState("");
   const { Type, AirType, StoneType } = Constant();
   const [childDataSource, setChildDataSource] = useState([]);
+  const [changeLog, setChangeLog] = useState([]);
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -197,7 +199,33 @@ function ContentPageLogic() {
     isActive: true,
   });
 
+  const [leadInformationExistingData, setLeadInformationExistingData] =
+    useState({
+      leadTitle: "",
+      address: "",
+      status: "",
+      startDate: "",
+      endDate: "",
+      BidDueDate: "",
+      estimatedYards: "",
+      notes: "",
+      isActive: true,
+    });
+
   const [followupData, setFollowupData] = useState({
+    lead_id: "",
+    contactDate: "",
+    contactPersonName: "",
+    description: "",
+    contactNo: "",
+    nextMeetingDate: "",
+    typeOfContact: "",
+    email: "",
+    onSiteVisit: "",
+    section_name: "",
+  });
+
+  const [followupExistingData, setFollowupExistingData] = useState({
     lead_id: "",
     contactDate: "",
     contactPersonName: "",
@@ -961,7 +989,19 @@ function ContentPageLogic() {
                 BidDueDate: record.BidDueDate,
                 estimatedYards: record.estimatedYards,
                 notes: record.notes,
-                isActive: true,
+                isActive: record.isActive,
+              });
+
+              setLeadInformationExistingData({
+                leadTitle: record.leadTitle,
+                address: record.address,
+                status: record.status,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                BidDueDate: record.BidDueDate,
+                estimatedYards: record.estimatedYards,
+                notes: record.notes,
+                isActive: record.isActive,
               });
             }}
           >
@@ -1042,6 +1082,19 @@ function ContentPageLogic() {
                 onSiteVisit: record.onSiteVisit,
                 section_name: record.section_name,
               });
+
+              setFollowupExistingData({
+                lead_id: record.lead_id,
+                contactDate: record.contactDate,
+                contactPersonName: record.contactPersonName,
+                description: record.description,
+                contactNo: record.contactNo,
+                nextMeetingDate: record.nextMeetingDate,
+                typeOfContact: record.typeOfContact,
+                email: record.email,
+                onSiteVisit: record.onSiteVisit,
+                section_name: record.section_name,
+              });
             }}
           >
             Edit
@@ -1087,6 +1140,8 @@ function ContentPageLogic() {
           <Button
             onClick={(e) => {
               e.preventDefault();
+              setLogModalVisible(true);
+              setChangeLog(JSON.parse(record.updatedField));
             }}
           >
             View
@@ -1536,6 +1591,10 @@ function ContentPageLogic() {
     setFollowupModalVisible(true);
   };
 
+  const showLogModal = () => {
+    setLogModalVisible(true);
+  };
+
   // method to be called when modal ok is clicked
   const handleOk = () => {
     setIsModalVisible(false);
@@ -1646,9 +1705,17 @@ function ContentPageLogic() {
     }
   };
 
+  const logModalHandleOk = () => {
+    setLogModalVisible(false);
+  };
+
   // followup handleCancel
   const followuphandleCancel = () => {
     setFollowupModalVisible(false);
+  };
+
+  const loghandleCancel = () => {
+    setLogModalVisible(false);
   };
 
   // method to be called when modal cancel is clicked
@@ -3150,6 +3217,30 @@ function ContentPageLogic() {
                 columns={auditLogsTblHeaders}
                 dataSource={auditLogs}
               />
+
+              <Modal
+                title={<h2>Changed log Information </h2>}
+                visible={logModalVisible}
+                onOk={logModalHandleOk}
+                onCancel={loghandleCancel}
+                destroyOnClose
+              >
+                <table>
+                  {changeLog.map((row) => {
+                    return (
+                      <tr className="tr-custom">
+                        <td
+                          className="td-custom"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {row.key}
+                        </td>
+                        <td className="td-custom">{row.value}</td>
+                      </tr>
+                    );
+                  })}
+                </table>
+              </Modal>
             </TabPane>
           </Tabs>
         </Modal>
@@ -3669,7 +3760,83 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 200) {
               message.success(response.data.message);
-              getLeads();
+
+              const logData = [];
+
+              if (
+                leadInformationData.leadTitle !==
+                leadInformationExistingData.leadTitle
+              ) {
+                logData.push({
+                  key: "Lead Title",
+                  value: leadInformationData.leadTitle,
+                });
+              }
+
+              if (
+                leadInformationData.address !==
+                leadInformationExistingData.address
+              ) {
+                logData.push({
+                  key: "Address",
+                  value: leadInformationData.address,
+                });
+              }
+
+              if (
+                leadInformationData.startDate !==
+                leadInformationExistingData.startDate
+              ) {
+                logData.push({
+                  key: "Start Date",
+                  value: leadInformationData.startDate,
+                });
+              }
+
+              if (
+                leadInformationData.endDate !==
+                leadInformationExistingData.endDate
+              ) {
+                logData.push({
+                  key: "End Date",
+                  value: leadInformationData.endDate,
+                });
+              }
+
+              if (
+                leadInformationData.BidDueDate !==
+                leadInformationExistingData.BidDueDate
+              ) {
+                logData.push({
+                  key: "Bid Due Date",
+                  value: leadInformationData.BidDueDate,
+                });
+              }
+
+              if (
+                leadInformationData.estimatedYards !==
+                leadInformationExistingData.estimatedYards
+              ) {
+                logData.push({
+                  key: "Estimated Yards",
+                  value: leadInformationData.estimatedYards,
+                });
+              }
+
+              if (
+                leadInformationData.notes !== leadInformationExistingData.notes
+              ) {
+                logData.push({
+                  key: "Notes",
+                  value: leadInformationData.notes,
+                });
+              }
+
+              if (logData.length != 0) {
+                addLogs("Lead updated", "lead", id, logData);
+              } else {
+                message.info("No field is updated");
+              }
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -3697,7 +3864,84 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 200) {
               message.success(response.data.message);
-              getFollowups("lead");
+              const logData = [];
+
+              if (
+                followupData.contactPersonName !==
+                followupExistingData.contactPersonName
+              ) {
+                logData.push({
+                  key: "Contact Person Name",
+                  value: followupData.contactPersonName,
+                });
+              }
+
+              if (
+                followupData.typeOfContact !==
+                followupExistingData.typeOfContact
+              ) {
+                logData.push({
+                  key: "Type of Contact",
+                  value: followupData.typeOfContact,
+                });
+              }
+
+              if (
+                followupData.contactDate !== followupExistingData.contactDate
+              ) {
+                logData.push({
+                  key: "Contact Date",
+                  value: followupData.contactDate,
+                });
+              }
+
+              if (followupData.contactNo !== followupExistingData.contactNo) {
+                logData.push({
+                  key: "Contact No",
+                  value: followupData.contactNo,
+                });
+              }
+
+              if (followupData.email !== followupExistingData.email) {
+                logData.push({
+                  key: "Contact Email",
+                  value: followupData.email,
+                });
+              }
+
+              if (
+                followupData.description !== followupExistingData.description
+              ) {
+                logData.push({
+                  key: "Follow up Description",
+                  value: followupData.description,
+                });
+              }
+
+              if (
+                followupData.onSiteVisit !== followupExistingData.onSiteVisit
+              ) {
+                logData.push({
+                  key: "On Site Visit",
+                  value: followupData.onSiteVisit,
+                });
+              }
+
+              if (
+                followupData.nextMeetingDate !==
+                followupExistingData.nextMeetingDate
+              ) {
+                logData.push({
+                  key: "Next Meeting Date",
+                  value: followupData.nextMeetingDate,
+                });
+              }
+
+              if (logData.length != 0) {
+                addLogs("Follow-up updated", "followup", id, logData);
+              } else {
+                message.info("No field is updated");
+              }
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -4039,6 +4283,42 @@ function ContentPageLogic() {
         if (response.status == 200) {
           setDataSource(response.data.data);
           setLeads(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getLeadInfo", error);
+      });
+  };
+
+  // add logs
+  const addLogs = (operationName, sectionName, sectionDataid, updatedField) => {
+    setLoading(true);
+    let logdata = {
+      updatedField: updatedField,
+      operationName: operationName,
+      sectionName: sectionName,
+      sectionDataid: sectionDataid,
+    };
+    handler
+      .dataPost("/audit-logs/addLogs", logdata, {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 201) {
+          if (sectionName === "lead") {
+            getLeads();
+          } else if (sectionName === "followup") {
+            getFollowups("lead");
+          }
+        } else if (response.status == 200) {
+          if (sectionName === "lead") {
+            getLeads();
+          } else if (sectionName === "followup") {
+            getFollowups("lead");
+          }
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }

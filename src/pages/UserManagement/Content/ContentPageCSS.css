@@ -5,6 +5,16 @@
     justify-content: space-between;
 }
 
+.tr-custom{
+    border: 0.25px solid black;
+    padding: 5px;
+}
+
+.td-custom{
+    padding: 10px;
+    border: 0.25px solid black;
+}
+
 label{
    font-weight: bold; 
 }
