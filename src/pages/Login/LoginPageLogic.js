@@ -30,11 +30,11 @@ const LoginPageStates = () => {
       setLoading(true);
 
       axios
-        .post("/api/auth/login", loginRequest)
+        .post("/auth/login", loginRequest)
         .then((response) => {
           setLoading(false);
           if (response.status == 200) {
-            localStorage.setItem("token", response.data.auth_token);
+            localStorage.setItem("token", response.data.access_token);
 
             navigate("/dashboard");
           } else if (response.status == 400) {

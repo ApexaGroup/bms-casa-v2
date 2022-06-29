@@ -68,6 +68,7 @@ function ContentPageLogic() {
 
   const [leads, setLeads] = useState([]);
 
+  const [auditLogs, setAuditLogs] = useState([]);
   let [tblHeaders, setTblHeaders] = useState([]);
 
   const [ccData, setCCdata] = useState({
@@ -1056,6 +1057,51 @@ function ContentPageLogic() {
     },
   ];
 
+  const auditLogsTblHeaders = [
+    {
+      title: "Person Name",
+      dataIndex: "userName",
+      key: "userName",
+    },
+    {
+      title: "Operation Name",
+      dataIndex: "operationName",
+      key: "operationName",
+    },
+    {
+      title: "Files",
+      dataIndex: "files",
+      key: "files",
+    },
+    {
+      title: "Date",
+      dataIndex: "createdOn",
+      key: "createdOn",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            View
+          </Button>
+          {/* <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("followup", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm> */}
+        </Space>
+      ),
+    },
+  ];
+
   // general fields
   const [generalFields, setGeneralFields] = useState([]);
 
@@ -1065,6 +1111,7 @@ function ContentPageLogic() {
     } else if (key == 2) {
       getFollowups("lead");
     } else if (key == 3) {
+      getAllData("auditlogs");
     }
   };
 
@@ -3098,7 +3145,11 @@ function ContentPageLogic() {
               }
               key="3"
             >
-              Content of Tab Pane 3
+              <Table
+                size="small"
+                columns={auditLogsTblHeaders}
+                dataSource={auditLogs}
+              />
             </TabPane>
           </Tabs>
         </Modal>
@@ -3881,7 +3932,9 @@ function ContentPageLogic() {
         };
 
         handler
-          .dataPost("/lead-information/addLeadInfo", leaddata, {})
+          .dataPost("/lead-information/addLeadInfo", leaddata, {
+            authorization: localStorage.getItem("token"),
+          })
           .then((response) => {
             setLoading(false);
             if (response.status == 201) {
@@ -3906,7 +3959,9 @@ function ContentPageLogic() {
         };
 
         handler
-          .dataPost("/follow-up-section/addFollowUp", followupdata, {})
+          .dataPost("/follow-up-section/addFollowUp", followupdata, {
+            authorization: localStorage.getItem("token"),
+          })
           .then((response) => {
             setLoading(false);
             if (response.status == 201) {
@@ -3976,12 +4031,34 @@ function ContentPageLogic() {
   const getLeads = () => {
     setLoading(true);
     handler
-      .dataGet("/lead-information/getLeadInfo", {})
+      .dataGet("/lead-information/getLeadInfo", {
+        authorization: localStorage.getItem("token"),
+      })
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
           setDataSource(response.data.data);
           setLeads(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getLeadInfo", error);
+      });
+  };
+
+  // get audit logs api call
+  const getAuditLogs = (section_name) => {
+    setLoading(true);
+    handler
+      .dataGet("/audit-logs/getAuditLogs/?sectionName=" + section_name, {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setAuditLogs(response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -4208,6 +4285,10 @@ function ContentPageLogic() {
       case "lead":
         getLeads();
         getAddresses("lead");
+        break;
+
+      case "auditlogs":
+        getAuditLogs("lead");
         break;
 
       default:
