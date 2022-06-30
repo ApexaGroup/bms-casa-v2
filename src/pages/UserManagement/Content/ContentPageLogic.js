@@ -1728,7 +1728,7 @@ function ContentPageLogic() {
 
   const handleAddCCOk = () => {
     setIsAddCCModalVisible(false);
-    addAPICalls("construction_company");
+    addAPICalls("add_construction_company");
   };
 
   const handleAddCCCancel = () => {
@@ -3299,6 +3299,7 @@ function ContentPageLogic() {
           visible={constructionCompanyModalVisible}
           onOk={() => handleOk("construction_company")}
           onCancel={handleCancel}
+          okText={"Create Opportunity"}
           destroyOnClose
         >
           <Row>
@@ -3320,10 +3321,10 @@ function ContentPageLogic() {
                 })}
               </Select>
               <div>
-                <label style={{ color: "red" }}>
+                <label style={{ color: "red", fontSize: 11 }}>
                   Please select atleast 1 construction company
                 </label>
-                <Col span={24} style={{ width: "100%" }}>
+                <Col span={24} style={{ width: "100%", fontSize: 11 }}>
                   <label
                     style={{ color: "blue", cursor: "pointer" }}
                     onClick={(e) => {
@@ -4271,7 +4272,31 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 201) {
               message.success("success");
+
               getConstructionCompanyAPIcall();
+              getConstructionCompanyForProjectManager();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- addConstructionCompanyAPICall",
+              error
+            );
+          });
+        break;
+
+      case "add_construction_company":
+        setLoading(true);
+
+        handler
+          .dataPost("/construction-company/addCC", ccData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success("success");
+
               getConstructionCompanyForProjectManager();
             } else if (response.status == 400) {
               window.alert(response.data.message);
