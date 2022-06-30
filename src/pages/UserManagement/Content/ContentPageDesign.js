@@ -40,6 +40,9 @@ function ContentPageDesign(props) {
     addressTblHeaders,
     leadInfoTblHeaders,
     renderLeadModal,
+    renderConstructionCompanyModal,
+    constructionCompanyShowModal,
+    renderAddCCModal,
   } = ContentPageLogic();
 
   // useeffect
@@ -102,6 +105,15 @@ function ContentPageDesign(props) {
             <Button className="button-add-user" onClick={showModal}>
               {data.buttonText}
             </Button>
+
+            {pageName === "lead" ? (
+              <Button
+                className="button-add-user"
+                onClick={constructionCompanyShowModal}
+              >
+                Create Opportunity
+              </Button>
+            ) : null}
           </div>
         </div>
 
@@ -111,6 +123,8 @@ function ContentPageDesign(props) {
 
         <div>{renderModal(pageName, generalFields)}</div>
         <div>{renderLeadModal()}</div>
+        <div>{renderConstructionCompanyModal()}</div>
+        <div>{renderAddCCModal()}</div>
       </div>
     </div>
   );

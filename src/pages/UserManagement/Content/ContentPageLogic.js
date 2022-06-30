@@ -45,6 +45,9 @@ function ContentPageLogic() {
   const [leadModalVisible, setLeadModalVisible] = useState(false);
   const [followupModalVisible, setFollowupModalVisible] = useState(false);
   const [logModalVisible, setLogModalVisible] = useState(false);
+  const [constructionCompanyModalVisible, setConstructionCompanyModalVisible] =
+    useState(false);
+  const [isAddCCModalVisible, setIsAddCCModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -1252,6 +1255,14 @@ function ContentPageLogic() {
     }
   };
 
+  const handleCCChangeData = (evt) => {
+    const value = evt.target.value;
+    setCCdata({
+      ...ccData,
+      [evt.target.name]: value,
+    });
+  };
+
   // form handler child
   const followUpHandleChangeData = (evt) => {
     const value = evt.target.value;
@@ -1384,6 +1395,10 @@ function ContentPageLogic() {
             ...followupData,
             lead_id: value,
           });
+
+        case "select_company":
+          //TODO
+          break;
 
         default:
           break;
@@ -1586,6 +1601,10 @@ function ContentPageLogic() {
     resetStates();
   };
 
+  const constructionCompanyShowModal = () => {
+    setConstructionCompanyModalVisible(true);
+  };
+
   // method for showing child modal
   const showChildModal = () => {
     setFollowupModalVisible(true);
@@ -1596,103 +1615,124 @@ function ContentPageLogic() {
   };
 
   // method to be called when modal ok is clicked
-  const handleOk = () => {
+  const handleOk = (modalName) => {
     setIsModalVisible(false);
     setLeadModalVisible(false);
-    switch (pageName) {
-      case "user":
-        if (!isEdit) {
-          addAPICalls("user");
-        } else {
-          updateAPICalls("user");
-        }
-        break;
 
-      case "role":
-        break;
+    if (modalName === "construction_company") {
+      console.log(companyId);
+      if (companyId !== "") {
+        setConstructionCompanyModalVisible(false);
+      } else {
+        message.error(
+          "To create an opportunity, Please select atleast one construction company"
+        );
+      }
+    } else {
+      switch (pageName) {
+        case "user":
+          if (!isEdit) {
+            addAPICalls("user");
+          } else {
+            updateAPICalls("user");
+          }
+          break;
 
-      case "construction_company":
-        if (!isEdit) {
-          addAPICalls("construction_company");
-        } else {
-          updateAPICalls("construction_company");
-        }
-        break;
+        case "role":
+          break;
 
-      case "project_manager":
-        if (!isEdit) {
-          addAPICalls("project_manager");
-        } else {
-          updateAPICalls("project_manager");
-        }
-        break;
+        case "construction_company":
+          if (!isEdit) {
+            addAPICalls("construction_company");
+          } else {
+            updateAPICalls("construction_company");
+          }
+          break;
 
-      case "over_time_fees":
-        if (!isEdit) {
-          addAPICalls("over_time_fees");
-        } else {
-          updateAPICalls("over_time_fees");
-        }
-        break;
+        case "project_manager":
+          if (!isEdit) {
+            addAPICalls("project_manager");
+          } else {
+            updateAPICalls("project_manager");
+          }
+          break;
 
-      case "premium_rates":
-        if (!isEdit) {
-          addAPICalls("premium_rates");
-        } else {
-          updateAPICalls("premium_rates");
-        }
-        break;
+        case "over_time_fees":
+          if (!isEdit) {
+            addAPICalls("over_time_fees");
+          } else {
+            updateAPICalls("over_time_fees");
+          }
+          break;
 
-      case "short_load_charges":
-        if (!isEdit) {
-          addAPICalls("short_load_charges");
-        } else {
-          updateAPICalls("short_load_charges");
-        }
-        break;
+        case "premium_rates":
+          if (!isEdit) {
+            addAPICalls("premium_rates");
+          } else {
+            updateAPICalls("premium_rates");
+          }
+          break;
 
-      case "extra_charges":
-        if (!isEdit) {
-          addAPICalls("extra_charges");
-        } else {
-          updateAPICalls("extra_charges");
-        }
-        break;
+        case "short_load_charges":
+          if (!isEdit) {
+            addAPICalls("short_load_charges");
+          } else {
+            updateAPICalls("short_load_charges");
+          }
+          break;
 
-      case "house_mix_design":
-        if (!isEdit) {
-          addAPICalls("house_mix_design");
-        } else {
-          updateAPICalls("house_mix_design");
-        }
-        break;
+        case "extra_charges":
+          if (!isEdit) {
+            addAPICalls("extra_charges");
+          } else {
+            updateAPICalls("extra_charges");
+          }
+          break;
 
-      case "special_mix_design":
-        if (!isEdit) {
-          addAPICalls("special_mix_design");
-        } else {
-          updateAPICalls("special_mix_design");
-        }
-        break;
+        case "house_mix_design":
+          if (!isEdit) {
+            addAPICalls("house_mix_design");
+          } else {
+            updateAPICalls("house_mix_design");
+          }
+          break;
 
-      case "address":
-        if (!isEdit) {
-          addAPICalls("address");
-        } else {
-          updateAPICalls("address");
-        }
-        break;
+        case "special_mix_design":
+          if (!isEdit) {
+            addAPICalls("special_mix_design");
+          } else {
+            updateAPICalls("special_mix_design");
+          }
+          break;
 
-      case "lead":
-        if (!isEdit) {
-          addAPICalls("lead");
-        } else {
-          updateAPICalls("lead");
-        }
-        break;
-      default:
-        break;
+        case "address":
+          if (!isEdit) {
+            addAPICalls("address");
+          } else {
+            updateAPICalls("address");
+          }
+          break;
+
+        case "lead":
+          if (!isEdit) {
+            addAPICalls("lead");
+          } else {
+            updateAPICalls("lead");
+          }
+          break;
+        default:
+          break;
+      }
     }
+  };
+
+  const handleAddCCOk = () => {
+    setIsAddCCModalVisible(false);
+    addAPICalls("construction_company");
+  };
+
+  const handleAddCCCancel = () => {
+    setIsAddCCModalVisible(false);
   };
 
   // followup handleok
@@ -1722,6 +1762,7 @@ function ContentPageLogic() {
   const handleCancel = () => {
     setIsModalVisible(false);
     setLeadModalVisible(false);
+    setConstructionCompanyModalVisible(false);
     resetStates();
     resetCCstates();
     resetPMstates();
@@ -3250,6 +3291,247 @@ function ContentPageLogic() {
     return LeadModal;
   };
 
+  const renderConstructionCompanyModal = () => {
+    const ccModal = (
+      <div>
+        <Modal
+          title={<h2>Select Construction Company</h2>}
+          visible={constructionCompanyModalVisible}
+          onOk={() => handleOk("construction_company")}
+          onCancel={handleCancel}
+          destroyOnClose
+        >
+          <Row>
+            <label>Construction Company : &nbsp;</label>
+            <Col span={12}>
+              <Select
+                style={{ width: "100%" }}
+                defaultValue={isEdit ? companyId : "Select Company"}
+                onChange={(value) => {
+                  selectHandleChange(value, "select_company");
+                }}
+              >
+                {cc.map((item) => {
+                  return (
+                    <Option value={item.id}>
+                      {item.construction_company_name}
+                    </Option>
+                  );
+                })}
+              </Select>
+              <div>
+                <label style={{ color: "red" }}>
+                  Please select atleast 1 construction company
+                </label>
+                <Col span={24} style={{ width: "100%" }}>
+                  <label
+                    style={{ color: "blue", cursor: "pointer" }}
+                    onClick={(e) => {
+                      setIsAddCCModalVisible(true);
+                    }}
+                  >
+                    Add construction company
+                  </label>
+                </Col>
+              </div>
+            </Col>
+          </Row>
+        </Modal>
+      </div>
+    );
+
+    return ccModal;
+  };
+
+  const renderAddCCModal = () => {
+    const UserModal = (
+      <div>
+        <Modal
+          title={<h2>Add new construction company</h2>}
+          visible={isAddCCModalVisible}
+          onOk={handleAddCCOk}
+          onCancel={handleAddCCCancel}
+          destroyOnClose
+        >
+          <Row gutter={6}>
+            {ccFields.map((record) => {
+              switch (record.typeofinput) {
+                case "upload":
+                  if (pageName === "houseMixDesign" || "specialMixDesign") {
+                    return (
+                      <Col span={24}>
+                        <Upload
+                          name={record.name}
+                          listType="picture-card"
+                          className={record.className}
+                          showUploadList={false}
+                          onChange={(file) => {
+                            record.method(file, pageName);
+                          }}
+                        >
+                          {mixDesignData.documentPath ? (
+                            <img
+                              src={mixDesignData.documentPath}
+                              alt="avatar"
+                              style={{
+                                width: "100%",
+                              }}
+                            />
+                          ) : (
+                            uploadButton
+                          )}
+                        </Upload>
+                      </Col>
+                    );
+                  } else {
+                    return (
+                      <Col span={24}>
+                        <Upload
+                          name={record.name}
+                          listType="picture-card"
+                          className={record.className}
+                          showUploadList={false}
+                          onChange={(file) => {
+                            record.method(file, pageName);
+                          }}
+                        >
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt="avatar"
+                              style={{
+                                width: "100%",
+                              }}
+                            />
+                          ) : (
+                            uploadButton
+                          )}
+                        </Upload>
+                      </Col>
+                    );
+                  }
+
+                case "select":
+                  if (pageName === "house_mix_design" || "specialMixDesign") {
+                    return (
+                      <Col span={12}>
+                        <label>{"Select " + record.placeholder}</label>
+                        <Select
+                          style={{ width: "100%" }}
+                          defaultValue={
+                            !isEdit
+                              ? "Select " + record.placeholder
+                              : record.value
+                          }
+                          onChange={(value) => {
+                            selectHandleChange(value, record.name);
+                          }}
+                        >
+                          {(() => {
+                            if (record.name === "internalDesignType") {
+                              return Type.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            } else if (record.name === "airType") {
+                              return AirType.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            } else if (record.name === "stoneType") {
+                              return StoneType.map((item) => {
+                                return (
+                                  <Option value={item.name}>{item.name}</Option>
+                                );
+                              });
+                            }
+                          })()}
+                        </Select>
+                      </Col>
+                    );
+                  } else {
+                    return (
+                      <Col span={12}>
+                        <label>{"Select Company"}</label>
+                        <Select
+                          style={{ width: "100%" }}
+                          defaultValue={isEdit ? companyId : "Select Company"}
+                          onChange={selectHandleChange}
+                        >
+                          {cc.map((item) => {
+                            return (
+                              <Option value={item.id}>
+                                {item.construction_company_name}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      </Col>
+                    );
+                  }
+
+                case "switch":
+                  return (
+                    <Col span={24}>
+                      <label>Active/Inactive </label>
+                      <Switch
+                        checkedChildren={<CheckOutlined />}
+                        unCheckedChildren={<CloseOutlined />}
+                        defaultChecked
+                      />
+                    </Col>
+                  );
+
+                case "input":
+                  return (
+                    <Col span={12}>
+                      <label>{record.placeholder}</label>
+                      <Input
+                        placeholder={record.placeholder}
+                        name={record.name}
+                        value={record.value}
+                        type={record.type}
+                        className={record.className}
+                        onChange={handleCCChangeData}
+                      />
+                    </Col>
+                  );
+
+                case "textarea":
+                  return (
+                    <Col span={12}>
+                      <label>{record.placeholder}</label>
+                      <TextArea
+                        rows={4}
+                        placeholder={record.placeholder}
+                        name={record.name}
+                        value={record.value}
+                        type={record.type}
+                        className={record.className}
+                        onChange={handleCCChangeData}
+                      />
+                    </Col>
+                  );
+                default:
+                  break;
+              }
+            })}
+          </Row>
+
+          {isEdit ? (
+            <span style={{ color: "red" }}>
+              Note: Click on the Image to update the image
+            </span>
+          ) : null}
+        </Modal>
+      </div>
+    );
+
+    return UserModal;
+  };
+
   // delete API calls
   const deleteAPICalls = (pageName, id) => {
     const updatebleData = {
@@ -3990,6 +4272,7 @@ function ContentPageLogic() {
             if (response.status == 201) {
               message.success("success");
               getConstructionCompanyAPIcall();
+              getConstructionCompanyForProjectManager();
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -4565,6 +4848,7 @@ function ContentPageLogic() {
       case "lead":
         getLeads();
         getAddresses("lead");
+        getConstructionCompanyForProjectManager();
         break;
 
       case "auditlogs":
@@ -4694,6 +4978,9 @@ function ContentPageLogic() {
     addressTblHeaders,
     leadInfoTblHeaders,
     renderLeadModal,
+    renderConstructionCompanyModal,
+    constructionCompanyShowModal,
+    renderAddCCModal,
   };
 
   return StatesContainer;
