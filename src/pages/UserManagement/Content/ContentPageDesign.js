@@ -39,10 +39,12 @@ function ContentPageDesign(props) {
     smdTblHeaders,
     addressTblHeaders,
     leadInfoTblHeaders,
+    opportunityInfoTblHeaders,
     renderLeadModal,
     renderConstructionCompanyModal,
     constructionCompanyShowModal,
     renderAddCCModal,
+    renderOpportunityModal,
   } = ContentPageLogic();
 
   // useeffect
@@ -93,6 +95,10 @@ function ContentPageDesign(props) {
     if (data.page === "lead") {
       setTblHeaders(leadInfoTblHeaders);
     }
+
+    if (data.page === "opportunity") {
+      setTblHeaders(opportunityInfoTblHeaders);
+    }
   }, [data.page]);
 
   return (
@@ -106,14 +112,14 @@ function ContentPageDesign(props) {
               {data.buttonText}
             </Button>
 
-            {pageName === "lead" ? (
+            {/* {pageName === "lead" ? (
               <Button
                 className="button-add-user"
                 onClick={constructionCompanyShowModal}
               >
                 Create Opportunity
               </Button>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
 
@@ -125,6 +131,7 @@ function ContentPageDesign(props) {
         <div>{renderLeadModal()}</div>
         <div>{renderConstructionCompanyModal()}</div>
         <div>{renderAddCCModal()}</div>
+        <div>{renderOpportunityModal()}</div>
       </div>
     </div>
   );

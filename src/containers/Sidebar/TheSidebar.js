@@ -122,6 +122,12 @@ function TheSidebar() {
             <Link to={"/lead-section/lead"} />
           </Menu.Item>
         </SubMenu>
+
+        <Menu.Item key="6">
+          <DashboardOutlined />
+          <span>Opportunity</span>
+          <Link to="/opportunity" />
+        </Menu.Item>
       </Menu>
       <Modal
         title="Version 2.0.0"

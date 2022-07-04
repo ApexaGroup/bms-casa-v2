@@ -77,6 +77,10 @@ const pageData = () => {
       page: "lead",
       buttonText: "Add lead",
     },
+    opportunity: {
+      page: "opportunity",
+      buttonText: "Add Opportunity",
+    },
   };
 
   return data;

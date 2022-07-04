@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 // Antd components imports
 import {
   Input,
@@ -38,7 +40,9 @@ function ContentPageLogic() {
   const { TabPane } = Tabs;
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
+  const [opportunities, setOpportunities] = useState([]);
   const [cc, setCC] = useState([]);
+  const [projectManager, setProjectManager] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -48,6 +52,8 @@ function ContentPageLogic() {
   const [constructionCompanyModalVisible, setConstructionCompanyModalVisible] =
     useState(false);
   const [isAddCCModalVisible, setIsAddCCModalVisible] = useState(false);
+  const [isOpportunityModalVisible, setOpportunityModalVisible] =
+    useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -241,6 +247,8 @@ function ContentPageLogic() {
     section_name: "",
   });
 
+  const [plant, setPlant] = useState([]);
+
   const [leadStatusData, setLeadStatusData] = useState([
     {
       title: "Out to Bid",
@@ -278,6 +286,34 @@ function ContentPageLogic() {
   ]);
 
   const [addresslist, setaddressList] = useState([]);
+
+  const [opportunityData, setOpportunityData] = useState({
+    lead_name: "",
+    address_id: "",
+    estimated_yard: "",
+    plant_id: "",
+    construction_company: "",
+    project_manager: "",
+    startDate: "",
+    endDate: "",
+    bidDueDate: "",
+    status: "",
+    notes: "",
+  });
+
+  const [opportunityExistingData, setOpportunityExistingData] = useState({
+    lead_name: "",
+    address_id: "",
+    estimated_yard: "",
+    plant_id: "",
+    construction_company: "",
+    project_manager: "",
+    startDate: "",
+    endDate: "",
+    bidDueDate: "",
+    status: "",
+    notes: "",
+  });
 
   // table headers
   const userTblHeaders = [
@@ -1021,6 +1057,83 @@ function ContentPageLogic() {
     },
   ];
 
+  const opportunityInfoTblHeaders = [
+    {
+      title: "Opportunity",
+      dataIndex: "lead_name",
+      key: "lead_name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address_id",
+      key: "address_id",
+    },
+    {
+      title: "Construction Company",
+      dataIndex: "construction_company",
+      key: "construction_company",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              getProjectManagerAPICall("opportunity");
+              getPlants();
+              setOpportunityModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setOpportunityData({
+                lead_name: record.lead_name,
+                address_id: record.address_id,
+                estimated_yard: record.estimated_yard,
+                plant_id: record.plant_id,
+                construction_company: record.construction_company,
+                project_manager: record.project_manager,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                bidDueDate: record.bidDueDate,
+                status: record.status,
+                notes: record.notes,
+              });
+
+              setOpportunityExistingData({
+                lead_name: record.lead_name,
+                address_id: record.address_id,
+                estimated_yard: record.estimated_yard,
+                plant_id: record.plant_id,
+                construction_company: record.construction_company,
+                project_manager: record.project_manager,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                bidDueDate: record.bidDueDate,
+                status: record.status,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("opportunity", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const followupTblHeaders = [
     {
       title: "Contact Date",
@@ -1173,6 +1286,17 @@ function ContentPageLogic() {
     }
   };
 
+  const onOpTabChange = (key) => {
+    if (key == 1) {
+      getProjectManagerAPICall("opportunity");
+      getPlants();
+    } else if (key == 2) {
+      getFollowups("opportunity");
+    } else if (key == 3) {
+      getAuditLogs("opportunity");
+    }
+  };
+
   // form handler
   const handleChangeData = (evt) => {
     const value = evt.target.value;
@@ -1187,6 +1311,14 @@ function ContentPageLogic() {
     if (pageName === "construction_company") {
       setCCdata({
         ...ccData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "opportunity") {
+      console.log("opp");
+      setOpportunityData({
+        ...opportunityData,
         [evt.target.name]: value,
       });
     }
@@ -1310,6 +1442,48 @@ function ContentPageLogic() {
       });
     }
 
+    if (pageName === "opportunity") {
+      switch (name) {
+        case "select_status":
+          setOpportunityData({
+            ...opportunityData,
+            status: value,
+          });
+          break;
+
+        case "select_lead":
+          setFollowupData({
+            ...followupData,
+            lead_id: value,
+          });
+          break;
+
+        case "select_project_manager":
+          setOpportunityData({
+            ...opportunityData,
+            project_manager: value,
+          });
+
+          break;
+
+        case "select_type_of_contact":
+          setFollowupData({
+            ...followupData,
+            typeOfContact: value,
+          });
+          break;
+
+        case "select_plant":
+          setOpportunityData({
+            ...opportunityData,
+            plant_id: value,
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
     if (pageName === "house_mix_design") {
       console.log(name);
       switch (name) {
@@ -1398,6 +1572,7 @@ function ContentPageLogic() {
 
         case "select_company":
           //TODO
+          setCompanyId(value);
           break;
 
         default:
@@ -1614,15 +1789,22 @@ function ContentPageLogic() {
     setLogModalVisible(true);
   };
 
+  const handleOpportunityOk = () => {
+    setOpportunityModalVisible(false);
+    updateAPICalls("opportunity");
+  };
   // method to be called when modal ok is clicked
   const handleOk = (modalName) => {
     setIsModalVisible(false);
     setLeadModalVisible(false);
 
     if (modalName === "construction_company") {
-      console.log(companyId);
-      if (companyId !== "") {
+      if (companyId != "") {
         setConstructionCompanyModalVisible(false);
+
+        addAPICalls("opportunity");
+
+        console.log(leadInformationData);
       } else {
         message.error(
           "To create an opportunity, Please select atleast one construction company"
@@ -1736,12 +1918,27 @@ function ContentPageLogic() {
   };
 
   // followup handleok
-  const followUpHandleOk = () => {
+  const followUpHandleOk = (module) => {
     setFollowupModalVisible(false);
-    if (!isEdit) {
-      addAPICalls("followup");
-    } else {
-      updateAPICalls("followup");
+    switch (module) {
+      case "followup":
+        if (!isEdit) {
+          addAPICalls("followup");
+        } else {
+          updateAPICalls("followup");
+        }
+        break;
+
+      case "followup-opportunity":
+        if (!isEdit) {
+          addAPICalls("followup-opportunity");
+        } else {
+          updateAPICalls("followup-opportunity");
+        }
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -1763,6 +1960,7 @@ function ContentPageLogic() {
     setIsModalVisible(false);
     setLeadModalVisible(false);
     setConstructionCompanyModalVisible(false);
+    setOpportunityModalVisible(false);
     resetStates();
     resetCCstates();
     resetPMstates();
@@ -2974,6 +3172,22 @@ function ContentPageLogic() {
           onCancel={handleCancel}
           width={1920}
           destroyOnClose
+          footer={[
+            isEdit ? (
+              <Button
+                style={{ backgroundColor: "green", color: "white" }}
+                onClick={constructionCompanyShowModal}
+              >
+                Create Opportunity
+              </Button>
+            ) : null,
+            <Button key="back" onClick={handleCancel}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOk}>
+              Add Lead
+            </Button>,
+          ]}
         >
           <Tabs defaultActiveKey="1" onChange={onChange} size={"large"}>
             <TabPane
@@ -3117,7 +3331,9 @@ function ContentPageLogic() {
               <Modal
                 title={<h2>Follow up </h2>}
                 visible={followupModalVisible}
-                onOk={followUpHandleOk}
+                onOk={() => {
+                  followUpHandleOk("followup");
+                }}
                 onCancel={followuphandleCancel}
                 width={800}
                 destroyOnClose
@@ -3291,6 +3507,399 @@ function ContentPageLogic() {
     return LeadModal;
   };
 
+  const renderOpportunityModal = () => {
+    const OpportunityModal = (
+      <div>
+        <Modal
+          title={<h2>Opportunity section</h2>}
+          visible={isOpportunityModalVisible}
+          onOk={handleOpportunityOk}
+          onCancel={handleCancel}
+          width={1920}
+          destroyOnClose
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOpportunityOk}>
+              Update Opportunity
+            </Button>,
+          ]}
+        >
+          <Tabs defaultActiveKey="1" onChange={onOpTabChange} size={"large"}>
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Opportunity Information
+                </span>
+              }
+              key="1"
+            >
+              <Row gutter={6}>
+                <Col span={12}>
+                  <label>Job</label>
+                  <Input
+                    placeholder={"Job"}
+                    name={"lead_name"}
+                    value={opportunityData.lead_name}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                    disabled
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Address"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? opportunityData.address_id : "Select Address"
+                    }
+                  ></Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Construction Company"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit
+                        ? opportunityData.construction_company
+                        : "Select Construction Company"
+                    }
+                  ></Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Manager Name"}</label>
+                  <Select
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit
+                        ? opportunityData.project_manager
+                        : "Select Project Manager"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_project_manager");
+                    }}
+                  >
+                    {projectManager.map((item) => {
+                      return (
+                        <Option value={item.project_manager_name}>
+                          {item.project_manager_name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>Estimated Yards</label>
+                  <Input
+                    placeholder={"Estimated Yards"}
+                    name={"estimated_yard"}
+                    value={opportunityData.estimated_yard}
+                    type={"number"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Select Status"}</label>
+                  <Select
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? opportunityData.status : "Select Status"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_status");
+                    }}
+                  >
+                    {leadStatusData.map((item) => {
+                      return <Option value={item.title}>{item.title}</Option>;
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>Start Date</label>
+                  <Input
+                    placeholder={"Start Date"}
+                    name={"startDate"}
+                    value={opportunityData.startDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>End Date</label>
+                  <Input
+                    placeholder={"End Date"}
+                    name={"endDate"}
+                    value={opportunityData.endDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>Bid Due Date</label>
+                  <Input
+                    placeholder={"Bid Due Date"}
+                    name={"bidDueDate"}
+                    value={opportunityData.bidDueDate}
+                    type={"date"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Concrete Plant"}</label>
+                  <Select
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? opportunityData.plant_id : "Select Plant"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_plant");
+                    }}
+                  >
+                    {plant.map((item) => {
+                      return (
+                        <Option value={item.plant_name}>
+                          {item.plant_name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={24}>
+                  <label>Notes</label>
+                  <TextArea
+                    placeholder={"Notes"}
+                    name={"notes"}
+                    value={opportunityData.notes}
+                    type={"text"}
+                    className={"input-style"}
+                    onChange={handleChangeData}
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <PlusOutlined />
+                  Follow up
+                </span>
+              }
+              key="2"
+            >
+              <div className="div-page-header">
+                <Button
+                  onClick={() => {
+                    setIsEdit(false);
+                    showChildModal();
+                  }}
+                  className="button-add-user"
+                >
+                  Add Follow up
+                </Button>
+              </div>
+
+              <Table
+                size="small"
+                columns={followupTblHeaders}
+                dataSource={childDataSource}
+              />
+              <Modal
+                title={<h2>Follow up </h2>}
+                visible={followupModalVisible}
+                onOk={() => {
+                  followUpHandleOk("followup-opportunity");
+                }}
+                onCancel={followuphandleCancel}
+                width={800}
+                destroyOnClose
+              >
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <label>{"Opportunity"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit ? followupData.lead_id : "Select Lead"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_lead");
+                      }}
+                    >
+                      {opportunities.map((item) => {
+                        return (
+                          <Option value={item.id}>{item.lead_name}</Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Date</label>
+                    <Input
+                      placeholder={"Contact Date"}
+                      name={"contactDate"}
+                      type="date"
+                      value={followupData.contactDate}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Person Name</label>
+                    <Input
+                      placeholder={"Contact Person Name"}
+                      name={"contactPersonName"}
+                      value={followupData.contactPersonName}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>{"Type of Contact"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? followupData.typeOfContact
+                          : "Select Type of Contact"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_type_of_contact");
+                      }}
+                    >
+                      {typeOfContactData.map((item) => {
+                        return <Option value={item.title}>{item.title}</Option>;
+                      })}
+                    </Select>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Email</label>
+                    <Input
+                      placeholder={"Email"}
+                      name={"email"}
+                      value={followupData.email}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>On Site Visit</label>
+                    <Input
+                      placeholder={"On Site Visit"}
+                      name={"onSiteVisit"}
+                      value={followupData.onSiteVisit}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Contact No</label>
+                    <Input
+                      placeholder={"Contact No"}
+                      name={"contactNo"}
+                      value={followupData.contactNo}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Next Follow Up Date</label>
+                    <Input
+                      placeholder={"Next Follow Up Date"}
+                      name={"nextMeetingDate"}
+                      value={followupData.nextMeetingDate}
+                      type={"date"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={24}>
+                    <label>Description</label>
+                    <TextArea
+                      placeholder={"Description"}
+                      name={"description"}
+                      value={followupData.description}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                </Row>
+              </Modal>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Audit Logs
+                </span>
+              }
+              key="3"
+            >
+              <Table
+                size="small"
+                columns={auditLogsTblHeaders}
+                dataSource={auditLogs}
+              />
+
+              <Modal
+                title={<h2>Changed log Information </h2>}
+                visible={logModalVisible}
+                onOk={logModalHandleOk}
+                onCancel={loghandleCancel}
+                destroyOnClose
+              >
+                <table>
+                  {changeLog.map((row) => {
+                    return (
+                      <tr className="tr-custom">
+                        <td
+                          className="td-custom"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {row.key}
+                        </td>
+                        <td className="td-custom">{row.value}</td>
+                      </tr>
+                    );
+                  })}
+                </table>
+              </Modal>
+            </TabPane>
+          </Tabs>
+        </Modal>
+      </div>
+    );
+
+    return OpportunityModal;
+  };
+
   const renderConstructionCompanyModal = () => {
     const ccModal = (
       <div>
@@ -3307,7 +3916,7 @@ function ContentPageLogic() {
             <Col span={12}>
               <Select
                 style={{ width: "100%" }}
-                defaultValue={isEdit ? companyId : "Select Company"}
+                defaultValue={"Select Company"}
                 onChange={(value) => {
                   selectHandleChange(value, "select_company");
                 }}
@@ -4129,6 +4738,129 @@ function ContentPageLogic() {
           });
         break;
 
+      case "opportunity":
+        setLoading(true);
+
+        let updatableDataforOpportunity = {
+          ...opportunityData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/opportunity/updateOpportunity",
+            updatableDataforOpportunity,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+
+              const logData = [];
+
+              if (
+                opportunityData.lead_name !== opportunityExistingData.lead_name
+              ) {
+                logData.push({
+                  key: "Lead name",
+                  value: opportunityData.lead_name,
+                });
+              }
+
+              if (
+                opportunityData.address_id !==
+                opportunityExistingData.address_id
+              ) {
+                logData.push({
+                  key: "Address",
+                  value: opportunityData.address_id,
+                });
+              }
+
+              if (
+                opportunityData.plant_id !== opportunityExistingData.plant_id
+              ) {
+                logData.push({
+                  key: "Plant",
+                  value: opportunityData.plant_id,
+                });
+              }
+
+              if (
+                opportunityData.project_manager !==
+                opportunityExistingData.project_manager
+              ) {
+                logData.push({
+                  key: "Project Manager",
+                  value: opportunityData.project_manager,
+                });
+              }
+
+              if (
+                opportunityData.startDate !== opportunityExistingData.startDate
+              ) {
+                logData.push({
+                  key: "Start Date",
+                  value: opportunityData.startDate,
+                });
+              }
+
+              if (opportunityData.endDate !== opportunityExistingData.endDate) {
+                logData.push({
+                  key: "End Date",
+                  value: opportunityData.endDate,
+                });
+              }
+
+              if (
+                opportunityData.bidDueDate !==
+                opportunityExistingData.bidDueDate
+              ) {
+                logData.push({
+                  key: "Bid Due Date",
+                  value: opportunityData.bidDueDate,
+                });
+              }
+
+              if (
+                opportunityData.estimated_yard !==
+                opportunityExistingData.estimated_yard
+              ) {
+                logData.push({
+                  key: "Estimated Yards",
+                  value: opportunityData.estimated_yard,
+                });
+              }
+
+              if (opportunityData.status !== opportunityExistingData.status) {
+                logData.push({
+                  key: "Status",
+                  value: opportunityData.status,
+                });
+              }
+
+              if (opportunityData.notes !== opportunityExistingData.notes) {
+                logData.push({
+                  key: "Notes",
+                  value: opportunityData.notes,
+                });
+              }
+
+              if (logData.length != 0) {
+                addLogs("Opportunity updated", "opportunity", id, logData);
+              } else {
+                message.info("No field is updated");
+              }
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateOpportunityInfo", error);
+          });
+        break;
+
       case "followup":
         setLoading(true);
 
@@ -4222,6 +4954,116 @@ function ContentPageLogic() {
 
               if (logData.length != 0) {
                 addLogs("Follow-up updated", "followup", id, logData);
+              } else {
+                message.info("No field is updated");
+              }
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updatefollowup", error);
+          });
+        break;
+      case "followup-opportunity":
+        setLoading(true);
+
+        let updatableDataforfollowupopportunity = {
+          ...followupData,
+          id: id,
+          section_name: "followup-opportunity",
+        };
+
+        handler
+          .dataPost(
+            "/follow-up-section/updatefollowup",
+            updatableDataforfollowupopportunity,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              const logData = [];
+
+              if (
+                followupData.contactPersonName !==
+                followupExistingData.contactPersonName
+              ) {
+                logData.push({
+                  key: "Contact Person Name",
+                  value: followupData.contactPersonName,
+                });
+              }
+
+              if (
+                followupData.typeOfContact !==
+                followupExistingData.typeOfContact
+              ) {
+                logData.push({
+                  key: "Type of Contact",
+                  value: followupData.typeOfContact,
+                });
+              }
+
+              if (
+                followupData.contactDate !== followupExistingData.contactDate
+              ) {
+                logData.push({
+                  key: "Contact Date",
+                  value: followupData.contactDate,
+                });
+              }
+
+              if (followupData.contactNo !== followupExistingData.contactNo) {
+                logData.push({
+                  key: "Contact No",
+                  value: followupData.contactNo,
+                });
+              }
+
+              if (followupData.email !== followupExistingData.email) {
+                logData.push({
+                  key: "Contact Email",
+                  value: followupData.email,
+                });
+              }
+
+              if (
+                followupData.description !== followupExistingData.description
+              ) {
+                logData.push({
+                  key: "Follow up Description",
+                  value: followupData.description,
+                });
+              }
+
+              if (
+                followupData.onSiteVisit !== followupExistingData.onSiteVisit
+              ) {
+                logData.push({
+                  key: "On Site Visit",
+                  value: followupData.onSiteVisit,
+                });
+              }
+
+              if (
+                followupData.nextMeetingDate !==
+                followupExistingData.nextMeetingDate
+              ) {
+                logData.push({
+                  key: "Next Meeting Date",
+                  value: followupData.nextMeetingDate,
+                });
+              }
+
+              if (logData.length != 0) {
+                addLogs(
+                  "Follow-up updated",
+                  "followup-opportunity",
+                  id,
+                  logData
+                );
               } else {
                 message.info("No field is updated");
               }
@@ -4502,6 +5344,62 @@ function ContentPageLogic() {
           });
         break;
 
+      case "opportunity":
+        setLoading(true);
+
+        const construction_company_name = cc.find((element) => {
+          if (element.id === companyId) {
+            return element.construction_company_name;
+          }
+          return null;
+        });
+
+        let opportunitydata = {
+          lead_name: leadInformationData.leadTitle,
+          address_id: leadInformationData.address,
+          estimated_yard: leadInformationData.estimatedYards,
+          plant_id: "",
+          construction_company:
+            construction_company_name.construction_company_name,
+          project_manager: "",
+          startDate: leadInformationData.startDate,
+          endDate: leadInformationData.endDate,
+          bidDueDate: leadInformationData.BidDueDate,
+          status: leadInformationData.status,
+          notes: leadInformationData.notes,
+        };
+
+        setOpportunityData({
+          ...opportunitydata,
+        });
+
+        setOpportunityExistingData({
+          ...opportunityData,
+        });
+
+        handler
+          .dataPost("/opportunity/addOpportunity", opportunitydata, {
+            authorization: localStorage.getItem("token"),
+          })
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              setId(response.data.data);
+              setOpportunityModalVisible(true);
+              message.success(response.data.message);
+              setPageName("opportunity");
+              window.history.replaceState(null, "React App", "/opportunity");
+              getProjectManagerAPICall("opportunity");
+              getPlants();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addOpportunity", error);
+          });
+        break;
+
       case "followup":
         setLoading(true);
 
@@ -4528,20 +5426,71 @@ function ContentPageLogic() {
             console.error("There was an error!- addFollowUp", error);
           });
         break;
+
+      case "followup-opportunity":
+        setLoading(true);
+
+        let followupdataopportunity = {
+          ...followupData,
+          section_name: "opportunity",
+        };
+
+        handler
+          .dataPost("/follow-up-section/addFollowUp", followupdataopportunity, {
+            authorization: localStorage.getItem("token"),
+          })
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setFollowupModalVisible(false);
+              getFollowups("opportunity");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
       default:
         break;
     }
   };
 
   // get project manager api call
-  const getProjectManagerAPICall = () => {
+  const getProjectManagerAPICall = (modalName) => {
     setLoading(true);
     handler
       .dataGet("/project-manager/getPMs", {})
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          setDataSource(response.data.data);
+          if (modalName === "opportunity") {
+            setProjectManager(response.data.data);
+          } else {
+            setDataSource(response.data.data);
+          }
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getConstructionCompanyAPIcall",
+          error
+        );
+      });
+  };
+
+  const getPlants = () => {
+    setLoading(true);
+    handler
+      .dataGet("/opportunity/getPlants", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setPlant(response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -4618,12 +5567,16 @@ function ContentPageLogic() {
         if (response.status == 201) {
           if (sectionName === "lead") {
             getLeads();
+          } else if (sectionName === "opportunity") {
+            getOpportunities();
           } else if (sectionName === "followup") {
             getFollowups("lead");
           }
         } else if (response.status == 200) {
           if (sectionName === "lead") {
             getLeads();
+          } else if (sectionName === "opportunity") {
+            getOpportunities();
           } else if (sectionName === "followup") {
             getFollowups("lead");
           }
@@ -4876,6 +5829,12 @@ function ContentPageLogic() {
         getConstructionCompanyForProjectManager();
         break;
 
+      case "opportunity":
+        getOpportunities();
+        getConstructionCompanyForProjectManager();
+        getAuditLogs("opportunity");
+        break;
+
       case "auditlogs":
         getAuditLogs("lead");
         break;
@@ -4904,6 +5863,24 @@ function ContentPageLogic() {
           "There was an error!- getConstructionCompanyAPIcall",
           error
         );
+      });
+  };
+
+  const getOpportunities = () => {
+    setLoading(true);
+    handler
+      .dataGet("/opportunity/getOpportunities", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+          setOpportunities(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getOpportunities", error);
       });
   };
 
@@ -5006,6 +5983,8 @@ function ContentPageLogic() {
     renderConstructionCompanyModal,
     constructionCompanyShowModal,
     renderAddCCModal,
+    opportunityInfoTblHeaders,
+    renderOpportunityModal,
   };
 
   return StatesContainer;
