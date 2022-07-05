@@ -5887,8 +5887,8 @@ function ContentPageLogic() {
   // upload api call
   const uploadAPICall = (file, destination) => {
     const formData = new FormData();
-
-    if (destination === "user") {
+    console.log("file: ", file + " |" + destination);
+    if (destination === "profile") {
       formData.append("destination", "profile");
     }
 
@@ -5905,6 +5905,8 @@ function ContentPageLogic() {
     }
 
     formData.append("image", file);
+
+    console.log(formData);
 
     handler
       .dataPost("/auth/upload", formData, {})
