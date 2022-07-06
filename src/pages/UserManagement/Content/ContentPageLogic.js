@@ -1142,8 +1142,8 @@ function ContentPageLogic() {
     },
     {
       title: "Lead Name",
-      dataIndex: "lead_name",
-      key: "lead_name",
+      dataIndex: "lead_id",
+      key: "lead_id",
     },
     {
       title: "Contact Person Name",
@@ -1217,7 +1217,13 @@ function ContentPageLogic() {
           </Button>
           <Popconfirm
             title="Sure to delete?"
-            onConfirm={() => deleteAPICalls("followup", record.id)}
+            onConfirm={() => {
+              if (pageName === "opportunity") {
+                deleteAPICalls("followup", record.id, "opportunity");
+              } else if (pageName === "lead") {
+                deleteAPICalls("followup", record.id, "lead");
+              }
+            }}
           >
             <a>Delete</a>
           </Popconfirm>
@@ -1361,6 +1367,19 @@ function ContentPageLogic() {
     if (pageName === "house_mix_design") {
       setMixDesignData({
         ...mixDesignData,
+        mixDesignName:
+          mixDesignData.psi +
+          " " +
+          mixDesignData.internalDesignType +
+          " " +
+          mixDesignData.proportions +
+          " " +
+          mixDesignData.airType +
+          " " +
+          mixDesignData.stoneType +
+          " WC" +
+          " " +
+          mixDesignData.wcRatio,
         [evt.target.name]: value,
       });
     }
@@ -1368,6 +1387,19 @@ function ContentPageLogic() {
     if (pageName === "special_mix_design") {
       setSpecialMixDesignData({
         ...specialMixDesignData,
+        mixDesignName:
+          specialMixDesignData.psi +
+          " " +
+          specialMixDesignData.internalDesignType +
+          " " +
+          specialMixDesignData.proportions +
+          " " +
+          specialMixDesignData.airType +
+          " " +
+          specialMixDesignData.stoneType +
+          " WC" +
+          " " +
+          specialMixDesignData.wcRatio,
         [evt.target.name]: value,
       });
     }
@@ -1452,6 +1484,7 @@ function ContentPageLogic() {
           break;
 
         case "select_lead":
+          // alert(value + "<----oppp");
           setFollowupData({
             ...followupData,
             lead_id: value,
@@ -1565,6 +1598,7 @@ function ContentPageLogic() {
           break;
 
         case "select_lead":
+          // alert(value);
           setFollowupData({
             ...followupData,
             lead_id: value,
@@ -1782,6 +1816,7 @@ function ContentPageLogic() {
 
   // method for showing child modal
   const showChildModal = () => {
+    setIsEdit(false);
     setFollowupModalVisible(true);
   };
 
@@ -3115,19 +3150,36 @@ function ContentPageLogic() {
                   );
 
                 case "input":
-                  return (
-                    <Col span={12}>
-                      <label>{record.placeholder}</label>
-                      <Input
-                        placeholder={record.placeholder}
-                        name={record.name}
-                        value={record.value}
-                        type={record.type}
-                        className={record.className}
-                        onChange={record.method}
-                      />
-                    </Col>
-                  );
+                  if (record.name == "mixDesignName") {
+                    return (
+                      <Col span={12}>
+                        <label>{record.placeholder}</label>
+                        <Input
+                          placeholder={record.placeholder}
+                          name={record.name}
+                          value={record.value}
+                          type={record.type}
+                          className={record.className}
+                          onChange={record.method}
+                          disabled
+                        />
+                      </Col>
+                    );
+                  } else {
+                    return (
+                      <Col span={12}>
+                        <label>{record.placeholder}</label>
+                        <Input
+                          placeholder={record.placeholder}
+                          name={record.name}
+                          value={record.value}
+                          type={record.type}
+                          className={record.className}
+                          onChange={record.method}
+                        />
+                      </Col>
+                    );
+                  }
 
                 case "textarea":
                   return (
@@ -3352,7 +3404,9 @@ function ContentPageLogic() {
                     >
                       {leads.map((item) => {
                         return (
-                          <Option value={item.id}>{item.leadTitle}</Option>
+                          <Option value={item.leadTitle}>
+                            {item.leadTitle}
+                          </Option>
                         );
                       })}
                     </Select>
@@ -3745,7 +3799,9 @@ function ContentPageLogic() {
                     >
                       {opportunities.map((item) => {
                         return (
-                          <Option value={item.id}>{item.lead_name}</Option>
+                          <Option value={item.lead_name}>
+                            {item.lead_name}
+                          </Option>
                         );
                       })}
                     </Select>
@@ -4143,7 +4199,7 @@ function ContentPageLogic() {
   };
 
   // delete API calls
-  const deleteAPICalls = (pageName, id) => {
+  const deleteAPICalls = (pageName, id, modalName) => {
     const updatebleData = {
       id: id,
     };
@@ -4358,7 +4414,16 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 200) {
               message.success(response.data.message);
-              getLeads();
+              //TODO
+              if (modalName === "opportunity") {
+                addLogs("Follow-up deleted", "opportunity", id, null);
+                getFollowups("opportunity");
+              }
+
+              if (modalName === "lead") {
+                addLogs("Follow-up deleted", "lead", id, null);
+                getFollowups("lead");
+              }
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }

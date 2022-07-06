@@ -108,9 +108,11 @@ function ContentPageDesign(props) {
           <h3>{pageName.toUpperCase().replaceAll("_", " ")}</h3>
           <div className="div-page-header">
             <Search placeholder="Search" className="div-search" />
-            <Button className="button-add-user" onClick={showModal}>
-              {data.buttonText}
-            </Button>
+            {pageName === "opportunity" ? null : (
+              <Button className="button-add-user" onClick={showModal}>
+                {data.buttonText}
+              </Button>
+            )}
 
             {/* {pageName === "lead" ? (
               <Button
