@@ -25,6 +25,8 @@ import {
   LoadingOutlined,
   CheckOutlined,
   CloseOutlined,
+  CheckCircleOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 
 // constant data import
@@ -32,6 +34,7 @@ import { Constant } from "../../../Utils/Constant";
 
 // network handler
 import handler from "../../../handlers/generalHandler";
+import { mod } from "@antv/x6/lib/util/number/number";
 
 function ContentPageLogic() {
   // useStates
@@ -41,8 +44,10 @@ function ContentPageLogic() {
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
+  const [mixDesign, setMixDesign] = useState([]);
   const [cc, setCC] = useState([]);
   const [projectManager, setProjectManager] = useState([]);
+  const [projectManagerEmail, setProjectManagerEmail] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -53,6 +58,8 @@ function ContentPageLogic() {
     useState(false);
   const [isAddCCModalVisible, setIsAddCCModalVisible] = useState(false);
   const [isOpportunityModalVisible, setOpportunityModalVisible] =
+    useState(false);
+  const [isQualityControlModalVisible, setQualityControlModalVisible] =
     useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
@@ -231,6 +238,34 @@ function ContentPageLogic() {
     typeOfContact: "",
     email: "",
     onSiteVisit: "",
+    section_name: "",
+  });
+
+  const [qualityControlData, setQualityControlData] = useState({
+    section_id: "",
+    loadingPlant: "",
+    mixDesignName: "",
+    mixDesignId: "",
+    minPrice: "",
+    approvedDesign: "",
+    tr3: "",
+    tr2: "",
+    price: "",
+    estimatedYards: "",
+    section_name: "",
+  });
+
+  const [qualityControlExistingData, setQualityControlExistingData] = useState({
+    section_id: "",
+    loadingPlant: "",
+    mixDesignName: "",
+    mixDesignId: "",
+    minPrice: "",
+    approvedDesign: "",
+    tr3: "",
+    tr2: "",
+    price: "",
+    estimatedYards: "",
     section_name: "",
   });
 
@@ -1092,6 +1127,12 @@ function ContentPageLogic() {
               setOpportunityModalVisible(true);
               setIsEdit(true);
               setId(record.id);
+              setQualityControlData({
+                ...qualityControlData,
+                section_id: record.id,
+              });
+
+              setProjectManagerEmail(record.project_manager_email);
 
               setOpportunityData({
                 lead_name: record.lead_name,
@@ -1232,6 +1273,169 @@ function ContentPageLogic() {
     },
   ];
 
+  const qcTblHeaders = [
+    {
+      title: "Loading Plant",
+      dataIndex: "loadingPlant",
+      key: "loadingPlant",
+    },
+    {
+      title: "Mix Design",
+      dataIndex: "mixDesignName",
+      key: "mixDesignName",
+    },
+    {
+      title: "Submitted Mix",
+      key: "subMittedDesign",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button>
+            <a href={record.subMittedDesign} target="_blank" rel="noreferrer">
+              View
+            </a>
+          </Button>
+        </Space>
+      ),
+    },
+    {
+      title: "Approved Mix",
+      key: "approvedDesign",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button>
+            <a href={record.approvedDesign} target="_blank" rel="noreferrer">
+              View
+            </a>
+          </Button>
+        </Space>
+      ),
+    },
+
+    {
+      title: "TR3",
+      key: "tr3",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button>
+            <a href={record.tr3} target="_blank" rel="noreferrer">
+              View
+            </a>
+          </Button>
+        </Space>
+      ),
+    },
+
+    {
+      title: "TR2",
+      key: "tr2",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button>
+            <a href={record.tr2} target="_blank" rel="noreferrer">
+              View
+            </a>
+          </Button>
+        </Space>
+      ),
+    },
+
+    {
+      title: "Date",
+      dataIndex: "createdOn",
+      key: "createdOn",
+    },
+
+    {
+      title: "Quote Type",
+      dataIndex: "section_name",
+      key: "section_name",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              const list = [
+                {
+                  filename: "submittedDesign.pdf",
+                  path: record.subMittedDesign,
+                },
+                {
+                  filename: "approvedDesign.pdf",
+                  path: record.approvedDesign,
+                },
+                {
+                  filename: "tr3.pdf",
+                  path: record.tr3,
+                },
+                {
+                  filename: "tr2.pdf",
+                  path: record.tr2,
+                },
+              ];
+
+              sendMailtoManager(projectManagerEmail, "PFA", list);
+            }}
+          >
+            Mail
+          </Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQualityControlModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+
+              setQualityControlData({
+                section_id: record.section_id,
+                loadingPlant: record.loadingPlant,
+                mixDesignName: record.mixDesignName,
+                mixDesignId: record.mixDesignId,
+                minPrice: record.minPrice,
+                approvedDesign: record.approvedDesign,
+                tr3: record.tr3,
+                tr2: record.tr2,
+                price: record.price,
+                estimatedYards: record.estimatedYards,
+                section_name: record.section_name,
+              });
+
+              setQualityControlExistingData({
+                section_id: record.section_id,
+                loadingPlant: record.loadingPlant,
+                mixDesignName: record.mixDesignName,
+                mixDesignId: record.mixDesignId,
+                minPrice: record.minPrice,
+                approvedDesign: record.approvedDesign,
+                tr3: record.tr3,
+                tr2: record.tr2,
+                price: record.price,
+                estimatedYards: record.estimatedYards,
+                section_name: record.section_name,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => {
+              if (pageName === "opportunity") {
+                deleteAPICalls("qualitycontrol", record.id, "qualitycontrol");
+              }
+            }}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const auditLogsTblHeaders = [
     {
       title: "Person Name",
@@ -1300,6 +1504,9 @@ function ContentPageLogic() {
       getFollowups("opportunity");
     } else if (key == 3) {
       getAuditLogs("opportunity");
+    } else if (key == 4) {
+      getMixDesigns("house_mix_design", "qualitycontrol-opportunity");
+      getQualityControls("qualitycontrol-opportunity");
     }
   };
 
@@ -1436,6 +1643,14 @@ function ContentPageLogic() {
     });
   };
 
+  const qualityControlHandleChangeData = (evt) => {
+    const value = evt.target.value;
+    setQualityControlData({
+      ...qualityControlData,
+      [evt.target.name]: value,
+    });
+  };
+
   // select handler
   const selectHandleChange = (value, name) => {
     console.log(value);
@@ -1511,6 +1726,17 @@ function ContentPageLogic() {
             ...opportunityData,
             plant_id: value,
           });
+          break;
+
+        case "select_loading_plant":
+          setQualityControlData({
+            ...qualityControlData,
+            loadingPlant: value,
+          });
+          break;
+
+        case "select_mix_design":
+          getMixDesignById(value);
           break;
         default:
           break;
@@ -1977,6 +2203,49 @@ function ContentPageLogic() {
     }
   };
 
+  const QualityControlHandleOk = (module) => {
+    setQualityControlModalVisible(false);
+    switch (module) {
+      case "qualitycontrol-opportunity":
+        if (!isEdit) {
+          addAPICalls("qualitycontrol-opportunity");
+        } else {
+          updateAPICalls("qualitycontrol-opportunity");
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const sendMailtoManager = (toMail, body, attchment) => {
+    setLoading(true);
+
+    handler
+      .dataPost(
+        "/mail/sendMail",
+        {
+          toMail: toMail,
+          body: body,
+          attachment: attchment,
+        },
+        {}
+      )
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 201) {
+          message.success(response.data.message);
+          addLogs("Email Sent", "opportunity", id, attchment);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- addUserAPICall", error);
+      });
+  };
+
   const logModalHandleOk = () => {
     setLogModalVisible(false);
   };
@@ -2010,7 +2279,7 @@ function ContentPageLogic() {
   };
 
   // handle file pick change
-  const handleChange = (info, pageName) => {
+  const handleChange = (info, pageName, feature) => {
     if (info.file.originFileObj) {
       switch (pageName) {
         case "user":
@@ -2024,6 +2293,30 @@ function ContentPageLogic() {
 
         case "special_mix_design":
           uploadAPICall(info.file.originFileObj, "specialMixDesign");
+          break;
+
+        case "opportunity":
+          switch (feature) {
+            case "approvedDesign":
+              uploadAPICall(
+                info.file.originFileObj,
+                "houseMixDesign",
+                "approvedDesign"
+              );
+              break;
+
+            case "tr3":
+              uploadAPICall(info.file.originFileObj, "houseMixDesign", "tr3");
+              break;
+
+            case "tr2":
+              uploadAPICall(info.file.originFileObj, "houseMixDesign", "tr2");
+              break;
+
+            default:
+              break;
+          }
+
           break;
 
         default:
@@ -3642,7 +3935,9 @@ function ContentPageLogic() {
                   >
                     {projectManager.map((item) => {
                       return (
-                        <Option value={item.project_manager_name}>
+                        <Option
+                          value={item.project_manager_name + "_" + item.id}
+                        >
                           {item.project_manager_name}
                         </Option>
                       );
@@ -3946,6 +4241,166 @@ function ContentPageLogic() {
                     );
                   })}
                 </table>
+              </Modal>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <CheckCircleOutlined />
+                  Quality Control
+                </span>
+              }
+              key="4"
+            >
+              <div className="div-page-header">
+                <Button
+                  onClick={() => {
+                    setIsEdit(false);
+                    setQualityControlModalVisible(true);
+                  }}
+                  className="button-add-user"
+                >
+                  Add Quality Control
+                </Button>
+              </div>
+
+              <Table
+                size="small"
+                columns={qcTblHeaders}
+                dataSource={childDataSource}
+              />
+              <Modal
+                title={!isEdit ? <h2>Add Files</h2> : <h2>Edit Files</h2>}
+                visible={isQualityControlModalVisible}
+                onOk={() => {
+                  QualityControlHandleOk("qualitycontrol-opportunity");
+                }}
+                onCancel={() => {
+                  setQualityControlModalVisible(false);
+                }}
+                width={800}
+                destroyOnClose
+              >
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <label>{"Loading Plant"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? qualityControlData.loadingPlant
+                          : "Select Loading Plant"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_loading_plant");
+                      }}
+                    >
+                      {plant.map((item) => {
+                        return (
+                          <Option value={item.plant_name}>
+                            {item.plant_name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>{"Mix Design Name"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? qualityControlData.mixDesignName
+                          : "Select Mix Design"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_mix_design");
+                      }}
+                    >
+                      {mixDesign.map((item) => {
+                        return (
+                          <Option value={item.id}>{item.mixDesignName}</Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>Minimum Price ($)</label>
+                    <Input
+                      name={"minPrice"}
+                      value={qualityControlData.minPrice}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                      disabled
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Approved Design</label>
+                    <br />
+                    <Upload
+                      name={"approvedDesign"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "approvedDesign");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>TR3</label>
+                    <br />
+                    <Upload
+                      name={"tr3"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "tr3");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>TR2</label>
+                    <br />
+                    <Upload
+                      name={"tr2"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "tr2");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Price</label>
+                    <Input
+                      placeholder={"Price"}
+                      name={"price"}
+                      value={qualityControlData.price}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Est. Yards</label>
+                    <Input
+                      placeholder={"Est. Yards"}
+                      name={"estimatedYards"}
+                      value={qualityControlData.estimatedYards}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                    />
+                  </Col>
+                </Row>
               </Modal>
             </TabPane>
           </Tabs>
@@ -4342,7 +4797,7 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 200) {
               message.success(response.data.message);
-              getMixDesigns("house_mix_Design");
+              getMixDesigns("house_mix_design");
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -4423,6 +4878,28 @@ function ContentPageLogic() {
               if (modalName === "lead") {
                 addLogs("Follow-up deleted", "lead", id, null);
                 getFollowups("lead");
+              }
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteFollowup", error);
+          });
+        break;
+
+      case "qualitycontrol":
+        setLoading(true);
+        handler
+          .dataPost("/quality-control/deleteQualityControl", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              //TODO
+              if (modalName === "qualitycontrol") {
+                addLogs("Quality control deleted", "opportunity", id, null);
+                getQualityControls("opportunity");
               }
             } else if (response.status == 400) {
               window.alert(response.data.message);
@@ -5140,6 +5617,114 @@ function ContentPageLogic() {
             console.error("There was an error!- updatefollowup", error);
           });
         break;
+
+      case "qualitycontrol-opportunity":
+        setLoading(true);
+
+        let updatableDataforQCopportunity = {
+          ...qualityControlData,
+          id: id,
+          section_name: "qualitycontrol-opportunity",
+        };
+
+        handler
+          .dataPost(
+            "/quality-control/updateQualityControl",
+            updatableDataforQCopportunity,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              const logData = [];
+
+              if (
+                qualityControlData.loadingPlant !==
+                qualityControlExistingData.loadingPlant
+              ) {
+                logData.push({
+                  key: "Loading Plant",
+                  value: qualityControlData.loadingPlant,
+                });
+              }
+
+              if (
+                qualityControlData.mixDesignName !==
+                qualityControlExistingData.mixDesignName
+              ) {
+                logData.push({
+                  key: "Mix Design Name",
+                  value: qualityControlData.mixDesignName,
+                });
+              }
+
+              if (
+                qualityControlData.minPrice !==
+                qualityControlExistingData.minPrice
+              ) {
+                logData.push({
+                  key: "Min Price",
+                  value: qualityControlData.minPrice,
+                });
+              }
+
+              if (
+                qualityControlData.approvedDesign !==
+                qualityControlExistingData.approvedDesign
+              ) {
+                logData.push({
+                  key: "Approved Design",
+                  value: qualityControlData.approvedDesign,
+                });
+              }
+
+              if (qualityControlData.tr3 !== qualityControlExistingData.tr2) {
+                logData.push({
+                  key: "TR3",
+                  value: qualityControlData.tr3,
+                });
+              }
+
+              if (qualityControlData.tr2 !== qualityControlExistingData.tr2) {
+                logData.push({
+                  key: "TR2",
+                  value: qualityControlData.tr2,
+                });
+              }
+
+              if (
+                qualityControlData.price !== qualityControlExistingData.price
+              ) {
+                logData.push({
+                  key: "Price",
+                  value: qualityControlData.price,
+                });
+              }
+
+              if (
+                qualityControlData.estimatedYards !==
+                qualityControlExistingData.estimatedYards
+              ) {
+                logData.push({
+                  key: "Estimated Yards",
+                  value: qualityControlData.estimatedYards,
+                });
+              }
+
+              if (logData.length != 0) {
+                addLogs("Quality Control updated", "opportunity", id, logData);
+              } else {
+                message.info("No field is updated");
+              }
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updatequalitycontrol", error);
+          });
+        break;
       default:
         break;
     }
@@ -5518,6 +6103,37 @@ function ContentPageLogic() {
             console.error("There was an error!- addFollowUp", error);
           });
         break;
+
+      case "qualitycontrol-opportunity":
+        setLoading(true);
+
+        let qualityControldataopportunity = {
+          ...qualityControlData,
+          section_name: "opportunity",
+        };
+
+        handler
+          .dataPost(
+            "/quality-control/addQualityControl",
+            qualityControldataopportunity,
+            {
+              authorization: localStorage.getItem("token"),
+            }
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQualityControlModalVisible(false);
+              getQualityControls("opportunity");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
       default:
         break;
     }
@@ -5650,7 +6266,7 @@ function ContentPageLogic() {
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getLeadInfo", error);
+        console.error("There was an error!- addLogs", error);
       });
   };
 
@@ -5753,7 +6369,7 @@ function ContentPageLogic() {
   };
 
   // get mix design list api call
-  const getMixDesigns = (type) => {
+  const getMixDesigns = (type, modalName) => {
     setLoading(true);
 
     handler
@@ -5761,7 +6377,34 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          setDataSource(response.data.data);
+          if (modalName === "qualitycontrol-opportunity") {
+            setMixDesign(response.data.data);
+          } else {
+            setDataSource(response.data.data);
+          }
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getMixDesigns", error);
+      });
+  };
+
+  const getMixDesignById = (id) => {
+    setLoading(true);
+
+    handler
+      .dataGet("/mix-design/getMixDesignById?id=" + id, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setQualityControlData({
+            ...qualityControlData,
+            minPrice: response.data.data.minRate,
+            mixDesignName: response.data.data.mixDesignName,
+            mixDesignId: response.data.data.id,
+          });
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -5790,6 +6433,27 @@ function ContentPageLogic() {
       })
       .catch((error) => {
         console.error("There was an error!- getFollowups", error);
+      });
+  };
+
+  const getQualityControls = (section_name) => {
+    setLoading(true);
+
+    handler
+      .dataGet(
+        "/quality-control/getQualityControls?section_name=" + section_name,
+        {}
+      )
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setChildDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getQualityControls", error);
       });
   };
 
@@ -5950,7 +6614,7 @@ function ContentPageLogic() {
   };
 
   // upload api call
-  const uploadAPICall = (file, destination) => {
+  const uploadAPICall = (file, destination, feature) => {
     const formData = new FormData();
     console.log("file: ", file + " |" + destination);
     if (destination === "profile") {
@@ -5979,14 +6643,32 @@ function ContentPageLogic() {
         setLoading(true);
         if (response.data.status == 200) {
           setLoading(false);
-          // setUserData({ userProfileImage: response.data.imageRef });
-          userData.userProfileImage = response.data.imageRef;
-          setImageUrl(response.data.imageRef);
-          setDocumentId(response.data.imageRef);
-          setMixDesignData({
-            ...mixDesignData,
-            documentPath: response.data.imageRef,
-          });
+          if (feature === "approvedDesign") {
+            setQualityControlData({
+              ...qualityControlData,
+              approvedDesign: response.data.imageRef,
+            });
+          } else if (feature === "tr3") {
+            setQualityControlData({
+              ...qualityControlData,
+              tr3: response.data.imageRef,
+            });
+          } else if (feature === "tr2") {
+            setQualityControlData({
+              ...qualityControlData,
+              tr2: response.data.imageRef,
+            });
+          } else {
+            // setUserData({ userProfileImage: response.data.imageRef });
+            userData.userProfileImage = response.data.imageRef;
+            setImageUrl(response.data.imageRef);
+            setDocumentId(response.data.imageRef);
+            setMixDesignData({
+              ...mixDesignData,
+              documentPath: response.data.imageRef,
+            });
+          }
+
           message.success(response.data.message, {
             position: "bottom-center",
           });
