@@ -45,6 +45,7 @@ function ContentPageDesign(props) {
     constructionCompanyShowModal,
     renderAddCCModal,
     renderOpportunityModal,
+    renderQuotationModal,
   } = ContentPageLogic();
 
   // useeffect
@@ -134,6 +135,7 @@ function ContentPageDesign(props) {
         <div>{renderConstructionCompanyModal()}</div>
         <div>{renderAddCCModal()}</div>
         <div>{renderOpportunityModal()}</div>
+        <div>{renderQuotationModal()}</div>
       </div>
     </div>
   );

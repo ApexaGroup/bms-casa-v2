@@ -8,7 +8,7 @@ const { Header, Footer, Sider, Content } = Layout;
 function TheLayout() {
   return (
     <Layout className="layout-container" theme="light">
-      <Sider width={200} theme="light">
+      <Sider width={230} theme="light">
         <TheSidebar />
       </Sider>
       <Layout>

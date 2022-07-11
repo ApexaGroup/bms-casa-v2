@@ -36,7 +36,7 @@ const LoginPageStates = () => {
           if (response.status == 200) {
             localStorage.setItem("token", response.data.access_token);
 
-            navigate("/dashboard");
+            navigate("/");
           } else if (response.status == 400) {
             window.alert(response.data.message);
           }

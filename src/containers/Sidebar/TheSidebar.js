@@ -34,14 +34,14 @@ function TheSidebar() {
       </div>
 
       <Menu
-        defaultSelectedKeys={["0"]}
+        defaultSelectedKeys={["1"]}
         mode="inline"
         className="menu-container"
       >
         <Menu.Item key="1">
           <DashboardOutlined />
           <span>Dashboard</span>
-          <Link to="/dashboard" />
+          <Link to="/" />
         </Menu.Item>
         <SubMenu
           key="10"

@@ -35,8 +35,8 @@ export default function () {
           element={<ForgotPasswordPageDesign />}
         ></Route>
 
-        <Route path="/" element={<TheLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
+        <Route path="" element={<TheLayout />}>
+          <Route path="" element={<Dashboard />} />
           <Route path="" element={<TheContent />}>
             <Route path="user" element={<Content data={user} />} />
             <Route path="role" element={<Content data={role} />} />

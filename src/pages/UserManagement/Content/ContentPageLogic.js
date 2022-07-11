@@ -34,7 +34,6 @@ import { Constant } from "../../../Utils/Constant";
 
 // network handler
 import handler from "../../../handlers/generalHandler";
-import { mod } from "@antv/x6/lib/util/number/number";
 
 function ContentPageLogic() {
   // useStates
@@ -61,6 +60,7 @@ function ContentPageLogic() {
     useState(false);
   const [isQualityControlModalVisible, setQualityControlModalVisible] =
     useState(false);
+  const [isQuotationModalVisible, setQuotationModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -2234,15 +2234,15 @@ function ContentPageLogic() {
       )
       .then((response) => {
         setLoading(false);
-        if (response.status == 201) {
+        if (response.status == 200) {
           message.success(response.data.message);
-          addLogs("Email Sent", "opportunity", id, attchment);
+          addLogs("Email Sent", "opportunity", id, null);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- addUserAPICall", error);
+        console.error("There was an error!- addLogs", error);
       });
   };
 
@@ -3865,6 +3865,14 @@ function ContentPageLogic() {
           width={1920}
           destroyOnClose
           footer={[
+            <Button
+              style={{ backgroundColor: "green", color: "white" }}
+              onClick={() => {
+                setQuotationModalVisible(true);
+              }}
+            >
+              Create Quotation
+            </Button>,
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>,
@@ -4651,6 +4659,24 @@ function ContentPageLogic() {
     );
 
     return UserModal;
+  };
+
+  const renderQuotationModal = () => {
+    const qModal = (
+      <div>
+        <Modal
+          title={<h2>Add Quotation</h2>}
+          visible={isQuotationModalVisible}
+          onOk={""}
+          onCancel={() => setQuotationModalVisible(false)}
+          destroyOnClose
+        >
+          <Row gutter={6}></Row>
+        </Modal>
+      </div>
+    );
+
+    return qModal;
   };
 
   // delete API calls
@@ -6734,6 +6760,7 @@ function ContentPageLogic() {
     renderAddCCModal,
     opportunityInfoTblHeaders,
     renderOpportunityModal,
+    renderQuotationModal,
   };
 
   return StatesContainer;
