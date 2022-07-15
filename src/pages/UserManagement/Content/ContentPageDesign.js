@@ -46,6 +46,7 @@ function ContentPageDesign(props) {
     renderAddCCModal,
     renderOpportunityModal,
     renderQuotationModal,
+    quotationTblHeaders,
   } = ContentPageLogic();
 
   // useeffect
@@ -99,6 +100,10 @@ function ContentPageDesign(props) {
 
     if (data.page === "opportunity") {
       setTblHeaders(opportunityInfoTblHeaders);
+    }
+
+    if (data.page === "quotation") {
+      setTblHeaders(quotationTblHeaders);
     }
   }, [data.page]);
 

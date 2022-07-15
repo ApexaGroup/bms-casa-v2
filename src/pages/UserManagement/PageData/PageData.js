@@ -81,6 +81,10 @@ const pageData = () => {
       page: "opportunity",
       buttonText: "Add Opportunity",
     },
+    quotation: {
+      page: "quotation",
+      buttonText: "Add Quotation",
+    },
   };
 
   return data;

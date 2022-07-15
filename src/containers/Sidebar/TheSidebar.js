@@ -128,6 +128,12 @@ function TheSidebar() {
           <span>Opportunity</span>
           <Link to="/opportunity" />
         </Menu.Item>
+
+        <Menu.Item key="7">
+          <DashboardOutlined />
+          <span>Quotation</span>
+          <Link to="/quotation" />
+        </Menu.Item>
       </Menu>
       <Modal
         title="Version 2.0.0"

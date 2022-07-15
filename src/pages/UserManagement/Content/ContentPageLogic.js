@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-
 // Antd components imports
 import {
   Input,
@@ -17,6 +15,7 @@ import {
   Popconfirm,
   Tabs,
   Table,
+  Radio,
 } from "antd";
 
 //antd icons import
@@ -43,6 +42,7 @@ function ContentPageLogic() {
   const [pageName, setPageName] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
+  const [construction_companies, setConstruction_companies] = useState([]);
   const [mixDesign, setMixDesign] = useState([]);
   const [cc, setCC] = useState([]);
   const [projectManager, setProjectManager] = useState([]);
@@ -348,6 +348,21 @@ function ContentPageLogic() {
     bidDueDate: "",
     status: "",
     notes: "",
+  });
+
+  const [quotationData, setQuotationData] = useState({
+    constructionCompanyId: "",
+    opportunityId: "",
+    quotationStatus: "", // Bid, Awarded
+    tr3Required: false, // Yes, No
+    plantId: "",
+    projectManagerId: "",
+    dueDate: "",
+    increaseDate: "",
+    notes: "",
+    status: "",
+    quotationType: "",
+    quotationCode: "",
   });
 
   // table headers
@@ -1263,6 +1278,8 @@ function ContentPageLogic() {
                 deleteAPICalls("followup", record.id, "opportunity");
               } else if (pageName === "lead") {
                 deleteAPICalls("followup", record.id, "lead");
+              } else if (pageName === "quotation") {
+                deleteAPICalls("followup", record.id, "quotation");
               }
             }}
           >
@@ -1436,6 +1453,79 @@ function ContentPageLogic() {
     },
   ];
 
+  const quotationTblHeaders = [
+    {
+      title: "Construction Company Name",
+      dataIndex: "constructionCompanyName",
+      key: "constructionCompanyName",
+    },
+    {
+      title: "Opportunity Name",
+      dataIndex: "opportunityName",
+      key: "opportunityName",
+    },
+    {
+      title: "Project Manager Name",
+      key: "projectManagerName",
+      dataIndex: "projectManagerName",
+    },
+
+    {
+      title: "Quotation Status",
+      key: "quotationStatus",
+      dataIndex: "quotationStatus",
+    },
+
+    {
+      title: "TR3 Required",
+      key: "tr3Required",
+      render: (_, record) => <span>{record.tr3Required ? "Yes" : "No"}</span>,
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsEdit(true);
+              setQuotationModalVisible(true);
+              setId(record.id);
+              setQuotationData({
+                constructionCompanyId: record.constructionCompanyId,
+                opportunityId: record.opportunityId,
+                quotationStatus: record.quotationStatus, // Bid, Awarded
+                tr3Required: record.tr3Required, // Yes, No
+                plantId: record.plantId,
+                projectManagerId: record.projectManagerId,
+                dueDate: record.dueDate,
+                increaseDate: record.increaseDate,
+                notes: record.notes,
+                status: record.status,
+                quotationType: record.quoteTypeList,
+                quotationCode: record.quoteTypeList.quoteCode,
+              });
+
+              console.log(record.quoteTypeList.quoteCode);
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => {
+              deleteAPICalls("quotation", record.id);
+            }}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const auditLogsTblHeaders = [
     {
       title: "Person Name",
@@ -1504,6 +1594,20 @@ function ContentPageLogic() {
       getFollowups("opportunity");
     } else if (key == 3) {
       getAuditLogs("opportunity");
+    } else if (key == 4) {
+      getMixDesigns("house_mix_design", "qualitycontrol-opportunity");
+      getQualityControls("qualitycontrol-opportunity");
+    }
+  };
+
+  const onQuotationTabChange = (key) => {
+    if (key == 1) {
+      getProjectManagerAPICall("opportunity");
+      getPlants();
+    } else if (key == 2) {
+      getFollowups("quotation");
+    } else if (key == 3) {
+      getAuditLogs("quotation");
     } else if (key == 4) {
       getMixDesigns("house_mix_design", "qualitycontrol-opportunity");
       getQualityControls("qualitycontrol-opportunity");
@@ -1651,6 +1755,26 @@ function ContentPageLogic() {
     });
   };
 
+  const quotationChangeData = (evt, name) => {
+    const value = evt.target.value;
+    switch (name) {
+      case "dueDate":
+        setQuotationData({
+          ...quotationData,
+          [evt.target.name]: value,
+        });
+        break;
+      case "increaseDate":
+        setQuotationData({
+          ...quotationData,
+          [evt.target.name]: value,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   // select handler
   const selectHandleChange = (value, name) => {
     console.log(value);
@@ -1712,6 +1836,11 @@ function ContentPageLogic() {
             project_manager: value,
           });
 
+          setQuotationData({
+            ...quotationData,
+            projectManagerId: value,
+          });
+
           break;
 
         case "select_type_of_contact":
@@ -1726,6 +1855,11 @@ function ContentPageLogic() {
             ...opportunityData,
             plant_id: value,
           });
+
+          setQuotationData({
+            ...quotationData,
+            plantId: value,
+          });
           break;
 
         case "select_loading_plant":
@@ -1738,6 +1872,39 @@ function ContentPageLogic() {
         case "select_mix_design":
           getMixDesignById(value);
           break;
+        case "select_opportunity":
+          setQuotationData({
+            ...quotationData,
+            opportunityId: value,
+          });
+          break;
+        case "select_construction_company":
+          setQuotationData({
+            ...quotationData,
+            constructionCompanyId: value,
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pageName === "quotation") {
+      switch (name) {
+        case "select_lead":
+          setFollowupData({
+            ...followupData,
+            lead_id: value,
+          });
+          break;
+
+        case "select_type_of_contact":
+          setFollowupData({
+            ...followupData,
+            typeOfContact: value,
+          });
+          break;
+
         default:
           break;
       }
@@ -2054,6 +2221,7 @@ function ContentPageLogic() {
     setOpportunityModalVisible(false);
     updateAPICalls("opportunity");
   };
+
   // method to be called when modal ok is clicked
   const handleOk = (modalName) => {
     setIsModalVisible(false);
@@ -2198,6 +2366,14 @@ function ContentPageLogic() {
         }
         break;
 
+      case "quotation":
+        if (!isEdit) {
+          addAPICalls("followup-quotation");
+        } else {
+          updateAPICalls("followup-quotation");
+        }
+        break;
+
       default:
         break;
     }
@@ -2211,6 +2387,14 @@ function ContentPageLogic() {
           addAPICalls("qualitycontrol-opportunity");
         } else {
           updateAPICalls("qualitycontrol-opportunity");
+        }
+        break;
+
+      case "qualitycontrol-quotation":
+        if (!isEdit) {
+          addAPICalls("qualitycontrol-quotation");
+        } else {
+          updateAPICalls("qualitycontrol-quotation");
         }
         break;
 
@@ -3253,7 +3437,7 @@ function ContentPageLogic() {
     },
   ];
 
-  // user modal for add and edit
+  // dynamic modal for add and edit operations
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
       generalFields = ccFields;
@@ -3868,6 +4052,7 @@ function ContentPageLogic() {
             <Button
               style={{ backgroundColor: "green", color: "white" }}
               onClick={() => {
+                setIsEdit(false);
                 setQuotationModalVisible(true);
               }}
             >
@@ -4665,13 +4850,568 @@ function ContentPageLogic() {
     const qModal = (
       <div>
         <Modal
-          title={<h2>Add Quotation</h2>}
+          title={<h2>Quotation</h2>}
           visible={isQuotationModalVisible}
-          onOk={""}
+          onOk={() => {
+            if (isEdit) {
+              updateAPICalls("quotation");
+            } else {
+              addAPICalls("quotation");
+            }
+          }}
           onCancel={() => setQuotationModalVisible(false)}
           destroyOnClose
+          width={1000}
         >
-          <Row gutter={6}></Row>
+          <Tabs
+            defaultActiveKey="1"
+            onChange={onQuotationTabChange}
+            size={"large"}
+          >
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Quotation Information
+                </span>
+              }
+              key="1"
+            >
+              <Row gutter={6}>
+                <Col span={12}>
+                  <label>Quotation Code</label>
+                  <Input
+                    disabled
+                    name="quotationCode"
+                    type={"text"}
+                    value={quotationData.quotationCode}
+                  />
+                </Col>
+                <Col span={12}>
+                  <label>{"Concrete Plant"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit ? quotationData.plantId : "Select Plant"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_plant");
+                    }}
+                  >
+                    {plant.map((item) => {
+                      return (
+                        <Option value={item.plant_name}>
+                          {item.plant_name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Opportunity"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit
+                        ? quotationData.opportunityId
+                        : "Select Opportunity"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_opportunity");
+                    }}
+                  >
+                    {opportunities.map((item) => {
+                      return <Option value={item.id}>{item.lead_name}</Option>;
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Construction Company"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit
+                        ? quotationData.constructionCompanyId
+                        : "Select Construction Company"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_construction_company");
+                    }}
+                  >
+                    {cc.map((item) => {
+                      return (
+                        <Option value={item.id}>
+                          {item.construction_company_name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>{"Project Manager"}</label>
+                  <Select
+                    disabled
+                    style={{ width: "100%" }}
+                    defaultValue={
+                      isEdit
+                        ? quotationData.projectManagerId
+                        : "Select Project Manager"
+                    }
+                    onChange={(value) => {
+                      selectHandleChange(value, "select_project_manager");
+                    }}
+                  >
+                    {projectManager.map((item) => {
+                      return (
+                        <Option value={item.id}>
+                          {item.project_manager_name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Col>
+
+                <Col span={12}>
+                  <label>Due Date</label>
+                  <Input
+                    name="dueDate"
+                    type={"date"}
+                    value={quotationData.dueDate}
+                    onChange={(e) => {
+                      quotationChangeData(e, "dueDate");
+                    }}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>Increase Date</label>
+                  <Input
+                    name="increaseDate"
+                    type={"date"}
+                    value={quotationData.increaseDate}
+                    onChange={(e) => {
+                      quotationChangeData(e, "increaseDate");
+                    }}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <label>Quotation Status</label>
+                  <br />
+                  <Radio.Group
+                    onChange={(e) => {
+                      setQuotationData({
+                        ...quotationData,
+                        quotationStatus: e.target.value,
+                      });
+                    }}
+                    value={quotationData.quotationStatus}
+                  >
+                    <Radio value={"Bid"}>Bid</Radio>
+                    <Radio value={"Awarded"}>Awarded</Radio>
+                  </Radio.Group>
+                </Col>
+
+                <Col span={12}>
+                  <label>TR3's Required</label>
+                  <br />
+                  <Radio.Group
+                    onChange={(e) => {
+                      setQuotationData({
+                        ...quotationData,
+                        tr3Required: e.target.value,
+                      });
+                    }}
+                    value={quotationData.tr3Required}
+                  >
+                    <Radio value={true}>Yes</Radio>
+                    <Radio value={false}>No</Radio>
+                  </Radio.Group>
+                </Col>
+                <Col span={24}>
+                  <label>Notes</label>
+                  <TextArea
+                    rows={4}
+                    name={"notes"}
+                    value={quotationData.notes}
+                    onChange={(e) => {
+                      setQuotationData({
+                        ...quotationData,
+                        notes: e.target.value,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <PlusOutlined />
+                  Follow up
+                </span>
+              }
+              key="2"
+            >
+              <div className="div-page-header">
+                <Button
+                  onClick={() => {
+                    setIsEdit(false);
+                    showChildModal();
+                  }}
+                  className="button-add-user"
+                >
+                  Add Follow up
+                </Button>
+              </div>
+
+              <Table
+                size="small"
+                columns={followupTblHeaders}
+                dataSource={childDataSource}
+              />
+              <Modal
+                title={<h2>Follow up </h2>}
+                visible={followupModalVisible}
+                onOk={() => {
+                  followUpHandleOk("quotation");
+                }}
+                onCancel={followuphandleCancel}
+                width={800}
+                destroyOnClose
+              >
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <label>{"Opportunity"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit ? followupData.lead_id : "Select Lead"
+                      }
+                      onChange={(value) => {
+                        alert(value);
+                        console.log(value);
+                        selectHandleChange(value, "select_lead");
+                      }}
+                    >
+                      {opportunities.map((item) => {
+                        return (
+                          <Option value={item.lead_name}>
+                            {item.lead_name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Date</label>
+                    <Input
+                      placeholder={"Contact Date"}
+                      name={"contactDate"}
+                      type="date"
+                      value={followupData.contactDate}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <label>Contact Person Name</label>
+                    <Input
+                      placeholder={"Contact Person Name"}
+                      name={"contactPersonName"}
+                      value={followupData.contactPersonName}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>{"Type of Contact"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? followupData.typeOfContact
+                          : "Select Type of Contact"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_type_of_contact");
+                      }}
+                    >
+                      {typeOfContactData.map((item) => {
+                        return <Option value={item.title}>{item.title}</Option>;
+                      })}
+                    </Select>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Email</label>
+                    <Input
+                      placeholder={"Email"}
+                      name={"email"}
+                      value={followupData.email}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>On Site Visit</label>
+                    <Input
+                      placeholder={"On Site Visit"}
+                      name={"onSiteVisit"}
+                      value={followupData.onSiteVisit}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Contact No</label>
+                    <Input
+                      placeholder={"Contact No"}
+                      name={"contactNo"}
+                      value={followupData.contactNo}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Next Follow Up Date</label>
+                    <Input
+                      placeholder={"Next Follow Up Date"}
+                      name={"nextMeetingDate"}
+                      value={followupData.nextMeetingDate}
+                      type={"date"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={24}>
+                    <label>Description</label>
+                    <TextArea
+                      placeholder={"Description"}
+                      name={"description"}
+                      value={followupData.description}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={followUpHandleChangeData}
+                    />
+                  </Col>
+                </Row>
+              </Modal>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <CheckOutlined />
+                  Audit Logs
+                </span>
+              }
+              key="3"
+            >
+              <Table
+                size="small"
+                columns={auditLogsTblHeaders}
+                dataSource={auditLogs}
+              />
+
+              <Modal
+                title={<h2>Changed log Information </h2>}
+                visible={logModalVisible}
+                onOk={logModalHandleOk}
+                onCancel={loghandleCancel}
+                destroyOnClose
+              >
+                <table>
+                  {changeLog.map((row) => {
+                    return (
+                      <tr className="tr-custom">
+                        <td
+                          className="td-custom"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {row.key}
+                        </td>
+                        <td className="td-custom">{row.value}</td>
+                      </tr>
+                    );
+                  })}
+                </table>
+              </Modal>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <CheckCircleOutlined />
+                  Quality Control
+                </span>
+              }
+              key="4"
+            >
+              <div className="div-page-header">
+                <Button
+                  onClick={() => {
+                    setIsEdit(false);
+                    setQualityControlModalVisible(true);
+                  }}
+                  className="button-add-user"
+                >
+                  Add Quality Control
+                </Button>
+              </div>
+
+              <Table
+                size="small"
+                columns={qcTblHeaders}
+                dataSource={childDataSource}
+              />
+              <Modal
+                title={!isEdit ? <h2>Add Files</h2> : <h2>Edit Files</h2>}
+                visible={isQualityControlModalVisible}
+                onOk={() => {
+                  QualityControlHandleOk("qualitycontrol-quotation");
+                }}
+                onCancel={() => {
+                  setQualityControlModalVisible(false);
+                }}
+                width={800}
+                destroyOnClose
+              >
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <label>{"Loading Plant"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? qualityControlData.loadingPlant
+                          : "Select Loading Plant"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_loading_plant");
+                      }}
+                    >
+                      {plant.map((item) => {
+                        return (
+                          <Option value={item.plant_name}>
+                            {item.plant_name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>{"Mix Design Name"}</label>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        isEdit
+                          ? qualityControlData.mixDesignName
+                          : "Select Mix Design"
+                      }
+                      onChange={(value) => {
+                        selectHandleChange(value, "select_mix_design");
+                      }}
+                    >
+                      {mixDesign.map((item) => {
+                        return (
+                          <Option value={item.id}>{item.mixDesignName}</Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col span={12}>
+                    <label>Minimum Price ($)</label>
+                    <Input
+                      name={"minPrice"}
+                      value={qualityControlData.minPrice}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                      disabled
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Approved Design</label>
+                    <br />
+                    <Upload
+                      name={"approvedDesign"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "approvedDesign");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>TR3</label>
+                    <br />
+                    <Upload
+                      name={"tr3"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "tr3");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>TR2</label>
+                    <br />
+                    <Upload
+                      name={"tr2"}
+                      showUploadList={true}
+                      onChange={(file) => {
+                        handleChange(file, "opportunity", "tr2");
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Price</label>
+                    <Input
+                      placeholder={"Price"}
+                      name={"price"}
+                      value={qualityControlData.price}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <label>Est. Yards</label>
+                    <Input
+                      placeholder={"Est. Yards"}
+                      name={"estimatedYards"}
+                      value={qualityControlData.estimatedYards}
+                      type={"text"}
+                      className={"input-style"}
+                      onChange={qualityControlHandleChangeData}
+                    />
+                  </Col>
+                </Row>
+              </Modal>
+            </TabPane>
+          </Tabs>
         </Modal>
       </div>
     );
@@ -4901,6 +5641,11 @@ function ContentPageLogic() {
                 getFollowups("opportunity");
               }
 
+              if (modalName === "quotation") {
+                addLogs("Follow-up deleted", "quotation", id, null);
+                getFollowups("quotation");
+              }
+
               if (modalName === "lead") {
                 addLogs("Follow-up deleted", "lead", id, null);
                 getFollowups("lead");
@@ -4927,6 +5672,25 @@ function ContentPageLogic() {
                 addLogs("Quality control deleted", "opportunity", id, null);
                 getQualityControls("opportunity");
               }
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteFollowup", error);
+          });
+        break;
+
+      case "quotation":
+        setLoading(true);
+        handler
+          .dataPost("/quotation/deleteQuotationTransaction", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              addLogs("Quotation deleted", "quotation", id, null);
+              getQuotations();
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -5751,6 +6515,38 @@ function ContentPageLogic() {
             console.error("There was an error!- updatequalitycontrol", error);
           });
         break;
+
+      case "quotation":
+        setLoading(true);
+
+        let updatableDataforQuotation = {
+          ...quotationData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/quotation/updateQuotationTransaction",
+            updatableDataforQuotation,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              setQuotationModalVisible(false);
+              message.success(response.data.message);
+              getQuotations();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- updateQuotationTransaction",
+              error
+            );
+          });
+        break;
       default:
         break;
     }
@@ -6130,6 +6926,34 @@ function ContentPageLogic() {
           });
         break;
 
+      case "followup-quotation":
+        setLoading(true);
+
+        let followupdataquotation = {
+          ...followupData,
+          section_name: "quotation",
+          lead_id: quotationData.quotationCode,
+        };
+
+        handler
+          .dataPost("/follow-up-section/addFollowUp", followupdataquotation, {
+            authorization: localStorage.getItem("token"),
+          })
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setFollowupModalVisible(false);
+              getFollowups("quotation");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
+
       case "qualitycontrol-opportunity":
         setLoading(true);
 
@@ -6160,6 +6984,62 @@ function ContentPageLogic() {
             console.error("There was an error!- addFollowUp", error);
           });
         break;
+      case "quotation":
+        setLoading(true);
+
+        handler
+          .dataPost("/quotation/addQuotationTransaction", quotationData, {
+            authorization: localStorage.getItem("token"),
+          })
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setOpportunityModalVisible(false);
+              setQuotationModalVisible(false);
+              setPageName("quotation");
+              window.history.replaceState(null, "React App", "/quotation");
+              window.location.reload();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
+
+      case "qualitycontrol-opportunity":
+        setLoading(true);
+
+        let qualityControldataquotation = {
+          ...qualityControlData,
+          section_name: "quotation",
+          section_id: quotationData.quotationCod,
+        };
+
+        handler
+          .dataPost(
+            "/quality-control/addQualityControl",
+            qualityControldataquotation,
+            {
+              authorization: localStorage.getItem("token"),
+            }
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQualityControlModalVisible(false);
+              getQualityControls("quotation");
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addFollowUp", error);
+          });
+        break;
       default:
         break;
     }
@@ -6173,7 +7053,7 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          if (modalName === "opportunity") {
+          if (modalName === "opportunity" || "quotation") {
             setProjectManager(response.data.data);
           } else {
             setDataSource(response.data.data);
@@ -6253,6 +7133,28 @@ function ContentPageLogic() {
       })
       .catch((error) => {
         console.error("There was an error!- getLeadInfo", error);
+      });
+  };
+
+  const getQuotations = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quotation/getQuotationTransactionList", {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getQuotationTransactionList",
+          error
+        );
       });
   };
 
@@ -6594,6 +7496,14 @@ function ContentPageLogic() {
         getAuditLogs("lead");
         break;
 
+      case "quotation":
+        getPlants();
+        getOpportunities();
+        getProjectManagerAPICall("quotation");
+        getConstructionCompanyForProjectManager();
+        getQuotations();
+        break;
+
       default:
         break;
     }
@@ -6642,7 +7552,6 @@ function ContentPageLogic() {
   // upload api call
   const uploadAPICall = (file, destination, feature) => {
     const formData = new FormData();
-    console.log("file: ", file + " |" + destination);
     if (destination === "profile") {
       formData.append("destination", "profile");
     }
@@ -6761,6 +7670,7 @@ function ContentPageLogic() {
     opportunityInfoTblHeaders,
     renderOpportunityModal,
     renderQuotationModal,
+    quotationTblHeaders,
   };
 
   return StatesContainer;

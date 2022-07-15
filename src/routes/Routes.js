@@ -24,6 +24,7 @@ export default function () {
     address,
     lead,
     opportunity,
+    quotation,
   } = pageData();
 
   return (
@@ -91,6 +92,10 @@ export default function () {
           <Route
             path="opportunity"
             element={<Content data={opportunity} />}
+          ></Route>
+          <Route
+            path="quotation"
+            element={<Content data={quotation} />}
           ></Route>
         </Route>
       </Routes>
