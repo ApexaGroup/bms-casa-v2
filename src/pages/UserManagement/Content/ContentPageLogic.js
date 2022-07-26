@@ -1444,6 +1444,10 @@ function ContentPageLogic() {
               if (pageName === "opportunity") {
                 deleteAPICalls("qualitycontrol", record.id, "qualitycontrol");
               }
+
+              if (pageName === "quotation") {
+                deleteAPICalls("qualitycontrol", record.id, "quotation");
+              }
             }}
           >
             <a>Delete</a>
@@ -1609,8 +1613,8 @@ function ContentPageLogic() {
     } else if (key == 3) {
       getAuditLogs("quotation");
     } else if (key == 4) {
-      getMixDesigns("house_mix_design", "qualitycontrol-opportunity");
-      getQualityControls("qualitycontrol-opportunity");
+      getMixDesigns("house_mix_design", "qualitycontrol-quotation");
+      getQualityControls("quotation");
     }
   };
 
@@ -1780,10 +1784,17 @@ function ContentPageLogic() {
     console.log(value);
     // alert(value);
     if (pageName === "project_manager") {
-      setPmData({
-        ...pmData,
-        construction_company_id: value,
-      });
+      switch (name) {
+        case "construction_company_id":
+          setPmData({
+            ...pmData,
+            construction_company_id: value,
+          });
+          break;
+
+        default:
+          break;
+      }
     }
 
     if (pageName === "over_time_fees") {
@@ -1902,6 +1913,16 @@ function ContentPageLogic() {
           setFollowupData({
             ...followupData,
             typeOfContact: value,
+          });
+          break;
+        case "select_mix_design":
+          getMixDesignById(value);
+          break;
+
+        case "select_loading_plant":
+          setQualityControlData({
+            ...qualityControlData,
+            loadingPlant: value,
           });
           break;
 
@@ -2464,18 +2485,22 @@ function ContentPageLogic() {
 
   // handle file pick change
   const handleChange = (info, pageName, feature) => {
+    console.log("test handle Change: " + info + " " + pageName);
+
     if (info.file.originFileObj) {
       switch (pageName) {
         case "user":
+          console.log("user");
           uploadAPICall(info.file.originFileObj, "profile");
           break;
 
         case "house_mix_design":
-          console.log("uploa");
+          console.log("house_mix_design");
           uploadAPICall(info.file.originFileObj, "houseMixDesign");
           break;
 
         case "special_mix_design":
+          console.log("special_mix_design");
           uploadAPICall(info.file.originFileObj, "specialMixDesign");
           break;
 
@@ -2751,7 +2776,7 @@ function ContentPageLogic() {
     {
       name: "construction_company_id",
       typeofinput: "select",
-      placeholder: "",
+      placeholder: "Construction Company",
       type: "text",
       className: "input-style",
       value: pmData.construction_company_id,
@@ -2873,7 +2898,7 @@ function ContentPageLogic() {
     {
       name: "plant_id",
       typeofinput: "select",
-      placeholder: "",
+      placeholder: "Construction company",
       type: "text",
       className: "input-style",
       value: otData.plantid,
@@ -2944,7 +2969,7 @@ function ContentPageLogic() {
     {
       name: "plant_id",
       typeofinput: "select",
-      placeholder: "",
+      placeholder: "Construction company",
       type: "text",
       className: "input-style",
       value: premiumRatesData.plantid,
@@ -3015,7 +3040,7 @@ function ContentPageLogic() {
     {
       name: "plant_id",
       typeofinput: "select",
-      placeholder: "",
+      placeholder: "Construction company",
       type: "text",
       className: "input-style",
       value: shortLoadData.plantid,
@@ -3067,7 +3092,7 @@ function ContentPageLogic() {
     {
       name: "plant_id",
       typeofinput: "select",
-      placeholder: "",
+      placeholder: "Construction company",
       type: "text",
       className: "input-style",
       value: extraChargesData.plantid,
@@ -3526,6 +3551,7 @@ function ContentPageLogic() {
                       </Col>
                     );
                   } else {
+                    console.log(record.method + " ");
                     return (
                       <Col span={24}>
                         <Upload
@@ -3552,68 +3578,61 @@ function ContentPageLogic() {
                       </Col>
                     );
                   }
-
                 case "select":
-                  if (pageName === "house_mix_design" || "specialMixDesign") {
-                    return (
-                      <Col span={12}>
-                        <label>{"Select " + record.placeholder}</label>
-                        <Select
-                          style={{ width: "100%" }}
-                          defaultValue={
-                            !isEdit
-                              ? "Select " + record.placeholder
-                              : record.value
+                  return (
+                    <Col span={12}>
+                      <label>{record.placeholder}</label>
+                      <Select
+                        style={{ width: "100%" }}
+                        defaultValue={
+                          !isEdit
+                            ? "Select " + record.placeholder
+                            : record.value
+                        }
+                        onChange={(value) => {
+                          selectHandleChange(value, record.name);
+                        }}
+                      >
+                        {(() => {
+                          if (record.name === "construction_company_id") {
+                            return cc.map((item) => {
+                              return (
+                                <Option value={item.id}>
+                                  {item.construction_company_name}
+                                </Option>
+                              );
+                            });
+                          } else if (record.name === "internalDesignType") {
+                            return Type.map((item) => {
+                              return (
+                                <Option value={item.name}>{item.name}</Option>
+                              );
+                            });
+                          } else if (record.name === "airType") {
+                            return AirType.map((item) => {
+                              return (
+                                <Option value={item.name}>{item.name}</Option>
+                              );
+                            });
+                          } else if (record.name === "stoneType") {
+                            return StoneType.map((item) => {
+                              return (
+                                <Option value={item.name}>{item.name}</Option>
+                              );
+                            });
+                          } else if (record.name === "plant_id") {
+                            return cc.map((item) => {
+                              return (
+                                <Option value={item.id}>
+                                  {item.construction_company_name}
+                                </Option>
+                              );
+                            });
                           }
-                          onChange={(value) => {
-                            selectHandleChange(value, record.name);
-                          }}
-                        >
-                          {(() => {
-                            if (record.name === "internalDesignType") {
-                              return Type.map((item) => {
-                                return (
-                                  <Option value={item.name}>{item.name}</Option>
-                                );
-                              });
-                            } else if (record.name === "airType") {
-                              return AirType.map((item) => {
-                                return (
-                                  <Option value={item.name}>{item.name}</Option>
-                                );
-                              });
-                            } else if (record.name === "stoneType") {
-                              return StoneType.map((item) => {
-                                return (
-                                  <Option value={item.name}>{item.name}</Option>
-                                );
-                              });
-                            }
-                          })()}
-                        </Select>
-                      </Col>
-                    );
-                  } else {
-                    return (
-                      <Col span={12}>
-                        <label>{"Select Company"}</label>
-                        <Select
-                          style={{ width: "100%" }}
-                          defaultValue={isEdit ? companyId : "Select Company"}
-                          onChange={selectHandleChange}
-                        >
-                          {cc.map((item) => {
-                            return (
-                              <Option value={item.id}>
-                                {item.construction_company_name}
-                              </Option>
-                            );
-                          })}
-                        </Select>
-                      </Col>
-                    );
-                  }
-
+                        })()}
+                      </Select>
+                    </Col>
+                  );
                 case "switch":
                   return (
                     <Col span={24}>
@@ -3625,7 +3644,6 @@ function ContentPageLogic() {
                       />
                     </Col>
                   );
-
                 case "input":
                   if (record.name == "mixDesignName") {
                     return (
@@ -3657,7 +3675,6 @@ function ContentPageLogic() {
                       </Col>
                     );
                   }
-
                 case "textarea":
                   return (
                     <Col span={12}>
@@ -5672,6 +5689,10 @@ function ContentPageLogic() {
                 addLogs("Quality control deleted", "opportunity", id, null);
                 getQualityControls("opportunity");
               }
+              if (modalName === "quotation") {
+                addLogs("Quality control deleted", "quotation", id, null);
+                getQualityControls("quotation");
+              }
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -6558,20 +6579,40 @@ function ContentPageLogic() {
       case "user":
         setLoading(true);
 
-        handler
-          .dataPost("/auth/register", userData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getUsersAPIcall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addUserAPICall", error);
-          });
+        if (
+          userData.username === "" ||
+          userData.password === "" ||
+          userData.firstName === "" ||
+          userData.lastName === "" ||
+          userData.contactNo === "" ||
+          userData.address === "" ||
+          userData.alternateNo === "" ||
+          userData.userProfileImage === "" ||
+          userData.city === "" ||
+          userData.state === "" ||
+          userData.zipcode === ""
+        ) {
+          window.alert("Please provide required fields");
+        } else {
+          handler
+            .dataPost("/auth/register", userData, {})
+            .then((response) => {
+              setLoading(false);
+              console.log(response);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getUsersAPIcall();
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- addUserAPICall", error);
+            });
+        }
         break;
 
       case "role":
@@ -6580,25 +6621,42 @@ function ContentPageLogic() {
       case "construction_company":
         setLoading(true);
 
-        handler
-          .dataPost("/construction-company/addCC", ccData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success("success");
+        if (
+          ccData.address === "" ||
+          ccData.alternate_no === "" ||
+          ccData.city === "" ||
+          ccData.construction_company_name === "" ||
+          ccData.contact_no === "" ||
+          ccData.contact_person_name === "" ||
+          ccData.email === "" ||
+          ccData.state === "" ||
+          ccData.zipcode === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/construction-company/addCC", ccData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success("success");
 
-              getConstructionCompanyAPIcall();
-              getConstructionCompanyForProjectManager();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error(
-              "There was an error!- addConstructionCompanyAPICall",
-              error
-            );
-          });
+                getConstructionCompanyAPIcall();
+                getConstructionCompanyForProjectManager();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error(
+                "There was an error!- addConstructionCompanyAPICall",
+                error
+              );
+            });
+        }
         break;
 
       case "add_construction_company":
@@ -6626,98 +6684,161 @@ function ContentPageLogic() {
 
       case "project_manager":
         setLoading(true);
-
-        handler
-          .dataPost("/project-manager/addPM", pmData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getProjectManagerAPICall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error(
-              "There was an error!- addProjectManagerAPICall",
-              error
-            );
-          });
+        if (
+          pmData.address === "" ||
+          pmData.alternate_email === "" ||
+          pmData.cell_phone === "" ||
+          pmData.city === "" ||
+          pmData.construction_company_id === "" ||
+          pmData.contact_no === "" ||
+          pmData.email === "" ||
+          pmData.project_manager_name === "" ||
+          pmData.state === "" ||
+          pmData.zipcode === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/project-manager/addPM", pmData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getProjectManagerAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error(
+                "There was an error!- addProjectManagerAPICall",
+                error
+              );
+            });
+        }
         break;
       case "over_time_fees":
         setLoading(true);
-
-        handler
-          .dataPost("/over-time-fees/addOvertimeFees", otData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getOvertimeFeesAPICall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addOvertimeFeesAPICall", error);
-          });
+        if (
+          otData.title === "" ||
+          otData.unit === "" ||
+          otData.quoteNote === "" ||
+          otData.price === "" ||
+          otData.plantid === "" ||
+          otData.fieldDescription === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/over-time-fees/addOvertimeFees", otData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getOvertimeFeesAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "There was an error!- addOvertimeFeesAPICall",
+                error
+              );
+            });
+        }
         break;
       case "premium_rates":
         setLoading(true);
-
-        handler
-          .dataPost("/premium-rates/addPremiumRates", premiumRatesData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getPremiumRatesAPICall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addOvertimeFeesAPICall", error);
-          });
+        if (
+          premiumRatesData.fieldDescription === "" ||
+          premiumRatesData.plantOpeningFee === "" ||
+          premiumRatesData.plantid === "" ||
+          premiumRatesData.truckHireFee === "" ||
+          premiumRatesData.title === "" ||
+          premiumRatesData.quoteNote === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/premium-rates/addPremiumRates", premiumRatesData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getPremiumRatesAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "There was an error!- addOvertimeFeesAPICall",
+                error
+              );
+            });
+        }
         break;
 
       case "short_load_charges":
         setLoading(true);
-
-        handler
-          .dataPost("/short-load-charges/addShortLoad", shortLoadData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getShortLoadChargesAPICall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addShortLoad", error);
-          });
+        if (
+          shortLoadData.title === "" ||
+          shortLoadData.fieldDescription === "" ||
+          shortLoadData.plantid === "" ||
+          shortLoadData.quoteNote === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/short-load-charges/addShortLoad", shortLoadData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getShortLoadChargesAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addShortLoad", error);
+            });
+        }
         break;
 
       case "extra_charges":
         setLoading(true);
 
-        handler
-          .dataPost("/extra-charges/addExtraCharge", extraChargesData, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getExtraChargeAPICall();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addExtraCharge", error);
-          });
+        if (
+          extraChargesData.fieldDescription === "" ||
+          extraChargesData.plantid === "" ||
+          extraChargesData.price === "" ||
+          extraChargesData.quoteNote === "" ||
+          extraChargesData.title === "" ||
+          extraChargesData.unit === ""
+        ) {
+          window.alert("Please provide required details");
+          console.log(extraChargesData);
+        } else {
+          handler
+            .dataPost("/extra-charges/addExtraCharge", extraChargesData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getExtraChargeAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addExtraCharge", error);
+            });
+        }
         break;
 
       case "house_mix_design":
@@ -6727,21 +6848,38 @@ function ContentPageLogic() {
           ...mixDesignData,
           mixType: "house_mix_design",
         };
-
-        handler
-          .dataPost("/mix-design/addMixDesign", data, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getMixDesigns(data.mixType);
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addMixDesign", error);
-          });
+        if (
+          mixDesignData.airType === "" ||
+          mixDesignData.documentPath === "" ||
+          mixDesignData.expirationDate === "" ||
+          mixDesignData.minRate === "" ||
+          mixDesignData.mixDesignCode === "" ||
+          mixDesignData.mixDesignName === "" ||
+          mixDesignData.mixType === "" ||
+          mixDesignData.plantid === "" ||
+          mixDesignData.psi === "" ||
+          mixDesignData.proportions === "" ||
+          mixDesignData.pumpMixtestingLabName === "" ||
+          mixDesignData.stoneType === "" ||
+          mixDesignData.wcRatio === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/mix-design/addMixDesign", data, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getMixDesigns(data.mixType);
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addMixDesign", error);
+            });
+        }
         break;
       case "special_mix_design":
         setLoading(true);
@@ -6750,21 +6888,38 @@ function ContentPageLogic() {
           ...specialMixDesignData,
           mixType: "special_mix_design",
         };
-
-        handler
-          .dataPost("/mix-design/addMixDesign", datasmd, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getMixDesigns(datasmd.mixType);
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addMixDesign", error);
-          });
+        if (
+          specialMixDesignData.airType === "" ||
+          specialMixDesignData.documentPath === "" ||
+          specialMixDesignData.expirationDate === "" ||
+          specialMixDesignData.minRate === "" ||
+          specialMixDesignData.mixDesignCode === "" ||
+          specialMixDesignData.mixDesignName === "" ||
+          specialMixDesignData.mixType === "" ||
+          specialMixDesignData.plantid === "" ||
+          specialMixDesignData.psi === "" ||
+          specialMixDesignData.proportions === "" ||
+          specialMixDesignData.pumpMixtestingLabName === "" ||
+          specialMixDesignData.stoneType === "" ||
+          specialMixDesignData.wcRatio === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/mix-design/addMixDesign", datasmd, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getMixDesigns(datasmd.mixType);
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addMixDesign", error);
+            });
+        }
         break;
 
       case "address":
@@ -6773,21 +6928,30 @@ function ContentPageLogic() {
         let addressdata_ = {
           ...addressData,
         };
-
-        handler
-          .dataPost("/lead-section/addAddress", addressdata_, {})
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              getAddresses();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addMixDesign", error);
-          });
+        if (
+          addressData.address === "" ||
+          addressData.borough === "" ||
+          addressData.cross_street === "" ||
+          addressData.state === "" ||
+          addressData.zipcode === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/lead-section/addAddress", addressdata_, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getAddresses();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addMixDesign", error);
+            });
+        }
         break;
 
       case "lead":
@@ -6797,23 +6961,34 @@ function ContentPageLogic() {
           ...leadInformationData,
         };
 
-        handler
-          .dataPost("/lead-information/addLeadInfo", leaddata, {
-            authorization: localStorage.getItem("token"),
-          })
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              resetLeadInfoStates();
-              message.success(response.data.message);
-              getLeads();
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addLeadInfo", error);
-          });
+        if (
+          leadInformationData.BidDueDate === "" ||
+          leadInformationData.address === "" ||
+          leadInformationData.endDate === "" ||
+          leadInformationData.estimatedYards === "" ||
+          leadInformationData.leadTitle === "" ||
+          leadInformationData.startDate === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/lead-information/addLeadInfo", leaddata, {
+              authorization: localStorage.getItem("token"),
+            })
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                resetLeadInfoStates();
+                message.success(response.data.message);
+                getLeads();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addLeadInfo", error);
+            });
+        }
         break;
 
       case "opportunity":
@@ -6879,24 +7054,38 @@ function ContentPageLogic() {
           ...followupData,
           section_name: "lead",
         };
-
-        handler
-          .dataPost("/follow-up-section/addFollowUp", followupdata, {
-            authorization: localStorage.getItem("token"),
-          })
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              setFollowupModalVisible(false);
-              getFollowups("lead");
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
-          });
+        if (
+          followupData.contactDate === "" ||
+          followupData.contactNo === "" ||
+          followupData.contactPersonName === "" ||
+          followupData.description === "" ||
+          followupData.email === "" ||
+          followupData.lead_id === "" ||
+          followupData.nextMeetingDate === "" ||
+          followupData.onSiteVisit === "" ||
+          followupData.section_name === "" ||
+          followupData.typeOfContact === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/follow-up-section/addFollowUp", followupdata, {
+              authorization: localStorage.getItem("token"),
+            })
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                setFollowupModalVisible(false);
+                getFollowups("lead");
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addFollowUp", error);
+            });
+        }
         break;
 
       case "followup-opportunity":
@@ -6906,24 +7095,42 @@ function ContentPageLogic() {
           ...followupData,
           section_name: "opportunity",
         };
-
-        handler
-          .dataPost("/follow-up-section/addFollowUp", followupdataopportunity, {
-            authorization: localStorage.getItem("token"),
-          })
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              setFollowupModalVisible(false);
-              getFollowups("opportunity");
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
-          });
+        if (
+          followupData.contactDate === "" ||
+          followupData.contactNo === "" ||
+          followupData.contactPersonName === "" ||
+          followupData.description === "" ||
+          followupData.email === "" ||
+          followupData.lead_id === "" ||
+          followupData.nextMeetingDate === "" ||
+          followupData.onSiteVisit === "" ||
+          followupData.section_name === "" ||
+          followupData.typeOfContact === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost(
+              "/follow-up-section/addFollowUp",
+              followupdataopportunity,
+              {
+                authorization: localStorage.getItem("token"),
+              }
+            )
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                setFollowupModalVisible(false);
+                getFollowups("opportunity");
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addFollowUp", error);
+            });
+        }
         break;
 
       case "followup-quotation":
@@ -6934,24 +7141,38 @@ function ContentPageLogic() {
           section_name: "quotation",
           lead_id: quotationData.quotationCode,
         };
-
-        handler
-          .dataPost("/follow-up-section/addFollowUp", followupdataquotation, {
-            authorization: localStorage.getItem("token"),
-          })
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              setFollowupModalVisible(false);
-              getFollowups("quotation");
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
-          });
+        if (
+          followupData.contactDate === "" ||
+          followupData.contactNo === "" ||
+          followupData.contactPersonName === "" ||
+          followupData.description === "" ||
+          followupData.email === "" ||
+          followupData.lead_id === "" ||
+          followupData.nextMeetingDate === "" ||
+          followupData.onSiteVisit === "" ||
+          followupData.section_name === "" ||
+          followupData.typeOfContact === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/follow-up-section/addFollowUp", followupdataquotation, {
+              authorization: localStorage.getItem("token"),
+            })
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                setFollowupModalVisible(false);
+                getFollowups("quotation");
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addFollowUp", error);
+            });
+        }
         break;
 
       case "qualitycontrol-opportunity":
@@ -6962,27 +7183,43 @@ function ContentPageLogic() {
           section_name: "opportunity",
         };
 
-        handler
-          .dataPost(
-            "/quality-control/addQualityControl",
-            qualityControldataopportunity,
-            {
-              authorization: localStorage.getItem("token"),
-            }
-          )
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              setQualityControlModalVisible(false);
-              getQualityControls("opportunity");
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
-          });
+        if (
+          qualityControlData.approvedDesign === "" ||
+          qualityControlData.estimatedYards === "" ||
+          qualityControlData.loadingPlant === "" ||
+          qualityControlData.minPrice === "" ||
+          qualityControlData.mixDesignId === "" ||
+          qualityControlData.mixDesignName === "" ||
+          qualityControlData.price === "" ||
+          qualityControlData.section_id === "" ||
+          qualityControlData.section_name === "" ||
+          qualityControlData.tr2 === "" ||
+          qualityControlData.tr3 === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost(
+              "/quality-control/addQualityControl",
+              qualityControldataopportunity,
+              {
+                authorization: localStorage.getItem("token"),
+              }
+            )
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                setQualityControlModalVisible(false);
+                getQualityControls("opportunity");
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addFollowUp", error);
+            });
+        }
         break;
       case "quotation":
         setLoading(true);
@@ -7009,36 +7246,51 @@ function ContentPageLogic() {
           });
         break;
 
-      case "qualitycontrol-opportunity":
+      case "qualitycontrol-quotation":
         setLoading(true);
 
         let qualityControldataquotation = {
           ...qualityControlData,
           section_name: "quotation",
-          section_id: quotationData.quotationCod,
+          section_id: quotationData.quotationCode,
         };
-
-        handler
-          .dataPost(
-            "/quality-control/addQualityControl",
-            qualityControldataquotation,
-            {
-              authorization: localStorage.getItem("token"),
-            }
-          )
-          .then((response) => {
-            setLoading(false);
-            if (response.status == 201) {
-              message.success(response.data.message);
-              setQualityControlModalVisible(false);
-              getQualityControls("quotation");
-            } else if (response.status == 400) {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
-          });
+        if (
+          qualityControlData.approvedDesign === "" ||
+          qualityControlData.estimatedYards === "" ||
+          qualityControlData.loadingPlant === "" ||
+          qualityControlData.minPrice === "" ||
+          qualityControlData.mixDesignId === "" ||
+          qualityControlData.mixDesignName === "" ||
+          qualityControlData.price === "" ||
+          qualityControlData.section_id === "" ||
+          qualityControlData.section_name === "" ||
+          qualityControlData.tr2 === "" ||
+          qualityControlData.tr3 === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost(
+              "/quality-control/addQualityControl",
+              qualityControldataquotation,
+              {
+                authorization: localStorage.getItem("token"),
+              }
+            )
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                setQualityControlModalVisible(false);
+                getQualityControls("quotation");
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addFollowUp", error);
+            });
+        }
         break;
       default:
         break;
@@ -7053,11 +7305,8 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          if (modalName === "opportunity" || "quotation") {
-            setProjectManager(response.data.data);
-          } else {
-            setDataSource(response.data.data);
-          }
+          setDataSource(response.data.data);
+          setProjectManager(response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -7306,6 +7555,8 @@ function ContentPageLogic() {
         setLoading(false);
         if (response.status == 200) {
           if (modalName === "qualitycontrol-opportunity") {
+            setMixDesign(response.data.data);
+          } else if (modalName === "qualitycontrol-quotation") {
             setMixDesign(response.data.data);
           } else {
             setDataSource(response.data.data);
