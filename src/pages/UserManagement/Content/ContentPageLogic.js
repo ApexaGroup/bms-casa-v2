@@ -40,6 +40,12 @@ function ContentPageLogic() {
   const { TextArea } = Input;
   const { TabPane } = Tabs;
   const [pageName, setPageName] = useState("");
+  const [file, setFile] = useState();
+  const [isUploaded, setUploaded] = useState(false);
+  const [isTr3Uploaded, setTr3Uploaded] = useState(false);
+  const [isTr2Uploaded, setTr2Uploaded] = useState(false);
+  const [tr3, setTr3] = useState("");
+  const [tr2, setTr2] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
   const [construction_companies, setConstruction_companies] = useState([]);
@@ -2487,39 +2493,35 @@ function ContentPageLogic() {
   const handleChange = (info, pageName, feature) => {
     console.log("test handle Change: " + info + " " + pageName);
 
-    if (info.file.originFileObj) {
+    if (info) {
       switch (pageName) {
         case "user":
           console.log("user");
-          uploadAPICall(info.file.originFileObj, "profile");
+          uploadAPICall(info, "profile");
           break;
 
         case "house_mix_design":
           console.log("house_mix_design");
-          uploadAPICall(info.file.originFileObj, "houseMixDesign");
+          uploadAPICall(info, "houseMixDesign");
           break;
 
         case "special_mix_design":
           console.log("special_mix_design");
-          uploadAPICall(info.file.originFileObj, "specialMixDesign");
+          uploadAPICall(info, "specialMixDesign");
           break;
 
         case "opportunity":
           switch (feature) {
             case "approvedDesign":
-              uploadAPICall(
-                info.file.originFileObj,
-                "houseMixDesign",
-                "approvedDesign"
-              );
+              uploadAPICall(info, "houseMixDesign", "approvedDesign");
               break;
 
             case "tr3":
-              uploadAPICall(info.file.originFileObj, "houseMixDesign", "tr3");
+              uploadAPICall(info, "houseMixDesign", "tr3");
               break;
 
             case "tr2":
-              uploadAPICall(info.file.originFileObj, "houseMixDesign", "tr2");
+              uploadAPICall(info, "houseMixDesign", "tr2");
               break;
 
             default:
@@ -2768,7 +2770,6 @@ function ContentPageLogic() {
       type: "upload",
       className: "avatar-uploader",
       value: userData.userProfileImage,
-      method: handleChange,
     },
   ];
 
@@ -3276,7 +3277,6 @@ function ContentPageLogic() {
       type: "upload",
       className: "avatar-uploader",
       value: mixDesignData.documentPath,
-      method: handleChange,
     },
   ];
 
@@ -3524,59 +3524,158 @@ function ContentPageLogic() {
             {generalFields.map((record) => {
               switch (record.typeofinput) {
                 case "upload":
-                  if (pageName === "houseMixDesign" || "specialMixDesign") {
+                  if (pageName === "user") {
                     return (
                       <Col span={24}>
-                        <Upload
-                          name={record.name}
-                          listType="picture-card"
-                          className={record.className}
-                          showUploadList={false}
-                          onChange={(file) => {
-                            record.method(file, pageName);
-                          }}
-                        >
-                          {mixDesignData.documentPath ? (
-                            <img
-                              src={mixDesignData.documentPath}
-                              alt="avatar"
-                              style={{
-                                width: "100%",
-                              }}
-                            />
-                          ) : (
-                            uploadButton
-                          )}
-                        </Upload>
-                      </Col>
-                    );
-                  } else {
-                    console.log(record.method + " ");
-                    return (
-                      <Col span={24}>
-                        <Upload
-                          name={record.name}
-                          listType="picture-card"
-                          className={record.className}
-                          showUploadList={false}
-                          onChange={(file) => {
-                            record.method(file, pageName);
-                          }}
-                        >
-                          {imageUrl ? (
+                        <label>Profile Image</label>
+                        <br />
+                        {imageUrl ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              marginTop: 4,
+                            }}
+                          >
                             <img
                               src={imageUrl}
                               alt="avatar"
                               style={{
-                                width: "100%",
+                                width: 100,
+                                height: 100,
                               }}
                             />
-                          ) : (
-                            uploadButton
-                          )}
-                        </Upload>
+                            <div
+                              style={{
+                                display: "flex",
+                                marginLeft: 4,
+                                alignItems: "center",
+                              }}
+                            >
+                              <Button
+                                type="primary"
+                                onClick={() => {
+                                  uploadAPICall(file, "profile", "");
+                                }}
+                                style={{ marginRight: 5 }}
+                                disabled={isUploaded ? true : false}
+                              >
+                                {isUploaded ? "Uploaded" : "Upload"}
+                              </Button>
+
+                              <Button
+                                type="primary"
+                                danger
+                                onClick={() => {
+                                  setUploaded(false);
+                                  setImageUrl(null);
+                                  setFile(null);
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            onChange={(e) => {
+                              setImageUrl(
+                                URL.createObjectURL(e.target.files[0])
+                              );
+                              setFile(e.target.files[0]);
+                            }}
+                          />
+                        )}
                       </Col>
                     );
+                  } else {
+                    return (
+                      <Col span={24}>
+                        <label>Mix Design Image</label>
+                        <br />
+                        {imageUrl ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              marginTop: 4,
+                            }}
+                          >
+                            <img
+                              src={imageUrl}
+                              alt="avatar"
+                              style={{
+                                width: 100,
+                                height: 100,
+                              }}
+                            />
+                            <div
+                              style={{
+                                display: "flex",
+                                marginLeft: 4,
+                                alignItems: "center",
+                              }}
+                            >
+                              <Button
+                                type="primary"
+                                onClick={() => {
+                                  uploadAPICall(file, "houseMixDesign", "");
+                                }}
+                                style={{ marginRight: 5 }}
+                                disabled={isUploaded ? true : false}
+                              >
+                                {isUploaded ? "Uploaded" : "Upload"}
+                              </Button>
+
+                              <Button
+                                type="primary"
+                                danger
+                                onClick={() => {
+                                  setUploaded(false);
+                                  setImageUrl(null);
+                                  setFile(null);
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            onChange={(e) => {
+                              setImageUrl(
+                                URL.createObjectURL(e.target.files[0])
+                              );
+                              setFile(e.target.files[0]);
+                            }}
+                          />
+                        )}
+                      </Col>
+                    );
+
+                    // return (
+                    //   <Col span={24}>
+                    //     <Upload
+                    //       name={record.name}
+                    //       listType="picture-card"
+                    //       className={record.className}
+                    //       showUploadList={false}
+                    //       onChange={(file) => {}}
+                    //     >
+                    //       {mixDesignData.documentPath ? (
+                    //         <img
+                    //           src={mixDesignData.documentPath}
+                    //           alt="avatar"
+                    //           style={{
+                    //             width: "100%",
+                    //           }}
+                    //         />
+                    //       ) : (
+                    //         uploadButton
+                    //       )}
+                    //     </Upload>
+                    //   </Col>
+                    // );
                   }
                 case "select":
                   return (
@@ -4548,43 +4647,185 @@ function ContentPageLogic() {
                   <Col span={12}>
                     <label>Approved Design</label>
                     <br />
-                    <Upload
-                      name={"approvedDesign"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "approvedDesign");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {imageUrl ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={imageUrl}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(
+                                file,
+                                "houseMixDesign",
+                                "approvedDesign"
+                              );
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isUploaded ? true : false}
+                          >
+                            {isUploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setUploaded(false);
+                              setImageUrl(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setImageUrl(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
                     <label>TR3</label>
                     <br />
-                    <Upload
-                      name={"tr3"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "tr3");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {tr3 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={tr3}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(file, "houseMixDesign", "tr3");
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isTr3Uploaded ? true : false}
+                          >
+                            {isTr3Uploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setTr3Uploaded(false);
+                              setTr3(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setTr3(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
                     <label>TR2</label>
                     <br />
-                    <Upload
-                      name={"tr2"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "tr2");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {tr2 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={tr2}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(file, "houseMixDesign", "tr2");
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isTr2Uploaded ? true : false}
+                          >
+                            {isTr2Uploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setTr2Uploaded(false);
+                              setTr2(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setTr2(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
@@ -5359,47 +5600,188 @@ function ContentPageLogic() {
                       disabled
                     />
                   </Col>
-
                   <Col span={12}>
                     <label>Approved Design</label>
                     <br />
-                    <Upload
-                      name={"approvedDesign"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "approvedDesign");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {imageUrl ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={imageUrl}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(
+                                file,
+                                "houseMixDesign",
+                                "approvedDesign"
+                              );
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isUploaded ? true : false}
+                          >
+                            {isUploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setUploaded(false);
+                              setImageUrl(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setImageUrl(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
                     <label>TR3</label>
                     <br />
-                    <Upload
-                      name={"tr3"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "tr3");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {tr3 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={tr3}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(file, "houseMixDesign", "tr3");
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isTr3Uploaded ? true : false}
+                          >
+                            {isTr3Uploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setTr3Uploaded(false);
+                              setTr3(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setTr3(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
                     <label>TR2</label>
                     <br />
-                    <Upload
-                      name={"tr2"}
-                      showUploadList={true}
-                      onChange={(file) => {
-                        handleChange(file, "opportunity", "tr2");
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
+                    {tr2 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          marginTop: 4,
+                        }}
+                      >
+                        <img
+                          src={tr2}
+                          alt="avatar"
+                          style={{
+                            width: 100,
+                            height: 100,
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: 4,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() => {
+                              uploadAPICall(file, "houseMixDesign", "tr2");
+                            }}
+                            style={{ marginRight: 5 }}
+                            disabled={isTr2Uploaded ? true : false}
+                          >
+                            {isTr2Uploaded ? "Uploaded" : "Upload"}
+                          </Button>
+
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                              setTr2Uploaded(false);
+                              setTr2(null);
+                              setFile(null);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          setTr2(URL.createObjectURL(e.target.files[0]));
+                          setFile(e.target.files[0]);
+                        }}
+                      />
+                    )}
                   </Col>
 
                   <Col span={12}>
@@ -6579,6 +6961,8 @@ function ContentPageLogic() {
       case "user":
         setLoading(true);
 
+        console.log(userData);
+
         if (
           userData.username === "" ||
           userData.password === "" ||
@@ -6848,20 +7232,22 @@ function ContentPageLogic() {
           ...mixDesignData,
           mixType: "house_mix_design",
         };
+
+        console.log(mixDesignData);
         if (
-          mixDesignData.airType === "" ||
-          mixDesignData.documentPath === "" ||
-          mixDesignData.expirationDate === "" ||
-          mixDesignData.minRate === "" ||
-          mixDesignData.mixDesignCode === "" ||
-          mixDesignData.mixDesignName === "" ||
-          mixDesignData.mixType === "" ||
-          mixDesignData.plantid === "" ||
-          mixDesignData.psi === "" ||
-          mixDesignData.proportions === "" ||
-          mixDesignData.pumpMixtestingLabName === "" ||
-          mixDesignData.stoneType === "" ||
-          mixDesignData.wcRatio === ""
+          data.airType === "" ||
+          data.documentPath === "" ||
+          data.expirationDate === "" ||
+          data.minRate === "" ||
+          data.mixDesignCode === "" ||
+          data.mixDesignName === "" ||
+          data.mixType === "" ||
+          data.plantid === "" ||
+          data.psi === "" ||
+          data.proportions === "" ||
+          data.pumpMixtestingLabName === "" ||
+          data.stoneType === "" ||
+          data.wcRatio === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -6889,19 +7275,19 @@ function ContentPageLogic() {
           mixType: "special_mix_design",
         };
         if (
-          specialMixDesignData.airType === "" ||
-          specialMixDesignData.documentPath === "" ||
-          specialMixDesignData.expirationDate === "" ||
-          specialMixDesignData.minRate === "" ||
-          specialMixDesignData.mixDesignCode === "" ||
-          specialMixDesignData.mixDesignName === "" ||
-          specialMixDesignData.mixType === "" ||
-          specialMixDesignData.plantid === "" ||
-          specialMixDesignData.psi === "" ||
-          specialMixDesignData.proportions === "" ||
-          specialMixDesignData.pumpMixtestingLabName === "" ||
-          specialMixDesignData.stoneType === "" ||
-          specialMixDesignData.wcRatio === ""
+          datasmd.airType === "" ||
+          datasmd.documentPath === "" ||
+          datasmd.expirationDate === "" ||
+          datasmd.minRate === "" ||
+          datasmd.mixDesignCode === "" ||
+          datasmd.mixDesignName === "" ||
+          datasmd.mixType === "" ||
+          datasmd.plantid === "" ||
+          datasmd.psi === "" ||
+          datasmd.proportions === "" ||
+          datasmd.pumpMixtestingLabName === "" ||
+          datasmd.stoneType === "" ||
+          datasmd.wcRatio === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -7184,17 +7570,17 @@ function ContentPageLogic() {
         };
 
         if (
-          qualityControlData.approvedDesign === "" ||
-          qualityControlData.estimatedYards === "" ||
-          qualityControlData.loadingPlant === "" ||
-          qualityControlData.minPrice === "" ||
-          qualityControlData.mixDesignId === "" ||
-          qualityControlData.mixDesignName === "" ||
-          qualityControlData.price === "" ||
-          qualityControlData.section_id === "" ||
-          qualityControlData.section_name === "" ||
-          qualityControlData.tr2 === "" ||
-          qualityControlData.tr3 === ""
+          qualityControldataopportunity.approvedDesign === "" ||
+          qualityControldataopportunity.estimatedYards === "" ||
+          qualityControldataopportunity.loadingPlant === "" ||
+          qualityControldataopportunity.minPrice === "" ||
+          qualityControldataopportunity.mixDesignId === "" ||
+          qualityControldataopportunity.mixDesignName === "" ||
+          qualityControldataopportunity.price === "" ||
+          qualityControldataopportunity.section_id === "" ||
+          qualityControldataopportunity.section_name === "" ||
+          qualityControldataopportunity.tr2 === "" ||
+          qualityControldataopportunity.tr3 === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -7255,17 +7641,17 @@ function ContentPageLogic() {
           section_id: quotationData.quotationCode,
         };
         if (
-          qualityControlData.approvedDesign === "" ||
-          qualityControlData.estimatedYards === "" ||
-          qualityControlData.loadingPlant === "" ||
-          qualityControlData.minPrice === "" ||
-          qualityControlData.mixDesignId === "" ||
-          qualityControlData.mixDesignName === "" ||
-          qualityControlData.price === "" ||
-          qualityControlData.section_id === "" ||
-          qualityControlData.section_name === "" ||
-          qualityControlData.tr2 === "" ||
-          qualityControlData.tr3 === ""
+          qualityControldataquotation.approvedDesign === "" ||
+          qualityControldataquotation.estimatedYards === "" ||
+          qualityControldataquotation.loadingPlant === "" ||
+          qualityControldataquotation.minPrice === "" ||
+          qualityControldataquotation.mixDesignId === "" ||
+          qualityControldataquotation.mixDesignName === "" ||
+          qualityControldataquotation.price === "" ||
+          qualityControldataquotation.section_id === "" ||
+          qualityControldataquotation.section_name === "" ||
+          qualityControldataquotation.tr2 === "" ||
+          qualityControldataquotation.tr3 === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -7821,7 +8207,7 @@ function ContentPageLogic() {
 
     formData.append("image", file);
 
-    console.log(formData);
+    console.log(destination + " " + feature);
 
     handler
       .dataPost("/auth/upload", formData, {})
@@ -7829,17 +8215,20 @@ function ContentPageLogic() {
         setLoading(true);
         if (response.data.status == 200) {
           setLoading(false);
+          setUploaded(true);
           if (feature === "approvedDesign") {
             setQualityControlData({
               ...qualityControlData,
               approvedDesign: response.data.imageRef,
             });
           } else if (feature === "tr3") {
+            setTr3Uploaded(true);
             setQualityControlData({
               ...qualityControlData,
               tr3: response.data.imageRef,
             });
           } else if (feature === "tr2") {
+            setTr2Uploaded(true);
             setQualityControlData({
               ...qualityControlData,
               tr2: response.data.imageRef,
