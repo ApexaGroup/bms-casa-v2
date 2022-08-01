@@ -7441,16 +7441,16 @@ function ContentPageLogic() {
           section_name: "lead",
         };
         if (
-          followupData.contactDate === "" ||
-          followupData.contactNo === "" ||
-          followupData.contactPersonName === "" ||
-          followupData.description === "" ||
-          followupData.email === "" ||
-          followupData.lead_id === "" ||
-          followupData.nextMeetingDate === "" ||
-          followupData.onSiteVisit === "" ||
-          followupData.section_name === "" ||
-          followupData.typeOfContact === ""
+          followupdata.contactDate === "" ||
+          followupdata.contactNo === "" ||
+          followupdata.contactPersonName === "" ||
+          followupdata.description === "" ||
+          followupdata.email === "" ||
+          followupdata.lead_id === "" ||
+          followupdata.nextMeetingDate === "" ||
+          followupdata.onSiteVisit === "" ||
+          followupdata.section_name === "" ||
+          followupdata.typeOfContact === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -7482,16 +7482,16 @@ function ContentPageLogic() {
           section_name: "opportunity",
         };
         if (
-          followupData.contactDate === "" ||
-          followupData.contactNo === "" ||
-          followupData.contactPersonName === "" ||
-          followupData.description === "" ||
-          followupData.email === "" ||
-          followupData.lead_id === "" ||
-          followupData.nextMeetingDate === "" ||
-          followupData.onSiteVisit === "" ||
-          followupData.section_name === "" ||
-          followupData.typeOfContact === ""
+          followupdataopportunity.contactDate === "" ||
+          followupdataopportunity.contactNo === "" ||
+          followupdataopportunity.contactPersonName === "" ||
+          followupdataopportunity.description === "" ||
+          followupdataopportunity.email === "" ||
+          followupdataopportunity.lead_id === "" ||
+          followupdataopportunity.nextMeetingDate === "" ||
+          followupdataopportunity.onSiteVisit === "" ||
+          followupdataopportunity.section_name === "" ||
+          followupdataopportunity.typeOfContact === ""
         ) {
           window.alert("Please provide required details");
         } else {
@@ -7528,16 +7528,16 @@ function ContentPageLogic() {
           lead_id: quotationData.quotationCode,
         };
         if (
-          followupData.contactDate === "" ||
-          followupData.contactNo === "" ||
-          followupData.contactPersonName === "" ||
-          followupData.description === "" ||
-          followupData.email === "" ||
-          followupData.lead_id === "" ||
-          followupData.nextMeetingDate === "" ||
-          followupData.onSiteVisit === "" ||
-          followupData.section_name === "" ||
-          followupData.typeOfContact === ""
+          followupdataquotation.contactDate === "" ||
+          followupdataquotation.contactNo === "" ||
+          followupdataquotation.contactPersonName === "" ||
+          followupdataquotation.description === "" ||
+          followupdataquotation.email === "" ||
+          followupdataquotation.lead_id === "" ||
+          followupdataquotation.nextMeetingDate === "" ||
+          followupdataquotation.onSiteVisit === "" ||
+          followupdataquotation.section_name === "" ||
+          followupdataquotation.typeOfContact === ""
         ) {
           window.alert("Please provide required details");
         } else {
