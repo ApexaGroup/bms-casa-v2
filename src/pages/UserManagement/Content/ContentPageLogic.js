@@ -25,6 +25,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   CheckCircleOutlined,
+  InfoCircleOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 
@@ -68,9 +69,11 @@ function ContentPageLogic() {
     useState(false);
   const [isQuotationModalVisible, setQuotationModalVisible] = useState(false);
   const [id, setId] = useState("");
+  const [quoteCode, setQuoteCode] = useState("")
   const [companyId, setCompanyId] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [documentId, setDocumentId] = useState("");
+  const [quotationId, setQuotationId] = useState("");
   const { Type, AirType, StoneType } = Constant();
   const [childDataSource, setChildDataSource] = useState([]);
   const [changeLog, setChangeLog] = useState([]);
@@ -91,6 +94,11 @@ function ContentPageLogic() {
   });
 
   const [leads, setLeads] = useState([]);
+
+  const [quoteExtraCharge, setQuoteExtraCharge] = useState([])
+  const [quoteOvertimeFee, setQuoteOvertimeFee] = useState([])
+  const [quotePremiumRates, setQuotePremiumRates] = useState([])
+  const [quoteShortLoadCharges, setQuoteShortLoadCharges] = useState([])
 
   const [auditLogs, setAuditLogs] = useState([]);
   let [tblHeaders, setTblHeaders] = useState([]);
@@ -288,6 +296,53 @@ function ContentPageLogic() {
     section_name: "",
   });
 
+  const [quoteExtraChargeModalVisible, setQuoteExtraChargeModalVisible] = useState(false)
+  const [quoteOvertimeFeeModalVisible, setQuoteOvertimeFeeModalVisible] = useState(false)
+  const [quotePremiumRatesModalVisible, setQuotePremiumRatesModalVisible] = useState(false)
+  const [quoteShortLoadModalVisible, setQuoteShortLoadModalVisible] = useState(false)
+
+  const [quoteExtraChargeData, setQuoteExtraChargeData] = useState({
+    quoteId: "",
+    title: "",
+    price: "",
+    unit: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "62a6db2e250a6ba0e49b540d",
+    isActive: true
+  })
+
+  const [quoteOvertimeFeeData, setQuoteOvertimeFeeData] = useState({
+    quoteId: "",
+    title: "",
+    price: "",
+    unit: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "62a6db2e250a6ba0e49b540d",
+    isActive: true
+  })
+
+  const [quotePremiumRateData, setQuotePremiumRateData] = useState({
+    quoteId: "",
+    title: "",
+    truckHireFee: "",
+    plantOpeningFee: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "62a6db2e250a6ba0e49b540d",
+    isActive: true
+  })
+
+  const [quoteShortLoadChargeData, setQuoteShortLoadChargeData] = useState({
+    quoteId: "",
+    title: "",
+    quoteNote: "",
+    fieldDescription: "",
+    plantid: "62a6db2e250a6ba0e49b540d",
+    isActive: true
+  })
+
   const [plant, setPlant] = useState([]);
 
   const [leadStatusData, setLeadStatusData] = useState([
@@ -340,6 +395,7 @@ function ContentPageLogic() {
     bidDueDate: "",
     status: "",
     notes: "",
+    construction_company_id: ""
   });
 
   const [opportunityExistingData, setOpportunityExistingData] = useState({
@@ -567,6 +623,72 @@ function ContentPageLogic() {
     },
   ];
 
+  const quoteOtTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Unit",
+      dataIndex: "unit",
+      key: "unit",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuoteOvertimeFeeModalVisible(true)
+              setIsEdit(true)
+              setId(record.id)
+              setQuoteOvertimeFeeData({
+                title: record.title,
+                price: record.price,
+                unit: record.unit,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              })
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => {
+              deleteAPICalls("quote_over_time_fees", record.id)
+            }}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const otTblHeaders = [
     {
       title: "Title",
@@ -698,6 +820,70 @@ function ContentPageLogic() {
     },
   ];
 
+  const quotePrTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Truck Hire Fee",
+      dataIndex: "truckHireFee",
+      key: "truckHireFee",
+    },
+    {
+      title: "Plant Opening Fee",
+      dataIndex: "plantOpeningFee",
+      key: "plantOpeningFee",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuotePremiumRatesModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setQuotePremiumRateData({
+                title: record.title,
+                truckHireFee: record.truckHireFee,
+                plantOpeningFee: record.plantOpeningFee,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: record.isActive,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("quote_premium_rates", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const slTblHeaders = [
     {
       title: "Title",
@@ -751,6 +937,56 @@ function ContentPageLogic() {
     },
   ];
 
+  const quoteSlTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuoteShortLoadModalVisible(true);
+              setIsEdit(true);
+              setId(record.id);
+              setQuoteShortLoadChargeData({
+                title: record.title,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("quote_short_load_charges", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
   const ecTblHeaders = [
     {
       title: "Title",
@@ -815,6 +1051,73 @@ function ContentPageLogic() {
       ),
     },
   ];
+
+  const quoteEcTblHeaders = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Unit",
+      dataIndex: "unit",
+      key: "unit",
+    },
+
+    {
+      title: "Quote Note",
+      dataIndex: "quoteNote",
+      key: "quoteNote",
+    },
+
+    {
+      title: "Field Description",
+      dataIndex: "fieldDescription",
+      key: "fieldDescription",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuoteExtraChargeModalVisible(true)
+              setIsEdit(true)
+              setId(record.id)
+              setQuoteExtraChargeData({
+                title: record.title,
+                price: record.price,
+                unit: record.unit,
+                quoteNote: record.quoteNote,
+                fieldDescription: record.fieldDescription,
+                plantid: record.plantid,
+                isActive: true,
+              })
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => {
+              deleteAPICalls("quote_extra_charges", record.id)
+            }}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
 
   const mdTblHeaders = [
     {
@@ -1167,6 +1470,7 @@ function ContentPageLogic() {
                 bidDueDate: record.bidDueDate,
                 status: record.status,
                 notes: record.notes,
+                construction_company_id: record.construction_company_id
               });
 
               setOpportunityExistingData({
@@ -1180,6 +1484,7 @@ function ContentPageLogic() {
                 endDate: record.endDate,
                 bidDueDate: record.bidDueDate,
                 status: record.status,
+                construction_company_id: record.construction_company_id
               });
             }}
           >
@@ -1503,6 +1808,8 @@ function ContentPageLogic() {
               setIsEdit(true);
               setQuotationModalVisible(true);
               setId(record.id);
+              setQuotationId(record.quoteTypeList.id)
+              setQuoteCode(record.quoteTypeList.id)
               setQuotationData({
                 constructionCompanyId: record.constructionCompanyId,
                 opportunityId: record.opportunityId,
@@ -1518,7 +1825,6 @@ function ContentPageLogic() {
                 quotationCode: record.quoteTypeList.quoteCode,
               });
 
-              console.log(record.quoteTypeList.quoteCode);
             }}
           >
             Edit
@@ -1621,6 +1927,20 @@ function ContentPageLogic() {
     } else if (key == 4) {
       getMixDesigns("house_mix_design", "qualitycontrol-quotation");
       getQualityControls("quotation");
+    } else if (key == 5) {
+      getQuoteExtraCharges()
+    }
+  };
+
+  const onAddlInfoTabChange = (key) => {
+    if (key == 1) {
+      getQuoteExtraCharges();
+    } else if (key == 2) {
+      getQuoteOvertimeFees();
+    } else if (key == 3) {
+      getQuotePremiumRates();
+    } else if (key == 4) {
+      getQuoteShortLoadCharges();
     }
   };
 
@@ -4168,8 +4488,15 @@ function ContentPageLogic() {
             <Button
               style={{ backgroundColor: "green", color: "white" }}
               onClick={() => {
-                setIsEdit(false);
-                setQuotationModalVisible(true);
+                setIsEdit(false)
+                setQuotationData({
+                  ...quotationData,
+                  constructionCompanyId: opportunityData.construction_company_id,
+                  plantId: opportunityData.plant_id,
+                  projectManagerId: opportunityData.project_manager.split('_')[1],
+                  opportunityId: id
+                })
+                setQuotationModalVisible(true)
               }}
             >
               Create Quotation
@@ -5136,7 +5463,7 @@ function ContentPageLogic() {
               key="1"
             >
               <Row gutter={6}>
-                <Col span={12}>
+                {/* {isEdit ? <Col span={12}>
                   <label>Quotation Code</label>
                   <Input
                     disabled
@@ -5144,14 +5471,14 @@ function ContentPageLogic() {
                     type={"text"}
                     value={quotationData.quotationCode}
                   />
-                </Col>
+                </Col> : null} */}
                 <Col span={12}>
                   <label>{"Concrete Plant"}</label>
                   <Select
                     disabled
                     style={{ width: "100%" }}
                     defaultValue={
-                      isEdit ? quotationData.plantId : "Select Plant"
+                      quotationData.plantId
                     }
                     onChange={(value) => {
                       selectHandleChange(value, "select_plant");
@@ -5173,9 +5500,7 @@ function ContentPageLogic() {
                     disabled
                     style={{ width: "100%" }}
                     defaultValue={
-                      isEdit
-                        ? quotationData.opportunityId
-                        : "Select Opportunity"
+                      quotationData.opportunityId
                     }
                     onChange={(value) => {
                       selectHandleChange(value, "select_opportunity");
@@ -5193,9 +5518,7 @@ function ContentPageLogic() {
                     disabled
                     style={{ width: "100%" }}
                     defaultValue={
-                      isEdit
-                        ? quotationData.constructionCompanyId
-                        : "Select Construction Company"
+                      quotationData.constructionCompanyId
                     }
                     onChange={(value) => {
                       selectHandleChange(value, "select_construction_company");
@@ -5217,9 +5540,7 @@ function ContentPageLogic() {
                     disabled
                     style={{ width: "100%" }}
                     defaultValue={
-                      isEdit
-                        ? quotationData.projectManagerId
-                        : "Select Project Manager"
+                      quotationData.projectManagerId
                     }
                     onChange={(value) => {
                       selectHandleChange(value, "select_project_manager");
@@ -5810,6 +6131,505 @@ function ContentPageLogic() {
                 </Row>
               </Modal>
             </TabPane>
+
+            <TabPane
+              tab={
+                <span>
+                  <InfoCircleOutlined />
+                  Additional Charges
+                </span>
+              }
+              key="5"
+            >
+
+              <Tabs
+                defaultActiveKey="6"
+                onChange={onAddlInfoTabChange}
+                size={"small"}
+                tabPosition={"left"}
+              >
+
+                <TabPane tab={
+                  <span>
+                    <InfoCircleOutlined />
+                    Quote Extra Charges
+                  </span>
+                }
+                  key="6">
+
+                  <div className="div-page-header">
+                    <Button
+                      onClick={() => {
+                        setIsEdit(false);
+                        setQuoteExtraChargeModalVisible(true)
+                      }}
+                      className="button-add-user"
+                    >
+                      Add Extra Charge
+                    </Button>
+                  </div>
+
+                  <Table
+                    size="small"
+                    columns={quoteEcTblHeaders}
+                    dataSource={quoteExtraCharge}
+                  />
+
+                  <Modal
+                    title={<h2>Quote Extra Charge </h2>}
+                    visible={quoteExtraChargeModalVisible}
+                    onOk={() => {
+                      if (isEdit) {
+                        updateAPICalls("quote_extra_charges")
+                      } else {
+                        addAPICalls("quote_extra_charges")
+                      }
+
+                    }}
+                    onCancel={() => setQuoteExtraChargeModalVisible(false)}
+                    width={800}
+                    destroyOnClose
+                  >
+                    <Row gutter={6}>
+
+                      <Col span={12}>
+                        <label>Title</label>
+                        <Input
+                          placeholder={"Title"}
+                          name={"title"}
+                          value={quoteExtraChargeData.title}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteExtraChargeData({
+                              ...quoteExtraChargeData,
+                              title: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <label>Price</label>
+                        <Input
+                          placeholder={"Price"}
+                          name={"price"}
+                          value={quoteExtraChargeData.price}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteExtraChargeData({
+                              ...quoteExtraChargeData,
+                              price: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Unit</label>
+                        <Input
+                          placeholder={"Unit"}
+                          name={"unit"}
+                          value={quoteExtraChargeData.unit}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteExtraChargeData({
+                              ...quoteExtraChargeData,
+                              unit: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Quote Note</label>
+                        <Input
+                          placeholder={"Quote Note"}
+                          name={"quoteNote"}
+                          value={quoteExtraChargeData.quoteNote}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteExtraChargeData({
+                              ...quoteExtraChargeData,
+                              quoteNote: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+
+
+                      <Col span={24}>
+                        <label>Field Description</label>
+                        <TextArea
+                          placeholder={"Field Description"}
+                          name={"fieldDescription"}
+                          value={quoteExtraChargeData.fieldDescription}
+                          type={"text"}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteExtraChargeData({
+                              ...quoteExtraChargeData,
+                              fieldDescription: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Modal>
+
+                </TabPane>
+
+                <TabPane tab={
+                  <span>
+                    <InfoCircleOutlined />
+                    Quote Overtime Fees
+                  </span>
+                }
+                  key="2">
+                  <div className="div-page-header">
+                    <Button
+                      onClick={() => {
+                        setIsEdit(false);
+                        setQuoteOvertimeFeeModalVisible(true)
+                      }}
+                      className="button-add-user"
+                    >
+                      Add Overtime Fee
+                    </Button>
+                  </div>
+                  <Table
+                    size="small"
+                    columns={quoteOtTblHeaders}
+                    dataSource={quoteOvertimeFee}
+                  />
+
+                  <Modal
+                    title={<h2>Overtime Fee </h2>}
+                    visible={quoteOvertimeFeeModalVisible}
+                    onOk={() => {
+                      if (isEdit) {
+                        updateAPICalls("quote_over_time_fees")
+                      } else {
+                        addAPICalls("quote_over_time_fees")
+                      }
+
+                    }}
+                    onCancel={() => setQuoteOvertimeFeeModalVisible(false)}
+                    width={800}
+                    destroyOnClose
+                  >
+                    <Row gutter={6}>
+
+                      <Col span={12}>
+                        <label>Title</label>
+                        <Input
+                          placeholder={"Title"}
+                          name={"title"}
+                          value={quoteOvertimeFeeData.title}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteOvertimeFeeData({
+                              ...quoteOvertimeFeeData,
+                              title: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <label>Price</label>
+                        <Input
+                          placeholder={"Price"}
+                          name={"price"}
+                          value={quoteOvertimeFeeData.price}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteOvertimeFeeData({
+                              ...quoteOvertimeFeeData,
+                              price: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Unit</label>
+                        <Input
+                          placeholder={"Unit"}
+                          name={"unit"}
+                          value={quoteOvertimeFeeData.unit}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteOvertimeFeeData({
+                              ...quoteOvertimeFeeData,
+                              unit: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Quote Note</label>
+                        <Input
+                          placeholder={"Quote Note"}
+                          name={"quoteNote"}
+                          value={quoteOvertimeFeeData.quoteNote}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteOvertimeFeeData({
+                              ...quoteOvertimeFeeData,
+                              quoteNote: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+
+
+                      <Col span={24}>
+                        <label>Field Description</label>
+                        <TextArea
+                          placeholder={"Field Description"}
+                          name={"fieldDescription"}
+                          value={quoteOvertimeFeeData.fieldDescription}
+                          type={"text"}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteOvertimeFeeData({
+                              ...quoteOvertimeFeeData,
+                              fieldDescription: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Modal>
+
+                </TabPane>
+
+                <TabPane tab={
+                  <span>
+                    <InfoCircleOutlined />
+                    Quote Premium Rates
+                  </span>
+                }
+                  key="3">
+                  <div className="div-page-header">
+                    <Button
+                      onClick={() => {
+                        setIsEdit(false);
+                        setQuotePremiumRatesModalVisible(true)
+                      }}
+                      className="button-add-user"
+                    >
+                      Add Premium Rate
+                    </Button>
+                  </div>
+                  <Table
+                    size="small"
+                    columns={quotePrTblHeaders}
+                    dataSource={quotePremiumRates}
+                  />
+
+                  <Modal
+                    title={<h2>Premium Rate</h2>}
+                    visible={quotePremiumRatesModalVisible}
+                    onOk={() => {
+                      if (isEdit) {
+                        updateAPICalls("quote_premium_rates")
+                      } else {
+                        addAPICalls("quote_premium_rates")
+                      }
+
+                    }}
+                    onCancel={() => setQuotePremiumRatesModalVisible(false)}
+                    width={800}
+                    destroyOnClose
+                  >
+                    <Row gutter={6}>
+
+                      <Col span={12}>
+                        <label>Title</label>
+                        <Input
+                          placeholder={"Title"}
+                          name={"title"}
+                          value={quotePremiumRateData.title}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuotePremiumRateData({
+                              ...quotePremiumRateData,
+                              title: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <label>Truck Hire Fee</label>
+                        <Input
+                          placeholder={"Truck Hire Fee"}
+                          name={"truckHireFee"}
+                          value={quotePremiumRateData.truckHireFee}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuotePremiumRateData({
+                              ...quotePremiumRateData,
+                              truckHireFee: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Plant Opening Fee</label>
+                        <Input
+                          placeholder={"Plant Opening Fee"}
+                          name={"plantOpeningFee"}
+                          value={quotePremiumRateData.plantOpeningFee}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuotePremiumRateData({
+                              ...quotePremiumRateData,
+                              plantOpeningFee: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+                      <Col span={12}>
+                        <label>Quote Note</label>
+                        <Input
+                          placeholder={"Quote Note"}
+                          name={"quoteNote"}
+                          value={quotePremiumRateData.quoteNote}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuotePremiumRateData({
+                              ...quotePremiumRateData,
+                              quoteNote: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+
+
+                      <Col span={24}>
+                        <label>Field Description</label>
+                        <TextArea
+                          placeholder={"Field Description"}
+                          name={"fieldDescription"}
+                          value={quotePremiumRateData.fieldDescription}
+                          type={"text"}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuotePremiumRateData({
+                              ...quotePremiumRateData,
+                              fieldDescription: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Modal>
+
+                </TabPane>
+
+                <TabPane tab={
+                  <span>
+                    <InfoCircleOutlined />
+                    Quote Short load charges
+                  </span>
+                }
+                  key="4">
+                  <div className="div-page-header">
+                    <Button
+                      onClick={() => {
+                        setIsEdit(false);
+                        setQuoteShortLoadModalVisible(true)
+                      }}
+                      className="button-add-user"
+                    >
+                      Add Short Load Charge
+                    </Button>
+                  </div>
+                  <Table
+                    size="small"
+                    columns={quoteSlTblHeaders}
+                    dataSource={quoteShortLoadCharges}
+                  />
+
+                  <Modal
+                    title={<h2>Short Load Charge</h2>}
+                    visible={quoteShortLoadModalVisible}
+                    onOk={() => {
+                      if (isEdit) {
+                        updateAPICalls("quote_short_load_charges")
+                      } else {
+                        addAPICalls("quote_short_load_charges")
+                      }
+
+                    }}
+                    onCancel={() => setQuoteShortLoadModalVisible(false)}
+                    width={800}
+                    destroyOnClose
+                  >
+                    <Row gutter={6}>
+
+                      <Col span={12}>
+                        <label>Title</label>
+                        <Input
+                          placeholder={"Title"}
+                          name={"title"}
+                          value={quoteShortLoadChargeData.title}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteShortLoadChargeData({
+                              ...quoteShortLoadChargeData,
+                              title: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+
+                      <Col span={12}>
+                        <label>Quote Note</label>
+                        <Input
+                          placeholder={"Quote Note"}
+                          name={"quoteNote"}
+                          value={quoteShortLoadChargeData.quoteNote}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteShortLoadChargeData({
+                              ...quoteShortLoadChargeData,
+                              quoteNote: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+
+
+
+                      <Col span={24}>
+                        <label>Field Description</label>
+                        <TextArea
+                          placeholder={"Field Description"}
+                          name={"fieldDescription"}
+                          value={quoteShortLoadChargeData.fieldDescription}
+                          type={"text"}
+                          className={"input-style"}
+                          onChange={(e) => {
+                            setQuoteShortLoadChargeData({
+                              ...quoteShortLoadChargeData,
+                              fieldDescription: e.target.value
+                            })
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Modal>
+                </TabPane>
+              </Tabs>
+
+            </TabPane>
           </Tabs>
         </Modal>
       </div>
@@ -5899,11 +6719,31 @@ function ContentPageLogic() {
             console.error("There was an error!- deleteOvertimeFees", error);
           });
         break;
+
+      case "quote_over_time_fees":
+        setLoading(true);
+
+        handler
+          .dataPost("/quoteOvertimeFees/deleteQuoteOvertimeFees", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getQuoteOvertimeFees();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteOvertimeFees", error);
+          });
+        break;
+
       case "premium_rates":
         setLoading(true);
 
         handler
-          .dataPost("premium-rates/deletePremiumRates", updatebleData, {})
+          .dataPost("/premium-rates/deletePremiumRates", updatebleData, {})
           .then((response) => {
             setLoading(false);
             if (response.status == 200) {
@@ -5915,6 +6755,25 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- updateUserAPICall", error);
+          });
+        break;
+
+      case "quote_premium_rates":
+        setLoading(true);
+
+        handler
+          .dataPost("/quotePremiumRates/deleteQuotePremiumRates", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getQuotePremiumRates();
+            } else if (response.status == 400) {
+              message.warning(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteQuotePremiumRates", error);
           });
         break;
 
@@ -5936,6 +6795,24 @@ function ContentPageLogic() {
           });
         break;
 
+      case "quote_short_load_charges":
+        setLoading(true);
+        handler
+          .dataPost("/quoteShortLoad/deleteQuoteShortLoad", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getQuoteShortLoadCharges();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteShortLoad", error);
+          });
+        break;
+
       case "extra_charges":
         setLoading(true);
         handler
@@ -5945,6 +6822,24 @@ function ContentPageLogic() {
             if (response.status == 200) {
               message.success(response.data.message);
               getExtraChargeAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteExtraCharge", error);
+          });
+        break;
+
+      case "quote_extra_charges":
+        setLoading(true);
+        handler
+          .dataPost("/quoteExtraCharge/deleteQuoteExtraCharge", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getQuoteExtraCharges();
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -6222,6 +7117,35 @@ function ContentPageLogic() {
           });
         break;
 
+      case "quote_over_time_fees":
+        setLoading(true);
+
+        let updatableDataforQOtf = {
+          ...quoteOvertimeFeeData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/quoteOvertimeFees/updateQuoteOvertimefees",
+            updatableDataforQOtf,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              setQuoteOvertimeFeeModalVisible(false)
+              getQuoteOvertimeFees();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateOvertimeFees", error);
+          });
+        break;
+
       case "premium_rates":
         setLoading(true);
 
@@ -6243,6 +7167,31 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- updatePremiumRates", error);
+          });
+        break;
+
+      case "quote_premium_rates":
+        setLoading(true);
+
+        let updatableDataforQPr = {
+          ...quotePremiumRateData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/quotePremiumRates/updateQuotePremiumRates", updatableDataforQPr, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              setQuotePremiumRatesModalVisible(false)
+              getQuotePremiumRates();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateQuotePremiumRates", error);
           });
         break;
 
@@ -6274,6 +7223,35 @@ function ContentPageLogic() {
           });
         break;
 
+      case "quote_short_load_charges":
+        setLoading(true);
+
+        let updatableDataforQSl = {
+          ...quoteShortLoadChargeData,
+          id: id,
+        };
+
+        handler
+          .dataPost(
+            "/quoteShortLoad/updateQuoteShortLoad",
+            updatableDataforQSl,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              setQuoteShortLoadModalVisible(false)
+              getQuoteShortLoadCharges();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateShortLoad", error);
+          });
+        break;
+
       case "extra_charges":
         setLoading(true);
 
@@ -6289,6 +7267,31 @@ function ContentPageLogic() {
             if (response.status == 200) {
               message.success(response.data.message);
               getExtraChargeAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- updateExtraCharge", error);
+          });
+        break;
+
+      case "quote_extra_charges":
+        setLoading(true);
+
+        let updatableDataforQEc = {
+          ...quoteExtraChargeData,
+          id: id,
+        };
+
+        handler
+          .dataPost("/quoteExtraCharge/updateQuoteExtraCharge", updatableDataforQEc, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              setQuoteExtraChargeModalVisible(false)
+              getQuoteExtraCharges();
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
@@ -7135,6 +8138,30 @@ function ContentPageLogic() {
             });
         }
         break;
+
+      case "quote_over_time_fees":
+        setLoading(true);
+
+        handler
+          .dataPost("/quoteOvertimeFees/addQuoteOvertimefees", { ...quoteOvertimeFeeData, quoteId: quotationId }, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQuoteOvertimeFeeModalVisible(false)
+              getQuoteOvertimeFees();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- addOvertimeFeesAPICall",
+              error
+            );
+          });
+
+        break;
       case "premium_rates":
         setLoading(true);
         if (
@@ -7167,6 +8194,29 @@ function ContentPageLogic() {
         }
         break;
 
+      case "quote_premium_rates":
+        setLoading(true);
+
+        handler
+          .dataPost("/quotePremiumRates/addQuotePremiumRates", { ...quotePremiumRateData, quoteId: quotationId }, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQuotePremiumRatesModalVisible(false)
+              getQuotePremiumRates();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- addOvertimeFeesAPICall",
+              error
+            );
+          });
+        break
+
       case "short_load_charges":
         setLoading(true);
         if (
@@ -7192,6 +8242,26 @@ function ContentPageLogic() {
               console.error("There was an error!- addShortLoad", error);
             });
         }
+        break;
+
+      case "quote_short_load_charges":
+        setLoading(true);
+
+        handler
+          .dataPost("/quoteShortLoad/addQuoteShortLoad", { ...quoteShortLoadChargeData, quoteId: quotationId }, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQuoteShortLoadModalVisible(false)
+              getQuoteShortLoadCharges();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addQuoteShortLoad", error);
+          });
         break;
 
       case "extra_charges":
@@ -7224,6 +8294,27 @@ function ContentPageLogic() {
             });
         }
         break;
+
+      case "quote_extra_charges":
+        setLoading(true);
+
+        handler
+          .dataPost("/quoteExtraCharge/addQuoteExtraCharge", { ...quoteExtraChargeData, quoteId: quotationId }, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 201) {
+              message.success(response.data.message);
+              setQuoteExtraChargeModalVisible(false)
+              getQuoteExtraCharges();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- addQuoteExtraCharge", error);
+          });
+
+        break
 
       case "house_mix_design":
         setLoading(true);
@@ -7623,12 +8714,13 @@ function ContentPageLogic() {
               setPageName("quotation");
               window.history.replaceState(null, "React App", "/quotation");
               window.location.reload();
+              setQuotationModalVisible(true);
             } else if (response.status == 400) {
               window.alert(response.data.message);
             }
           })
           .catch((error) => {
-            console.error("There was an error!- addFollowUp", error);
+            console.error("There was an error!- addQuotationTransaction", error);
           });
         break;
 
@@ -7691,8 +8783,15 @@ function ContentPageLogic() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          setDataSource(response.data.data);
-          setProjectManager(response.data.data);
+
+          if (modalName === "opportunity") {
+            setProjectManager(response.data.data);
+          } else if (modalName === "quotation") {
+            setProjectManager(response.data.data);
+          } else {
+            setDataSource(response.data.data);
+          }
+
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -8256,6 +9355,80 @@ function ContentPageLogic() {
         console.error("There was an error!", error);
       });
   };
+
+  // get quote extra charges
+
+  const getQuoteExtraCharges = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quoteExtraCharge/getQuoteExtraChargesByQuotationId?quotationId=" + quoteCode, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setQuoteExtraCharge(response.data.data)
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getQuoteExtraCharges", error);
+      });
+  }
+
+  // get quote overtime fee
+  const getQuoteOvertimeFees = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quoteOvertimeFees/getQuoteOvertimeFeesByQuotationId?quotationId=" + quoteCode, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setQuoteOvertimeFee(response.data.data)
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getQuoteOvertimeFees", error);
+      });
+  }
+
+  // get quote premium rates
+  const getQuotePremiumRates = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quotePremiumRates/getPremiumRatesByQuotationId?quotationId=" + quoteCode, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setQuotePremiumRates(response.data.data)
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getQuoteOvertimeFees", error);
+      });
+  }
+
+  // get quote short load charges
+  const getQuoteShortLoadCharges = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quoteShortLoad/getShortLoadsByQuotationId?quotationId=" + quoteCode, {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setQuoteShortLoadCharges(response.data.data)
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getQuoteOvertimeFees", error);
+      });
+  }
+
 
   // states container
   const StatesContainer = {

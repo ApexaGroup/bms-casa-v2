@@ -119,15 +119,6 @@ function ContentPageDesign(props) {
                 {data.buttonText}
               </Button>
             )}
-
-            {/* {pageName === "lead" ? (
-              <Button
-                className="button-add-user"
-                onClick={constructionCompanyShowModal}
-              >
-                Create Opportunity
-              </Button>
-            ) : null} */}
           </div>
         </div>
 
