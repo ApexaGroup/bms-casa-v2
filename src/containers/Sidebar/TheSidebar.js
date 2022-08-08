@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Layout, Menu, Modal, Button } from "antd";
 import {
   UserOutlined,
@@ -23,6 +23,21 @@ function TheSidebar() {
   // Destructuring of logic variables/methods
   let { isModalVisible, setIsModalVisible, showModal, handleOk, handleCancel } =
     TheSidebarStates;
+  let location = useLocation();
+  const [current, setCurrent] = useState(
+    location.pathname === "/"
+      ? "/"
+      : location.pathname,
+  );
+
+  useEffect(() => {
+    if (location) {
+      if (current !== location.pathname) {
+
+        setCurrent(location.pathname);
+      }
+    }
+  }, [location, current]);
 
   return (
     <div className="div-container-sidebar">
@@ -34,11 +49,11 @@ function TheSidebar() {
       </div>
 
       <Menu
-        defaultSelectedKeys={["1"]}
+        selectedKeys={[current]}
         mode="inline"
         className="menu-container"
       >
-        <Menu.Item key="1">
+        <Menu.Item key="/">
           <DashboardOutlined />
           <span>Dashboard</span>
           <Link to="/" />
@@ -48,24 +63,24 @@ function TheSidebar() {
           title={"User Management"}
           icon={<ApartmentOutlined />}
         >
-          <Menu.Item key="20">
+          <Menu.Item key="/user">
             <UserOutlined />
             <span>User</span>
             <Link to={"/user"} />
           </Menu.Item>
-          <Menu.Item key="21">
+          <Menu.Item key="/role">
             <UserSwitchOutlined />
             <span>Role</span>
             <Link to={"/role"} />
           </Menu.Item>
         </SubMenu>
         <SubMenu key="2" title={"Client Master"} icon={<DesktopOutlined />}>
-          <Menu.Item key="20">
+          <Menu.Item key="/client-master/construction-company">
             <SolutionOutlined />
             <span>Construction Company</span>
             <Link to={"/client-master/construction-company"} />
           </Menu.Item>
-          <Menu.Item key="21">
+          <Menu.Item key="/client-master/project-manager">
             <ProjectOutlined />
             <span>Project Manager</span>
             <Link to={"/client-master/project-manager"} />
@@ -76,34 +91,34 @@ function TheSidebar() {
           title={"Extra Charges Section"}
           icon={<DesktopOutlined />}
         >
-          <Menu.Item key="22">
+          <Menu.Item key="/extra-charges-section/extra-charges">
             <SolutionOutlined />
             <span>Extra Charges</span>
             <Link to={"/extra-charges-section/extra-charges"} />
           </Menu.Item>
-          <Menu.Item key="23">
+          <Menu.Item key="/extra-charges-section/over-time-fees">
             <ProjectOutlined />
             <span>Over Time Fees</span>
             <Link to={"/extra-charges-section/over-time-fees"} />
           </Menu.Item>
-          <Menu.Item key="24">
+          <Menu.Item key="/extra-charges-section/short-load-charges">
             <ProjectOutlined />
             <span>Short Load Charges</span>
             <Link to={"/extra-charges-section/short-load-charges"} />
           </Menu.Item>
-          <Menu.Item key="25">
+          <Menu.Item key="/extra-charges-section/premium-rates">
             <ProjectOutlined />
             <span>Premium Rates</span>
             <Link to={"/extra-charges-section/premium-rates"} />
           </Menu.Item>
         </SubMenu>
         <SubMenu key="4" title={"Company Master"} icon={<DesktopOutlined />}>
-          <Menu.Item key="26">
+          <Menu.Item key="/company-master/house-mix-design">
             <SolutionOutlined />
             <span>House Mix Design</span>
             <Link to={"/company-master/house-mix-design"} />
           </Menu.Item>
-          <Menu.Item key="27">
+          <Menu.Item key="/company-master/special-mix-design">
             <ProjectOutlined />
             <span>Special Mix Design</span>
             <Link to={"/company-master/special-mix-design"} />
@@ -111,25 +126,25 @@ function TheSidebar() {
         </SubMenu>
 
         <SubMenu key="5" title={"Lead Section"} icon={<DesktopOutlined />}>
-          <Menu.Item key="28">
+          <Menu.Item key="/lead-section/address">
             <SolutionOutlined />
             <span>Address</span>
             <Link to={"/lead-section/address"} />
           </Menu.Item>
-          <Menu.Item key="29">
+          <Menu.Item key="/lead-section/lead">
             <ProjectOutlined />
             <span>Lead</span>
             <Link to={"/lead-section/lead"} />
           </Menu.Item>
         </SubMenu>
 
-        <Menu.Item key="6">
+        <Menu.Item key="/opportunity">
           <DashboardOutlined />
           <span>Opportunity</span>
           <Link to="/opportunity" />
         </Menu.Item>
 
-        <Menu.Item key="7">
+        <Menu.Item key="/quotation">
           <DashboardOutlined />
           <span>Quotation</span>
           <Link to="/quotation" />
