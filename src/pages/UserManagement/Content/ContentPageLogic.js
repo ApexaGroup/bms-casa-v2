@@ -2068,6 +2068,7 @@ function ContentPageLogic() {
     });
   };
 
+
   // form handler child
   const followUpHandleChangeData = (evt) => {
     const value = evt.target.value;
