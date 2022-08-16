@@ -25,6 +25,8 @@ export default function () {
     lead,
     opportunity,
     quotation,
+    terms_short_details,
+    terms_full_details
   } = pageData();
 
   return (
@@ -70,6 +72,17 @@ export default function () {
             <Route
               path="premium-rates"
               element={<Content data={premium_rates} />}
+            />
+          </Route>
+
+          <Route path="terms-conditions" element={<TheContent />}>
+            <Route
+              path="short-details"
+              element={<Content data={terms_short_details} />}
+            />
+            <Route
+              path="full-details"
+              element={<Content data={terms_full_details} />}
             />
           </Route>
 

@@ -85,6 +85,14 @@ const pageData = () => {
       page: "quotation",
       buttonText: "Add Quotation",
     },
+    terms_short_details: {
+      page: "terms_short_details",
+      buttonText: "Add Short Details",
+    },
+    terms_full_details: {
+      page: "terms_full_details",
+      buttonText: "Add Full Details",
+    },
   };
 
   return data;

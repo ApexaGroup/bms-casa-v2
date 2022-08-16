@@ -345,6 +345,19 @@ function ContentPageLogic() {
 
   const [plant, setPlant] = useState([]);
 
+  const [termsShortDetailData, setTermsShortDetailData] = useState({
+    shortName: "",
+    fullName: "",
+    plantId: ""
+  })
+
+  const [termsFullDetailData, setTermsFullDetailData] = useState({
+    srNo: "",
+    title: "",
+    description: "",
+    plantId: ""
+  })
+
   const [leadStatusData, setLeadStatusData] = useState([
     {
       title: "Out to Bid",
@@ -929,6 +942,101 @@ function ContentPageLogic() {
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => deleteAPICalls("short_load_charges", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const termsShortDetailTblHeaders = [
+    {
+      title: "Short Name",
+      dataIndex: "shortName",
+      key: "shortName",
+    },
+    {
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsEdit(true);
+              setId(record.id);
+              setIsModalVisible(true);
+              setTermsShortDetailData({
+                shortName: record.shortName,
+                fullName: record.fullName,
+                plantId: record.plantId
+              })
+
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("terms_short_details", record.id)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const termsFullDetailTblHeaders = [
+    {
+      title: "Serial Number",
+      dataIndex: "srNo",
+      key: "srNo",
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsEdit(true);
+              setId(record.id);
+              setIsModalVisible(true)
+              setTermsFullDetailData({
+                srNo: record.srNo,
+                title: record.title,
+                description: record.description,
+                plantId: record.plantId
+              })
+
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => deleteAPICalls("terms_full_details", record.id)}
           >
             <a>Delete</a>
           </Popconfirm>
@@ -1792,12 +1900,6 @@ function ContentPageLogic() {
     },
 
     {
-      title: "TR3 Required",
-      key: "tr3Required",
-      render: (_, record) => <span>{record.tr3Required ? "Yes" : "No"}</span>,
-    },
-
-    {
       title: "Action",
       key: "action",
       render: (_, record) => (
@@ -2005,6 +2107,20 @@ function ContentPageLogic() {
       });
     }
 
+    if (pageName === "terms_short_details") {
+      setTermsShortDetailData({
+        ...termsShortDetailData,
+        [evt.target.name]: value,
+      });
+    }
+
+    if (pageName === "terms_full_details") {
+      setTermsFullDetailData({
+        ...termsFullDetailData,
+        [evt.target.name]: value,
+      });
+    }
+
     if (pageName === "house_mix_design") {
       setMixDesignData({
         ...mixDesignData,
@@ -2148,6 +2264,20 @@ function ContentPageLogic() {
       setExtraChargesData({
         ...extraChargesData,
         plantid: value,
+      });
+    }
+
+    if (pageName === "terms_short_details") {
+      setTermsShortDetailData({
+        ...termsShortDetailData,
+        plantId: value,
+      });
+    }
+
+    if (pageName === "terms_full_details") {
+      setTermsFullDetailData({
+        ...termsFullDetailData,
+        plantId: value,
       });
     }
 
@@ -2653,6 +2783,22 @@ function ContentPageLogic() {
             addAPICalls("house_mix_design");
           } else {
             updateAPICalls("house_mix_design");
+          }
+          break;
+
+        case "terms_short_details":
+          if (!isEdit) {
+            addAPICalls("terms_short_details");
+          } else {
+            updateAPICalls("terms_short_details");
+          }
+          break;
+
+        case "terms_full_details":
+          if (!isEdit) {
+            addAPICalls("terms_full_details");
+          } else {
+            updateAPICalls("terms_full_details");
           }
           break;
 
@@ -3783,6 +3929,86 @@ function ContentPageLogic() {
     },
   ];
 
+
+  const termsShortDetailFields = [
+    {
+      name: "shortName",
+      typeofinput: "input",
+      placeholder: "Short Name",
+      type: "text",
+      className: "input-style",
+      value: termsShortDetailData.shortName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "fullName",
+      typeofinput: "input",
+      placeholder: "Full Name",
+      type: "text",
+      className: "input-style",
+      value: termsShortDetailData.fullName,
+      method: handleChangeData,
+    },
+
+    {
+      name: "plantId",
+      typeofinput: "select",
+      placeholder: "Plant",
+      type: "text",
+      className: "input-style",
+      value: termsShortDetailData.plantId,
+      method: selectHandleChange,
+    },
+
+
+  ];
+
+  const termsFullDetailFields = [
+    {
+      name: "srNo",
+      typeofinput: "input",
+      placeholder: "Sr No",
+      type: "text",
+      className: "input-style",
+      value: termsFullDetailData.srNo,
+      method: handleChangeData,
+    },
+
+    {
+      name: "title",
+      typeofinput: "input",
+      placeholder: "Title",
+      type: "text",
+      className: "input-style",
+      value: termsFullDetailData.title,
+      method: handleChangeData,
+    },
+
+    {
+      name: "description",
+      typeofinput: "input",
+      placeholder: "Description",
+      type: "text",
+      className: "input-style",
+      value: termsFullDetailData.description,
+      method: handleChangeData,
+    },
+
+    {
+      name: "plantId",
+      typeofinput: "select",
+      placeholder: "Plant",
+      type: "text",
+      className: "input-style",
+      value: termsFullDetailData.plantId,
+      method: selectHandleChange,
+    },
+
+
+  ];
+
+
   // dynamic modal for add and edit operations
   const renderModal = (pageName, generalFields) => {
     if (pageName === "construction_company") {
@@ -3823,6 +4049,14 @@ function ContentPageLogic() {
 
     if (pageName === "address") {
       generalFields = addressFields;
+    }
+
+    if (pageName === "terms_short_details") {
+      generalFields = termsShortDetailFields;
+    }
+
+    if (pageName === "terms_full_details") {
+      generalFields = termsFullDetailFields;
     }
 
     const UserModal = (
@@ -4045,6 +4279,14 @@ function ContentPageLogic() {
                               return (
                                 <Option value={item.id}>
                                   {item.construction_company_name}
+                                </Option>
+                              );
+                            });
+                          } else if (record.name === "plantId") {
+                            return plant.map((item) => {
+                              return (
+                                <Option value={item.id}>
+                                  {item.plant_name}
                                 </Option>
                               );
                             });
@@ -5447,7 +5689,7 @@ function ContentPageLogic() {
           }}
           onCancel={() => setQuotationModalVisible(false)}
           destroyOnClose
-          width={1000}
+          width={1920}
         >
           <Tabs
             defaultActiveKey="1"
@@ -6281,7 +6523,7 @@ function ContentPageLogic() {
 
                 <TabPane tab={
                   <span>
-                    <InfoCircleOutlined />
+                    <UploadOutlined />
                     Quote Overtime Fees
                   </span>
                 }
@@ -6408,7 +6650,7 @@ function ContentPageLogic() {
 
                 <TabPane tab={
                   <span>
-                    <InfoCircleOutlined />
+                    <CheckCircleOutlined />
                     Quote Premium Rates
                   </span>
                 }
@@ -6535,7 +6777,7 @@ function ContentPageLogic() {
 
                 <TabPane tab={
                   <span>
-                    <InfoCircleOutlined />
+                    <CloseOutlined />
                     Quote Short load charges
                   </span>
                 }
@@ -6829,6 +7071,42 @@ function ContentPageLogic() {
           })
           .catch((error) => {
             console.error("There was an error!- deleteExtraCharge", error);
+          });
+        break;
+
+      case "terms_short_details":
+        setLoading(true);
+        handler
+          .dataPost("/termsConditionShortDetail/deleteTnCShortDetail", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getTermsShortDetailAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteTnCShortDetail", error);
+          });
+        break;
+
+      case "terms_full_details":
+        setLoading(true);
+        handler
+          .dataPost("/termsConditionFullDetail/deleteTnCFullDetail", updatebleData, {})
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              message.success(response.data.message);
+              getTermsFullDetailAPICall();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("There was an error!- deleteTnCFullDetail", error);
           });
         break;
 
@@ -7277,6 +7555,68 @@ function ContentPageLogic() {
           });
         break;
 
+      case "terms_short_details":
+        setLoading(true);
+
+        if (
+          termsShortDetailData.shortName === "" ||
+          termsShortDetailData.plantId === "" ||
+          termsShortDetailData.fullName === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          let updatableDataforTermsShortDetails = {
+            ...termsShortDetailData,
+            id: id,
+          };
+          handler
+            .dataPost("/termsConditionShortDetail/updateTnCShortDetail", updatableDataforTermsShortDetails, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 200) {
+                message.success(response.data.message);
+                getTermsShortDetailAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- updateTnCShortDetail", error);
+            });
+        }
+        break;
+
+      case "terms_full_details":
+        setLoading(true);
+
+        if (
+          termsFullDetailData.srNo === "" ||
+          termsFullDetailData.plantId === "" ||
+          termsFullDetailData.title === "" ||
+          termsFullDetailData.description === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          let updatableDataforTermsFullDetails = {
+            ...termsFullDetailData,
+            id: id,
+          };
+          handler
+            .dataPost("/termsConditionFullDetail/updateTnCFullDetail", updatableDataforTermsFullDetails, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 200) {
+                message.success(response.data.message);
+                getTermsFullDetailAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addTnCFullDetail", error);
+            });
+        }
+        break;
       case "quote_extra_charges":
         setLoading(true);
 
@@ -8296,6 +8636,62 @@ function ContentPageLogic() {
         }
         break;
 
+      case "terms_short_details":
+        setLoading(true);
+
+        console.log(termsShortDetailData)
+
+        if (
+          termsShortDetailData.shortName === "" ||
+          termsShortDetailData.plantId === "" ||
+          termsShortDetailData.fullName === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/termsConditionShortDetail/addTnCShortDetail", termsShortDetailData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getTermsShortDetailAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addTnCShortDetail", error);
+            });
+        }
+        break;
+
+      case "terms_full_details":
+        setLoading(true);
+
+        if (
+          termsFullDetailData.srNo === "" ||
+          termsFullDetailData.plantId === "" ||
+          termsFullDetailData.title === "" ||
+          termsFullDetailData.description === ""
+        ) {
+          window.alert("Please provide required details");
+        } else {
+          handler
+            .dataPost("/termsConditionFullDetail/addTnCFullDetail", termsFullDetailData, {})
+            .then((response) => {
+              setLoading(false);
+              if (response.status == 201) {
+                message.success(response.data.message);
+                getTermsFullDetailAPICall();
+              } else if (response.status == 400) {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("There was an error!- addTnCFullDetail", error);
+            });
+        }
+        break;
       case "quote_extra_charges":
         setLoading(true);
 
@@ -9031,6 +9427,40 @@ function ContentPageLogic() {
       });
   };
 
+  const getTermsShortDetailAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/termsConditionShortDetail/getTnCShortDetails", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getTermsShortDetailAPICall", error);
+      });
+  };
+
+  const getTermsFullDetailAPICall = () => {
+    setLoading(true);
+    handler
+      .dataGet("/termsConditionFullDetail/getTnCFullDetails", {})
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getTermsFullDetailAPICall", error);
+      });
+  };
+
   // get mix design list api call
   const getMixDesigns = (type, modalName) => {
     setLoading(true);
@@ -9201,6 +9631,16 @@ function ContentPageLogic() {
       case "extra_charges":
         getConstructionCompanyForProjectManager();
         getExtraChargeAPICall();
+        break;
+
+      case "terms_short_details":
+        getPlants()
+        getTermsShortDetailAPICall()
+        break;
+
+      case "terms_full_details":
+        getPlants()
+        getTermsFullDetailAPICall()
         break;
 
       case "house_mix_design":
@@ -9485,6 +9925,8 @@ function ContentPageLogic() {
     renderOpportunityModal,
     renderQuotationModal,
     quotationTblHeaders,
+    termsShortDetailTblHeaders,
+    termsFullDetailTblHeaders
   };
 
   return StatesContainer;

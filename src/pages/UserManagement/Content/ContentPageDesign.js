@@ -47,6 +47,8 @@ function ContentPageDesign(props) {
     renderOpportunityModal,
     renderQuotationModal,
     quotationTblHeaders,
+    termsShortDetailTblHeaders,
+    termsFullDetailTblHeaders
   } = ContentPageLogic();
 
   // useeffect
@@ -104,6 +106,15 @@ function ContentPageDesign(props) {
 
     if (data.page === "quotation") {
       setTblHeaders(quotationTblHeaders);
+    }
+
+    if (data.page === "terms_short_details") {
+      setTblHeaders(termsShortDetailTblHeaders);
+    }
+
+
+    if (data.page === "terms_full_details") {
+      setTblHeaders(termsFullDetailTblHeaders);
     }
   }, [data.page]);
 

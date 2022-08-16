@@ -112,6 +112,24 @@ function TheSidebar() {
             <Link to={"/extra-charges-section/premium-rates"} />
           </Menu.Item>
         </SubMenu>
+        <SubMenu
+          key="6"
+          title={"Terms & Conditions"}
+          icon={<DesktopOutlined />}
+        >
+          <Menu.Item key="/terms-conditions/short-details">
+            <SolutionOutlined />
+            <span>Short Details</span>
+            <Link to={"/terms-conditions/short-details"} />
+          </Menu.Item>
+          <Menu.Item key="/terms-conditions/full-details">
+            <ProjectOutlined />
+            <span>Full Details</span>
+            <Link to={"/terms-conditions/full-details"} />
+          </Menu.Item>
+
+        </SubMenu>
+
         <SubMenu key="4" title={"Company Master"} icon={<DesktopOutlined />}>
           <Menu.Item key="/company-master/house-mix-design">
             <SolutionOutlined />
