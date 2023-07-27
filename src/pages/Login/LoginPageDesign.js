@@ -47,6 +47,7 @@ function LoginPageDesign() {
         <span className="span-login-first-text">Login | </span>
         <span className="span-login-second-text">Sign in to your Account</span>
         <Input
+          id="Username"
           size="large"
           placeholder="Username"
           prefix={<UserOutlined />}
@@ -55,6 +56,7 @@ function LoginPageDesign() {
           onChange={(e) => handleUsername(e.target.value)}
         />
         <Input.Password
+          id="Password"
           size="large"
           placeholder="Password"
           prefix={<KeyOutlined />}
@@ -66,13 +68,14 @@ function LoginPageDesign() {
           onChange={(e) => handlePassword(e.target.value)}
         />
 
-        <Button type="primary" block size="large" onClick={loginAPIcall}>
+        <Button type="primary" block size="large" onClick={loginAPIcall} id="login-button">
           Login
         </Button>
 
         {loading ? <Loader /> : null}
 
         <p
+          id="forget-password"
           className="p-forgotpassword"
           onClick={(e) => {
             e.preventDefault();

@@ -52,6 +52,7 @@ function TheSidebar() {
         selectedKeys={[current]}
         mode="inline"
         className="menu-container"
+        id="menu"
       >
         <Menu.Item key="/">
           <DashboardOutlined />
@@ -62,8 +63,9 @@ function TheSidebar() {
           key="10"
           title={"User Management"}
           icon={<ApartmentOutlined />}
+          id="userManagement"
         >
-          <Menu.Item key="/user">
+          <Menu.Item key="/user" id="user">
             <UserOutlined />
             <span>User</span>
             <Link to={"/user"} />

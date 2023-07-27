@@ -3130,6 +3130,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.username,
       method: handleChangeData,
+      id: "user_username"
     },
     {
       name: "password",
@@ -3139,6 +3140,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.password,
       method: handleChangeData,
+      id: "user_password"
     },
 
     {
@@ -3149,6 +3151,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.firstName,
       method: handleChangeData,
+      id: "user_firstName"
     },
 
     {
@@ -3159,6 +3162,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.lastName,
       method: handleChangeData,
+      id: "user_lastName"
     },
     {
       name: "contactNo",
@@ -3168,6 +3172,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.contactNo,
       method: handleChangeData,
+      id: "user_contactNo"
     },
 
     {
@@ -3178,6 +3183,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.address,
       method: handleChangeData,
+      id: "user_address"
     },
 
     {
@@ -3188,6 +3194,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.alternateNo,
       method: handleChangeData,
+      id: "user_alternateNo"
     },
 
     {
@@ -3198,6 +3205,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.defaultCompanyId,
       method: handleChangeData,
+      id: "user_defaultCompanyId"
     },
 
     {
@@ -3208,6 +3216,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.city,
       method: handleChangeData,
+      id: "user_city"
     },
 
     {
@@ -3218,6 +3227,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.state,
       method: handleChangeData,
+      id: "user_state"
     },
 
     {
@@ -3228,6 +3238,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: userData.zipcode,
       method: handleChangeData,
+      id: "user_zipcode"
     },
 
     {
@@ -3237,6 +3248,7 @@ function ContentPageLogic() {
       type: "upload",
       className: "avatar-uploader",
       value: userData.userProfileImage,
+      id: "user_avatar"
     },
   ];
 
@@ -4113,9 +4125,12 @@ function ContentPageLogic() {
                                 }}
                                 style={{ marginRight: 5 }}
                                 disabled={isUploaded ? true : false}
+                                id="uploadButton"
                               >
                                 {isUploaded ? "Uploaded" : "Upload"}
                               </Button>
+
+                              <span id="response" style={{ display: "none" }}>{imageUrl}</span>
 
                               <Button
                                 type="primary"
@@ -4133,6 +4148,7 @@ function ContentPageLogic() {
                         ) : (
                           <input
                             type="file"
+                            id={record.id}
                             onChange={(e) => {
                               setImageUrl(
                                 URL.createObjectURL(e.target.files[0])
@@ -4197,6 +4213,7 @@ function ContentPageLogic() {
                         ) : (
                           <input
                             type="file"
+                            id={record.id}
                             onChange={(e) => {
                               setImageUrl(
                                 URL.createObjectURL(e.target.files[0])
@@ -4333,6 +4350,7 @@ function ContentPageLogic() {
                           type={record.type}
                           className={record.className}
                           onChange={record.method}
+                          id={record.id}
                         />
                       </Col>
                     );

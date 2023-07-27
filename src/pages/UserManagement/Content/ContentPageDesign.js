@@ -126,7 +126,7 @@ function ContentPageDesign(props) {
           <div className="div-page-header">
             <Search placeholder="Search" className="div-search" />
             {pageName === "opportunity" ? null : (
-              <Button className="button-add-user" onClick={showModal}>
+              <Button className="button-add-user" onClick={showModal} id="add-button">
                 {data.buttonText}
               </Button>
             )}
