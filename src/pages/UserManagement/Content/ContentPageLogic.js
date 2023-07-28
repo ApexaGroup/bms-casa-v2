@@ -3027,6 +3027,18 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.construction_company_name,
       method: handleChangeData,
+      id: "cc_name"
+    },
+
+    {
+      name: "email",
+      typeofinput: "input",
+      placeholder: "Construction Company Email",
+      type: "text",
+      className: "input-style",
+      value: ccData.email,
+      method: handleChangeData,
+      id: "cc_email"
     },
 
     {
@@ -3037,6 +3049,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.contact_person_name,
       method: handleChangeData,
+      id: "cc_contact_person_name"
     },
 
     {
@@ -3047,6 +3060,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.contact_no,
       method: handleChangeData,
+      id: "cc_contact_no"
     },
 
     {
@@ -3057,6 +3071,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.alternate_no,
       method: handleChangeData,
+      id: "cc_alternate_no"
     },
 
     {
@@ -3067,6 +3082,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.address,
       method: handleChangeData,
+      id: "cc_address"
     },
 
     {
@@ -3077,6 +3093,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.city,
       method: handleChangeData,
+      id: "cc_city"
     },
 
     {
@@ -3087,6 +3104,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.state,
       method: handleChangeData,
+      id: "cc_state"
     },
 
     {
@@ -3097,6 +3115,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.zipcode,
       method: handleChangeData,
+      id: "cc_zipcode"
     },
 
     {
@@ -3107,6 +3126,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.notes,
       method: handleChangeData,
+      id: "cc_notes"
     },
 
     {
@@ -3117,6 +3137,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: ccData.isActive,
       method: handleChangeData,
+      id: "cc_isActive"
     },
   ];
 
@@ -4367,6 +4388,7 @@ function ContentPageLogic() {
                         type={record.type}
                         className={record.className}
                         onChange={record.method}
+                        id={record.id}
                       />
                     </Col>
                   );

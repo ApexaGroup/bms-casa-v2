@@ -70,19 +70,19 @@ function TheSidebar() {
             <span>User</span>
             <Link to={"/user"} />
           </Menu.Item>
-          <Menu.Item key="/role">
+          <Menu.Item key="/role" id="role">
             <UserSwitchOutlined />
             <span>Role</span>
             <Link to={"/role"} />
           </Menu.Item>
         </SubMenu>
-        <SubMenu key="2" title={"Client Master"} icon={<DesktopOutlined />}>
-          <Menu.Item key="/client-master/construction-company">
+        <SubMenu key="2" title={"Client Master"} icon={<DesktopOutlined />} id="clientMaster">
+          <Menu.Item key="/client-master/construction-company" id="constructionCompany">
             <SolutionOutlined />
             <span>Construction Company</span>
             <Link to={"/client-master/construction-company"} />
           </Menu.Item>
-          <Menu.Item key="/client-master/project-manager">
+          <Menu.Item key="/client-master/project-manager" id="projectManager">
             <ProjectOutlined />
             <span>Project Manager</span>
             <Link to={"/client-master/project-manager"} />
