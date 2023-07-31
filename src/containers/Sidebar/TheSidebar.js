@@ -92,18 +92,19 @@ function TheSidebar() {
           key="3"
           title={"Extra Charges Section"}
           icon={<DesktopOutlined />}
+          id="extraCharges"
         >
-          <Menu.Item key="/extra-charges-section/extra-charges">
+          <Menu.Item key="/extra-charges-section/extra-charges" id="ec">
             <SolutionOutlined />
             <span>Extra Charges</span>
             <Link to={"/extra-charges-section/extra-charges"} />
           </Menu.Item>
-          <Menu.Item key="/extra-charges-section/over-time-fees">
+          <Menu.Item key="/extra-charges-section/over-time-fees" id="otf">
             <ProjectOutlined />
             <span>Over Time Fees</span>
             <Link to={"/extra-charges-section/over-time-fees"} />
           </Menu.Item>
-          <Menu.Item key="/extra-charges-section/short-load-charges">
+          <Menu.Item key="/extra-charges-section/short-load-charges" id="slc">
             <ProjectOutlined />
             <span>Short Load Charges</span>
             <Link to={"/extra-charges-section/short-load-charges"} />

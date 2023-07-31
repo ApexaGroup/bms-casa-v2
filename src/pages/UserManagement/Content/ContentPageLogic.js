@@ -3416,6 +3416,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.plantid,
       method: selectHandleChange,
+      id: "otf_plant_id"
     },
 
     {
@@ -3426,6 +3427,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.title,
       method: handleChangeData,
+      id: "otf_title"
     },
 
     {
@@ -3436,6 +3438,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.price,
       method: handleChangeData,
+      id: "otf_price"
     },
     {
       name: "unit",
@@ -3445,6 +3448,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.unit,
       method: handleChangeData,
+      id: "otf_unit"
     },
 
     {
@@ -3455,6 +3459,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.quoteNote,
       method: handleChangeData,
+      id: "otf_notes"
     },
 
     {
@@ -3465,6 +3470,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: otData.fieldDescription,
       method: handleChangeData,
+      id: "otf_description"
     },
 
     {
@@ -3558,6 +3564,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: shortLoadData.plantid,
       method: selectHandleChange,
+      id: "slc_plant_id"
     },
 
     {
@@ -3568,6 +3575,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: shortLoadData.title,
       method: handleChangeData,
+      id: "slc_title"
     },
 
     {
@@ -3578,6 +3586,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: shortLoadData.quoteNote,
       method: handleChangeData,
+      id: "slc_notes"
     },
 
     {
@@ -3588,6 +3597,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: shortLoadData.fieldDescription,
       method: handleChangeData,
+      id: "slc_description"
     },
 
     {
@@ -3610,6 +3620,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.plantid,
       method: selectHandleChange,
+      id: "ec_plant_id"
     },
 
     {
@@ -3620,6 +3631,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.title,
       method: handleChangeData,
+      id: "ec_title"
     },
 
     {
@@ -3630,6 +3642,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.price,
       method: handleChangeData,
+      id: "ec_price"
     },
     {
       name: "unit",
@@ -3639,6 +3652,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.unit,
       method: handleChangeData,
+      id: "ec_unit"
     },
 
     {
@@ -3649,6 +3663,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.quoteNote,
       method: handleChangeData,
+      id: "ec_notes"
     },
 
     {
@@ -3659,6 +3674,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: extraChargesData.fieldDescription,
       method: handleChangeData,
+      id: "ec_description"
     },
 
     {
