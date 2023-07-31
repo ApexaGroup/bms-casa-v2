@@ -145,7 +145,6 @@ describe("Testing Login form", () => {
         await page.type('#cc_address', "Newyork, United States")
         await page.waitForTimeout(4000)
         await page.waitForSelector('.ant-modal-content');
-
         await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
         await page.click('.ant-modal-footer .ant-btn-primary');
         await page.waitForTimeout(4000)
