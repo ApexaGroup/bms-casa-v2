@@ -3493,6 +3493,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.plantid,
       method: selectHandleChange,
+      id: "pr_plant_id"
     },
 
     {
@@ -3503,6 +3504,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.title,
       method: handleChangeData,
+      id: "pr_title"
     },
 
     {
@@ -3513,6 +3515,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.truckHireFee,
       method: handleChangeData,
+      id: "pr_truckHireFee"
     },
     {
       name: "plantOpeningFee",
@@ -3522,6 +3525,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.plantOpeningFee,
       method: handleChangeData,
+      id: "pr_plantOpeningFee"
     },
 
     {
@@ -3532,6 +3536,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.quoteNote,
       method: handleChangeData,
+      id: "pr_notes"
     },
 
     {
@@ -3542,6 +3547,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: premiumRatesData.fieldDescription,
       method: handleChangeData,
+      id: "pr_description"
     },
 
     {

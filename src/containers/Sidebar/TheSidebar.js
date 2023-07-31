@@ -109,7 +109,7 @@ function TheSidebar() {
             <span>Short Load Charges</span>
             <Link to={"/extra-charges-section/short-load-charges"} />
           </Menu.Item>
-          <Menu.Item key="/extra-charges-section/premium-rates">
+          <Menu.Item key="/extra-charges-section/premium-rates" id="pr">
             <ProjectOutlined />
             <span>Premium Rates</span>
             <Link to={"/extra-charges-section/premium-rates"} />
