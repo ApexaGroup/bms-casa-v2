@@ -157,6 +157,66 @@ describe("Testing Login form", () => {
         await page.waitForSelector('.ant-modal-close')
         await page.click('.ant-modal-close')
 
+        await page.waitForTimeout(2000);
+        await page.waitForSelector(mainMenuItemSelectorClientMaster);
+        await page.click(mainMenuItemSelectorClientMaster);
+        const subMenuItemSelectorCientMasterPM = '#projectManager';
+        await page.waitForSelector(subMenuItemSelectorCientMasterPM);
+        await page.click(subMenuItemSelectorCientMasterPM);
+        await page.waitForTimeout(8000)
+
+        // Click on Add button
+        await page.click("#add-button")
+        await page.waitForTimeout(5000)
+
+        // Type the form
+        await page.waitForSelector('.ant-select');
+        // Click on the Select component to open the dropdown menu
+        await page.click('.ant-select');
+        // Wait for the dropdown menu to appear
+        await page.waitForSelector('.ant-select-dropdown');
+        await page.click('.ant-select-item');
+        await page.type('#pm_name', `Mark ${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#pm_contact_no', `9999876534${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#pm_cell_phone', `786789${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#pm_email', `pm${Math.floor(Math.random() * 100) + 1}@gmail.com`)
+        await page.type('#pm_alternate_email', `pmalt${Math.floor(Math.random() * 100) + 1}@gmail.com`)
+        await page.type('#pm_address', "Alberta, US")
+        await page.type('#pm_city', "Alberta")
+        await page.type('#pm_state', "Newyork")
+        await page.type('#pm_zipcode', "122001")
+        await page.type('#pm_notes', `This is a sample note:${Math.floor(Math.random() * 100) + 1}`)
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.focus('#pm_cell_phone');
+        await page.keyboard.down('Control');
+        await page.keyboard.press('A');
+        await page.keyboard.up('Control');
+        await page.keyboard.press('Backspace');
+        await page.waitForTimeout(3000)
+        await page.type('#pm_cell_phone', `786789${Math.floor(Math.random() * 100) + 1}`)
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-content');
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-close')
+        await page.click('.ant-modal-close')
+
 
         await browser.close()
 

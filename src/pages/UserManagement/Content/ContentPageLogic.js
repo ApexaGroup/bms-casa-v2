@@ -3282,6 +3282,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.construction_company_id,
       method: selectHandleChange,
+      id: "pm_construction_company_id"
     },
 
     {
@@ -3292,6 +3293,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.project_manager_name,
       method: handleChangeData,
+      id: "pm_name"
     },
 
     {
@@ -3302,6 +3304,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.contact_no,
       method: handleChangeData,
+      id: "pm_contact_no"
     },
 
     {
@@ -3312,6 +3315,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.cell_phone,
       method: handleChangeData,
+      id: "pm_cell_phone"
     },
 
     {
@@ -3322,6 +3326,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.email,
       method: handleChangeData,
+      id: "pm_email"
     },
 
     {
@@ -3332,6 +3337,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.alternate_email,
       method: handleChangeData,
+      id: "pm_alternate_email"
     },
 
     {
@@ -3342,6 +3348,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.address,
       method: handleChangeData,
+      id: "pm_address"
     },
 
     {
@@ -3352,6 +3359,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.city,
       method: handleChangeData,
+      id: "pm_city"
     },
 
     {
@@ -3362,6 +3370,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.state,
       method: handleChangeData,
+      id: "pm_state"
     },
 
     {
@@ -3372,6 +3381,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.zipcode,
       method: handleChangeData,
+      id: "pm_zipcode"
     },
 
     {
@@ -3382,6 +3392,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.notes,
       method: handleChangeData,
+      id: "pm_notes"
     },
 
     {
@@ -3392,6 +3403,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: pmData.isActive,
       method: handleChangeData,
+      id: "pm_isActive"
     },
   ];
 
@@ -4284,6 +4296,7 @@ function ContentPageLogic() {
                         onChange={(value) => {
                           selectHandleChange(value, record.name);
                         }}
+                        id={record.id}
                       >
                         {(() => {
                           if (record.name === "construction_company_id") {
