@@ -4006,6 +4006,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsShortDetailData.shortName,
       method: handleChangeData,
+      id: "sd_shortname"
     },
 
     {
@@ -4016,6 +4017,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsShortDetailData.fullName,
       method: handleChangeData,
+      id: "sd_fullname"
     },
 
     {
@@ -4026,6 +4028,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsShortDetailData.plantId,
       method: selectHandleChange,
+      id: "sd_plant_id"
     },
 
 
@@ -4040,6 +4043,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsFullDetailData.srNo,
       method: handleChangeData,
+      id: "fd_sr_no"
     },
 
     {
@@ -4050,6 +4054,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsFullDetailData.title,
       method: handleChangeData,
+      id: "fd_title"
     },
 
     {
@@ -4060,6 +4065,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsFullDetailData.description,
       method: handleChangeData,
+      id: "fd_description"
     },
 
     {
@@ -4070,6 +4076,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: termsFullDetailData.plantId,
       method: selectHandleChange,
+      id: "fd_plant_id"
     },
 
 

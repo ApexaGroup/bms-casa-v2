@@ -102,6 +102,7 @@ describe("Testing Login form", () => {
         const subMenuItemSelectorRole = '#role';
         await page.waitForSelector(subMenuItemSelectorRole);
         await page.click(subMenuItemSelectorRole);
+        await page.keyboard.press('Enter');
         await page.waitForTimeout(2000);
         const mainMenuItemSelectorClientMaster = '#clientMaster';
         await page.waitForSelector(mainMenuItemSelectorClientMaster);
@@ -332,7 +333,7 @@ describe("Testing Login form", () => {
         await page.click('.ant-modal-close')
 
 
-        slc
+        // slc
         await page.waitForSelector(mainMenuItemSelectorExtraCharges);
         await page.click(mainMenuItemSelectorExtraCharges);
         const subMenuItemSelectorCientMasterSLC = '#slc';
@@ -426,6 +427,118 @@ describe("Testing Login form", () => {
         await page.keyboard.press('Backspace');
         await page.waitForTimeout(3000)
         await page.type('#pr_description', "This is updated sample description")
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-content');
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-close')
+        await page.click('.ant-modal-close')
+
+
+
+        // terms and conditions -- sd
+        const mainMenuItemSelectorTerms = '#termscoditions';
+        await page.waitForSelector(mainMenuItemSelectorTerms);
+        await page.click(mainMenuItemSelectorTerms);
+        const subMenuItemSelectorCientMasterTC = '#sd';
+        await page.waitForSelector(subMenuItemSelectorCientMasterTC);
+        await page.click(subMenuItemSelectorCientMasterTC);
+        await page.waitForTimeout(8000)
+
+        // Click on Add button
+        await page.click("#add-button")
+        await page.waitForTimeout(5000)
+
+        await page.type('#sd_shortname', `SSN ${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#sd_fullname', `Sample Full name ${Math.floor(Math.random() * 100) + 1}`)
+
+        // // Type the form
+        await page.waitForSelector('.ant-select');
+        // Click on the Select component to open the dropdown menu
+        await page.click('.ant-select');
+        // Wait for the dropdown menu to appear
+        await page.waitForSelector('.ant-select-dropdown');
+        await page.click('.ant-select-item');
+
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.focus('#sd_fullname');
+        await page.keyboard.down('Control');
+        await page.keyboard.press('A');
+        await page.keyboard.up('Control');
+        await page.keyboard.press('Backspace');
+        await page.waitForTimeout(3000)
+        await page.type('#sd_fullname', "This is updated full name")
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-content');
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-modal-close')
+        await page.click('.ant-modal-close')
+
+
+        // fd
+        await page.waitForSelector(mainMenuItemSelectorTerms);
+        await page.click(mainMenuItemSelectorTerms);
+        const subMenuItemSelectorCientMasterFD = '#fd';
+        await page.waitForSelector(subMenuItemSelectorCientMasterFD);
+        await page.click(subMenuItemSelectorCientMasterFD);
+        await page.waitForTimeout(8000)
+
+        // Click on Add button
+        await page.click("#add-button")
+        await page.waitForTimeout(5000)
+
+        await page.type('#fd_sr_no', `${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#fd_title', `Sample title ${Math.floor(Math.random() * 100) + 1}`)
+        await page.type('#fd_description', `Sample Description ${Math.floor(Math.random() * 100) + 1}`)
+        // // Type the form
+        await page.waitForSelector('.ant-select');
+        // Click on the Select component to open the dropdown menu
+        await page.click('.ant-select');
+        // Wait for the dropdown menu to appear
+        await page.waitForSelector('.ant-select-dropdown');
+        await page.click('.ant-select-item');
+
+        await page.waitForSelector('.ant-modal-footer .ant-btn-primary');
+        await page.click('.ant-modal-footer .ant-btn-primary');
+
+        await page.waitForTimeout(4000)
+
+        await page.waitForSelector('.ant-table-tbody tr')
+        await page.waitForTimeout(4000)
+        await page.waitForSelector('.ant-space-item');
+        await page.click('.ant-space-item')
+        await page.waitForTimeout(4000)
+        await page.focus('#fd_description');
+        await page.keyboard.down('Control');
+        await page.keyboard.press('A');
+        await page.keyboard.up('Control');
+        await page.keyboard.press('Backspace');
+        await page.waitForTimeout(3000)
+        await page.type('#fd_description', "This is updated description")
         await page.waitForTimeout(4000)
         await page.waitForSelector('.ant-modal-content');
         await page.waitForSelector('.ant-modal-footer .ant-btn-primary');

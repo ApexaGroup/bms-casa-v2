@@ -119,13 +119,14 @@ function TheSidebar() {
           key="6"
           title={"Terms & Conditions"}
           icon={<DesktopOutlined />}
+          id="termscoditions"
         >
-          <Menu.Item key="/terms-conditions/short-details">
+          <Menu.Item key="/terms-conditions/short-details" id="sd">
             <SolutionOutlined />
             <span>Short Details</span>
             <Link to={"/terms-conditions/short-details"} />
           </Menu.Item>
-          <Menu.Item key="/terms-conditions/full-details">
+          <Menu.Item key="/terms-conditions/full-details" id="fd">
             <ProjectOutlined />
             <span>Full Details</span>
             <Link to={"/terms-conditions/full-details"} />
