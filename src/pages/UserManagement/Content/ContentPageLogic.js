@@ -3703,6 +3703,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.mixDesignName,
       method: handleChangeData,
+      id: "hmd_mixDesignName"
     },
 
     {
@@ -3713,6 +3714,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.pumpMixtestingLabName,
       method: handleChangeData,
+      id: "hmd_pumpMixtestingLabName"
     },
 
     {
@@ -3723,6 +3725,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.minRate,
       method: handleChangeData,
+      id: "hmd_minRate"
     },
 
     {
@@ -3733,6 +3736,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.expirationDate,
       method: handleChangeData,
+      id: "hmd_expirationDate"
     },
     {
       name: "internalDesignType",
@@ -3742,6 +3746,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.internalDesignType,
       method: selectHandleChange,
+      id: "hmd_internalDesignType"
     },
 
     {
@@ -3752,6 +3757,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.mixDesignCode,
       method: handleChangeData,
+      id: "hmd_mixDesignCode"
     },
 
     {
@@ -3762,6 +3768,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.stoneType,
       method: selectHandleChange,
+      id: "hmd_stoneType"
     },
 
     {
@@ -3772,6 +3779,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.airType,
       method: selectHandleChange,
+      id: "hmd_airType"
     },
 
     {
@@ -3782,6 +3790,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.psi,
       method: handleChangeData,
+      id: "hmd_psi"
     },
 
     {
@@ -3792,6 +3801,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.wcRatio,
       method: handleChangeData,
+      id: "hmd_wcRatio"
     },
 
     {
@@ -3802,6 +3812,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: mixDesignData.proportions,
       method: handleChangeData,
+      id: "hmd_proportions"
     },
 
     {
@@ -3811,6 +3822,7 @@ function ContentPageLogic() {
       type: "upload",
       className: "avatar-uploader",
       value: mixDesignData.documentPath,
+      id: "hmd_avatar"
     },
   ];
 
@@ -3823,6 +3835,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.mixDesignName,
       method: handleChangeData,
+      id: "smd_mixDesignName"
     },
 
     {
@@ -3833,6 +3846,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.pumpMixtestingLabName,
       method: handleChangeData,
+      id: "smd_pumpMixtestingLabName"
     },
 
     {
@@ -3843,6 +3857,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.minRate,
       method: handleChangeData,
+      id: "smd_minRate"
     },
 
     {
@@ -3853,6 +3868,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.expirationDate,
       method: handleChangeData,
+      id: "smd_expirationDate"
     },
     {
       name: "internalDesignType",
@@ -3862,6 +3878,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.internalDesignType,
       method: selectHandleChange,
+      id: "smd_internalDesignType"
     },
 
     {
@@ -3872,6 +3889,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.mixDesignCode,
       method: handleChangeData,
+      id: "smd_mixDesignCode"
     },
 
     {
@@ -3882,6 +3900,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.stoneType,
       method: selectHandleChange,
+      id: "smd_stoneType"
     },
 
     {
@@ -3892,6 +3911,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.airType,
       method: selectHandleChange,
+      id: "smd_airType"
     },
 
     {
@@ -3902,6 +3922,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.psi,
       method: handleChangeData,
+      id: "smd_psi"
     },
 
     {
@@ -3912,6 +3933,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.wcRatio,
       method: handleChangeData,
+      id: "smd_wcRatio"
     },
 
     {
@@ -3922,6 +3944,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: specialMixDesignData.proportions,
       method: handleChangeData,
+      id: "smd_proportions"
     },
 
     {
@@ -3932,6 +3955,7 @@ function ContentPageLogic() {
       className: "avatar-uploader",
       value: specialMixDesignData.documentPath,
       method: handleChange,
+      id: "smd_avatar"
     },
   ];
 
@@ -3944,6 +3968,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.address,
       method: handleChangeData,
+      id: "lead_address"
     },
 
     {
@@ -3954,6 +3979,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.cross_street,
       method: handleChangeData,
+      id: "lead_crossstreet"
     },
 
     {
@@ -3964,6 +3990,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.borough,
       method: handleChangeData,
+      id: "lead_borough"
     },
 
     {
@@ -3974,6 +4001,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.state,
       method: handleChangeData,
+      id: "lead_state"
     },
     {
       name: "zipcode",
@@ -3983,6 +4011,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.zipcode,
       method: handleChangeData,
+      id: "lead_zipcode"
     },
 
     {
@@ -3993,6 +4022,7 @@ function ContentPageLogic() {
       className: "input-style",
       value: addressData.isActive,
       method: handleChangeData,
+      id: "lead_isActive"
     },
   ];
 
@@ -4247,7 +4277,7 @@ function ContentPageLogic() {
                                 marginLeft: 4,
                                 alignItems: "center",
                               }}
-                            >
+                            ><span id="response" style={{ display: "none" }}>{imageUrl}</span>
                               <Button
                                 type="primary"
                                 onClick={() => {
@@ -4255,6 +4285,7 @@ function ContentPageLogic() {
                                 }}
                                 style={{ marginRight: 5 }}
                                 disabled={isUploaded ? true : false}
+                                id="uploadButton"
                               >
                                 {isUploaded ? "Uploaded" : "Upload"}
                               </Button>
@@ -4498,6 +4529,7 @@ function ContentPageLogic() {
                     value={leadInformationData.leadTitle}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="leadTitle"
                   />
                 </Col>
 
@@ -4511,6 +4543,8 @@ function ContentPageLogic() {
                     onChange={(value) => {
                       selectHandleChange(value, "select_address");
                     }}
+                    id="leadAddress"
+                    name="address"
                   >
                     {addresslist.map((item) => {
                       return (
@@ -4530,6 +4564,8 @@ function ContentPageLogic() {
                     onChange={(value) => {
                       selectHandleChange(value, "select_status");
                     }}
+                    name="status"
+                    id="status"
                   >
                     {leadStatusData.map((item) => {
                       return <Option value={item.title}>{item.title}</Option>;
@@ -4546,6 +4582,7 @@ function ContentPageLogic() {
                     type={"date"}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="startDate"
                   />
                 </Col>
 
@@ -4558,6 +4595,7 @@ function ContentPageLogic() {
                     type={"date"}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="endDate"
                   />
                 </Col>
 
@@ -4570,6 +4608,7 @@ function ContentPageLogic() {
                     type={"date"}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="bidDueDate"
                   />
                 </Col>
 
@@ -4582,6 +4621,7 @@ function ContentPageLogic() {
                     type={"number"}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="estimatedYards"
                   />
                 </Col>
 
@@ -4594,6 +4634,7 @@ function ContentPageLogic() {
                     type={"text"}
                     className={"input-style"}
                     onChange={handleChangeData}
+                    id="notes"
                   />
                 </Col>
               </Row>

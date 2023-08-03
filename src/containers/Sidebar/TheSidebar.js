@@ -134,26 +134,26 @@ function TheSidebar() {
 
         </SubMenu>
 
-        <SubMenu key="4" title={"Company Master"} icon={<DesktopOutlined />}>
-          <Menu.Item key="/company-master/house-mix-design">
+        <SubMenu key="4" title={"Company Master"} icon={<DesktopOutlined />} id="companyMaster">
+          <Menu.Item key="/company-master/house-mix-design" id="hmd">
             <SolutionOutlined />
             <span>House Mix Design</span>
             <Link to={"/company-master/house-mix-design"} />
           </Menu.Item>
-          <Menu.Item key="/company-master/special-mix-design">
+          <Menu.Item key="/company-master/special-mix-design" id="smd">
             <ProjectOutlined />
             <span>Special Mix Design</span>
             <Link to={"/company-master/special-mix-design"} />
           </Menu.Item>
         </SubMenu>
 
-        <SubMenu key="5" title={"Lead Section"} icon={<DesktopOutlined />}>
-          <Menu.Item key="/lead-section/address">
+        <SubMenu key="5" title={"Lead Section"} icon={<DesktopOutlined />} id="leadSection">
+          <Menu.Item key="/lead-section/address" id="address">
             <SolutionOutlined />
             <span>Address</span>
             <Link to={"/lead-section/address"} />
           </Menu.Item>
-          <Menu.Item key="/lead-section/lead">
+          <Menu.Item key="/lead-section/lead" id="lead">
             <ProjectOutlined />
             <span>Lead</span>
             <Link to={"/lead-section/lead"} />
