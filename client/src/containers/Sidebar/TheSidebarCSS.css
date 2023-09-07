@@ -1,0 +1,17 @@
+.div-container-sidebar{
+/* background-color:#ff5500 ; */
+width: 100%;
+}
+
+.div-container-version{
+    text-align: center;
+    cursor: pointer;
+}
+
+.span-version{
+    color: black;
+}
+
+.menu-container{
+    /* background-color: #ff5500; */
+}

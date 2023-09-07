@@ -1,0 +1,18 @@
+.app-logo-container{
+    text-align: center;
+  }
+  
+  
+.app-logo{
+    width: 170px;
+    height: auto;
+    text-align: center;
+  }
+
+.app-logo-dashboard{
+    width: 100px;
+    height: auto;
+    text-align: center;
+    margin-top: 5px;
+    border-radius: 12px;
+  }

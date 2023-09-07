@@ -1,0 +1,25 @@
+.div-page-header{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.input-style{
+    /* margin: 5px !important; */
+    margin-bottom: 5px !important;
+}
+.userProfileImage{
+    width: 40px;
+    height: 40px;
+}
+
+.div-search{
+    width: 200px;
+}
+
+.button-add-user{
+    margin-left: 10px;
+    background-color: #ff5500;
+    color: white;
+}

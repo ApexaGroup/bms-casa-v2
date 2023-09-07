@@ -1,0 +1,21 @@
+{
+  "name": "bms-casa-new-version",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "concurrently -m 1 \"npm --prefix client run build\" \"npm --prefix server run build\"",
+    "dev": "concurrently \"npm --prefix client start\" \"npm --prefix server run dev\"",
+    "start": "npm --prefix server run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "concurrently": "^8.2.0",
+    "html-pdf": "^3.0.1",
+    "pdf-merger-js": "^4.3.0"
+  }
+}

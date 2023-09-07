@@ -1,0 +1,46 @@
+.div-page-header-parent{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.tr-custom{
+    border: 0.25px solid black;
+    padding: 5px;
+}
+
+.td-custom{
+    padding: 10px;
+    border: 0.25px solid black;
+}
+
+label{
+   font-weight: bold; 
+}
+
+.div-page-header{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.input-style{
+    margin-bottom: 5px !important;
+}
+.userProfileImage{
+    width: 40px;
+    height: 40px;
+}
+
+.div-search{
+    width: 200px;
+}
+
+.button-add-user{
+    margin-left: 10px;
+    background-color: #ff5500;
+    color: white;
+}
+

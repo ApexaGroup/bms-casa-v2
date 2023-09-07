@@ -1,0 +1,611 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://admin:SHPWgFgmOt6GPDOL@cluster0.mgexj.mongodb.net/Data?retryWrites=true&w=majority"
+}
+
+model testingData {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+}
+
+model Permission {
+  id    String           @id @default(auto()) @map("_id") @db.ObjectId
+  name  String           @unique
+  roles RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  role         role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  roleId       String
+  permissionId String
+
+  @@unique([roleId, permissionId]) // Ensure uniqueness in the junction table
+}
+
+model role {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  name            String           @unique
+  rolePermissions RolePermission[]
+  users           user[]
+}
+
+model user {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  username         String   @unique
+  role             role?    @relation(fields: [roleId], references: [id])
+  roleId           String
+  password         String
+  firstName        String
+  lastName         String
+  contactNo        String
+  address          String
+  alternateNo      String
+  userProfileImage String
+  isActive         Boolean  @default(false)
+  defaultCompanyId String
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+  city             String
+  state            String
+  zipcode          String
+}
+
+model user_backup {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  username         String   @unique
+  password         String
+  firstName        String
+  lastName         String
+  contactNo        String
+  address          String
+  alternateNo      String
+  userProfileImage String
+  isActive         Boolean  @default(false)
+  defaultCompanyId String
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+  city             String
+  state            String
+  zipcode          String
+}
+
+model construction_company {
+  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
+  construction_company_name String   @unique
+  contact_person_name       String
+  contact_no                String
+  alternate_no              String
+  email                     String
+  address                   String
+  city                      String
+  state                     String
+  zipcode                   String
+  notes                     String
+  isActive                  Boolean  @default(true)
+  createdOn                 DateTime @default(now())
+  modifiedOn                DateTime @updatedAt
+}
+
+model construction_company_backup {
+  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
+  construction_company_name String   @unique
+  contact_person_name       String
+  contact_no                String
+  alternate_no              String
+  email                     String
+  address                   String
+  city                      String
+  state                     String
+  zipcode                   String
+  notes                     String
+  isActive                  Boolean  @default(true)
+  createdOn                 DateTime @default(now())
+  modifiedOn                DateTime @updatedAt
+}
+
+model project_manager {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  construction_company_id String
+  project_manager_name    String
+  contact_no              String
+  email                   String
+  alternate_email         String
+  cell_phone              String
+  address                 String
+  city                    String
+  state                   String
+  zipcode                 String
+  notes                   String
+  isActive                Boolean  @default(true)
+  createdOn               DateTime @default(now())
+  modifiedOn              DateTime @updatedAt
+}
+
+model project_manager_backup {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  construction_company_id String
+  project_manager_name    String
+  contact_no              String
+  email                   String
+  alternate_email         String
+  cell_phone              String
+  address                 String
+  city                    String
+  state                   String
+  zipcode                 String
+  notes                   String
+  isActive                Boolean  @default(true)
+  createdOn               DateTime @default(now())
+  modifiedOn              DateTime @updatedAt
+}
+
+model overtime_fees {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model overtime_fees_backup {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model premium_rates {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  truckHireFee     String
+  plantOpeningFee  String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model premium_rates_backup {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  truckHireFee     String
+  plantOpeningFee  String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model mix_design {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  mixDesignName         String
+  mixDesignCode         String
+  wcRatio               String
+  documentPath          String
+  minRate               String
+  pumpMixtestingLabName String
+  expirationDate        String
+  plantid               String
+  psi                   String
+  mixType               String
+  stoneType             String
+  airType               String
+  proportions           String
+  status                String
+  internalDesignType    String
+  isActive              Boolean  @default(true)
+  createdOn             DateTime @default(now())
+  modifiedOn            DateTime @updatedAt
+}
+
+model mix_design_backup {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  mixDesignName         String
+  mixDesignCode         String
+  wcRatio               String
+  documentPath          String
+  minRate               String
+  pumpMixtestingLabName String
+  expirationDate        String
+  plantid               String
+  psi                   String
+  mixType               String
+  stoneType             String
+  airType               String
+  proportions           String
+  status                String
+  internalDesignType    String
+  isActive              Boolean  @default(true)
+  createdOn             DateTime @default(now())
+  modifiedOn            DateTime @updatedAt
+}
+
+model short_load {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model short_load_backup {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model extra_charge {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model extra_charge_backup {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model address_lead_section {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  address      String
+  cross_street String
+  borough      String
+  state        String
+  zipcode      String
+  isActive     Boolean  @default(true)
+  createdOn    DateTime @default(now())
+  modifiedOn   DateTime @updatedAt
+}
+
+model address_lead_section_backup {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  address      String
+  cross_street String
+  borough      String
+  state        String
+  zipcode      String
+  isActive     Boolean  @default(true)
+  createdOn    DateTime @default(now())
+  modifiedOn   DateTime @updatedAt
+}
+
+model lead_information {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  leadTitle      String
+  address        String
+  status         String
+  startDate      String
+  endDate        String
+  BidDueDate     String
+  estimatedYards String
+  notes          String
+  isActive       Boolean  @default(true)
+  createdOn      DateTime @default(now())
+  modifiedOn     DateTime @updatedAt
+}
+
+model lead_information_backup {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  leadTitle      String
+  address        String
+  status         String
+  startDate      String
+  endDate        String
+  BidDueDate     String
+  estimatedYards String
+  notes          String
+  isActive       Boolean  @default(true)
+  createdOn      DateTime @default(now())
+  modifiedOn     DateTime @updatedAt
+}
+
+model followup_section {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  lead_id           String // section_id rename
+  contactDate       String
+  contactPersonName String
+  description       String
+  contactNo         String
+  nextMeetingDate   String
+  typeOfContact     String
+  email             String
+  onSiteVisit       String
+  section_name      String
+  createdOn         DateTime @default(now())
+  modifiedOn        DateTime @updatedAt
+}
+
+model followup_section_backup {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  lead_id           String // section_id rename
+  contactDate       String
+  contactPersonName String
+  description       String
+  contactNo         String
+  nextMeetingDate   String
+  typeOfContact     String
+  email             String
+  onSiteVisit       String
+  section_name      String
+  createdOn         DateTime @default(now())
+  modifiedOn        DateTime @updatedAt
+}
+
+model audit_logs {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userName      String
+  email         String
+  contactNumber String
+  updatedField  String
+  operationName String
+  sectionName   String
+  sectionDataid String
+  createdOn     DateTime @default(now())
+  modifiedOn    DateTime @updatedAt
+}
+
+model plant_information {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  plant_name String
+  address    String
+  email      String
+  contactNo  String
+  logo       String
+  createdOn  DateTime @default(now())
+  modifiedOn DateTime @updatedAt
+}
+
+model opportunities {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  lead_name            String
+  address_id           String
+  estimated_yard       String
+  plant_id             String
+  construction_company String
+  project_manager      String
+  startDate            String
+  endDate              String
+  bidDueDate           String
+  status               String
+  notes                String
+  createdOn            DateTime @default(now())
+  modifiedOn           DateTime @updatedAt
+}
+
+model opportunities_backup {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  lead_name            String
+  address_id           String
+  estimated_yard       String
+  plant_id             String
+  construction_company String
+  project_manager      String
+  startDate            String
+  endDate              String
+  bidDueDate           String
+  status               String
+  notes                String
+  createdOn            DateTime @default(now())
+  modifiedOn           DateTime @updatedAt
+}
+
+model quality_control {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  section_id     String
+  loadingPlant   String
+  mixDesignName  String
+  mixDesignId    String
+  minPrice       String
+  approvedDesign String
+  tr3            String
+  tr2            String
+  price          String
+  estimatedYards String
+  section_name   String
+  createdOn      DateTime @default(now())
+  modifiedOn     DateTime @updatedAt
+}
+
+model quality_control_backup {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  section_id     String
+  loadingPlant   String
+  mixDesignName  String
+  mixDesignId    String
+  minPrice       String
+  approvedDesign String
+  tr3            String
+  tr2            String
+  price          String
+  estimatedYards String
+  section_name   String
+  createdOn      DateTime @default(now())
+  modifiedOn     DateTime @updatedAt
+}
+
+model quotation_transaction {
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  constructionCompanyId String
+  salesPersonId         String
+  opportunityId         String
+  quotationStatus       String
+  tr3Required           Boolean
+  plantId               String
+  projectManagerId      String
+  dueDate               String
+  increaseDate          String
+  notes                 String
+  status                String
+}
+
+model quotation_transaction_backup {
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  constructionCompanyId String
+  salesPersonId         String
+  opportunityId         String
+  quotationStatus       String
+  tr3Required           Boolean
+  plantId               String
+  projectManagerId      String
+  dueDate               String
+  increaseDate          String
+  notes                 String
+  status                String
+}
+
+model quotation_type {
+  id                   String @id @default(auto()) @map("_id") @db.ObjectId
+  quoteCode            String
+  Quote_Type           String
+  Quote_Transaction_Id String
+  TypeNumber           Int
+  status               String
+}
+
+model quotation_type_backup {
+  id                   String @id @default(auto()) @map("_id") @db.ObjectId
+  quoteCode            String
+  Quote_Type           String
+  Quote_Transaction_Id String
+  TypeNumber           Int
+  status               String
+}
+
+model quote_extra_charge {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  quotationId      String
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model quote_overtime_charge {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  quotationId      String
+  title            String
+  price            String
+  unit             String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model quote_shortload_charge {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  quotationId      String
+  title            String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model quote_premium_rates {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  quotationId      String
+  title            String
+  truckHireFee     String
+  plantOpeningFee  String
+  quoteNote        String
+  fieldDescription String
+  plantid          String
+  isActive         Boolean  @default(true)
+  createdOn        DateTime @default(now())
+  modifiedOn       DateTime @updatedAt
+}
+
+model terms_and_condition_short_detail {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  shortName  String
+  fullName   String
+  plantId    String
+  createdOn  DateTime @default(now())
+  modifiedOn DateTime @updatedAt
+}
+
+model terms_and_condition_short_detail_backup {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  shortName  String
+  fullName   String
+  plantId    String
+  createdOn  DateTime @default(now())
+  modifiedOn DateTime @updatedAt
+}
+
+model terms_and_condition_full_detail {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  srNo        String
+  title       String
+  description String
+  plantId     String
+  createdOn   DateTime @default(now())
+  modifiedOn  DateTime @updatedAt
+}
+
+model terms_and_condition_full_detail_backup {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  srNo        String
+  title       String
+  description String
+  plantId     String
+  createdOn   DateTime @default(now())
+  modifiedOn  DateTime @updatedAt
+}
