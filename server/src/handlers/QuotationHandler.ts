@@ -228,8 +228,6 @@ export const getQuotationTransactionList = async (
     const quotation_transaction_list =
       await prisma.quotation_transaction.findMany();
 
-    console.log(quotation_transaction_list)
-
     if (quotation_transaction_list) {
       for (let i = 0; i < quotation_transaction_list.length; i++) {
         const constructionCompanyId =
@@ -460,3 +458,66 @@ export const getQuotationTypeList = async (req: Request, res: Response) => {
       .json({ message: "Failed to get data" });
   }
 };
+
+export const getQuotationData = async (req: Request, res: Response) => {
+  try {
+    const quotation_id = req.query.id.toString()
+
+    const quoteData = await prisma.quotation_transaction.findUnique({
+      where: {
+        id: quotation_id
+      }
+    })
+
+    const extraChargeData = await prisma.quote_extra_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const overtimeFeeData = await prisma.quote_overtime_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const premiumRateData = await prisma.quote_premium_rates.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const shortLoadChargeData = await prisma.quote_shortload_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const productData = await prisma.quality_control.findMany({
+      where: {
+        section_id: quotation_id
+      }
+    })
+
+    const termsShortData = await prisma.terms_and_condition_short_detail.findMany()
+
+    const termsDetailData = await prisma.terms_and_condition_short_detail.findMany()
+
+    const data = {
+      quoteData, extraChargeData, overtimeFeeData, premiumRateData, shortLoadChargeData, productData, termsShortData, termsDetailData
+    }
+
+
+    return res
+      .status(http_status.OK)
+      .json({ data: data, message: "Success" });
+
+
+  } catch (err) {
+    return res
+      .status(http_status.Bad_Request)
+      .json({ message: "Failed to get data" });
+  }
+
+
+}

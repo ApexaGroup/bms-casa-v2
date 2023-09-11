@@ -5851,6 +5851,30 @@ function ContentPageLogic() {
           onCancel={() => setQuotationModalVisible(false)}
           destroyOnClose
           width={1920}
+          footer={[
+            <Button
+              type="primary"
+              loading={loading}
+              onClick={() => {
+                alert("PDF must show")
+              }}
+            >
+              View PDF
+            </Button>,
+            <Button key="back" onClick={() => setQuotationModalVisible(false)}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={() => {
+              if (isEdit) {
+                updateAPICalls("quotation");
+              } else {
+                addAPICalls("quotation");
+              }
+            }}>
+              Submit
+            </Button>
+
+          ]}
         >
           <Tabs
             defaultActiveKey="1"

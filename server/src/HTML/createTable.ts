@@ -21,7 +21,7 @@ import { style } from "./htmlStyle"
 // Static data import
 import { Company } from "../helpers"
 import { Project } from "../helpers"
-import { QuoteTrans, QuoteTypeRelation, QuoteDocumentRelation } from "../handlers"
+
 
 // Build paths for html and pdf files
 import { BuildPath } from './buildPaths';
@@ -65,9 +65,9 @@ const quoteProjectHeader = (logoPath: any, addressProject: any) => {
 // Quotation product data creation method.
 const productRow = (item: any) => `
     <tr>
-    <td class="TableRowData">${item.productName}</td>
-    <td class="TableRowData">${item.unit}</td>
-    <td class="TableRowData">${item.estYards}</td>
+    <td class="TableRowData">${item.mixDesignName}</td>
+    <td class="TableRowData">${1}</td>
+    <td class="TableRowData">${item.estimatedYards}</td>
     <td colspan="3" class="TableRowData">$  ${item.price}</td>
     </tr>
 `
