@@ -46,3 +46,63 @@ export const createApprovalTrans = async (
     }
 }
 
+export const getApprovalTrans = async () => {
+    try {
+
+        const approvalTransData = await prisma.approval_trans.findMany()
+        return approvalTransData
+
+    } catch (err: any) {
+        throw err
+    }
+}
+
+export interface UpdateApprovalTransParam {
+    id: number
+    approvalStatus: string
+    notes: string
+    approvalLevel: number
+    userId: number
+    userEmail: string
+    quoteId: string
+    origin: string
+    userName: string,
+    qtype: string
+}
+export const updateApprovalTransById = async (req: Request, res: Response) => {
+    try {
+        const { id, ...requestData } = req.body;
+        const updateObject = {};
+
+        for (const [key, value] of Object.entries(requestData)) {
+            if (value !== "") {
+                updateObject[key] = value;
+            }
+        }
+
+        if (Object.keys(updateObject).length === 0) {
+            return res.status(http_status.Bad_Request).json({
+                status: http_status.Bad_Request,
+                message: "No valid fields provided for update.",
+            });
+        }
+
+        const updatedata = await prisma.address_lead_section.update({
+            where: {
+                id: id,
+            },
+            data: updateObject,
+        });
+
+        if (updatedata) {
+            return res.status(http_status.OK).json({ message: "Success" });
+        } else {
+            return res.status(http_status.Bad_Request).json({ message: "Error" });
+        }
+    } catch (err) {
+        return res
+            .status(http_status.Failed_To_Create_Resource)
+            .json({ message: "Error" });
+    }
+}
+
