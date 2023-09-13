@@ -609,3 +609,17 @@ model terms_and_condition_full_detail_backup {
   createdOn   DateTime @default(now())
   modifiedOn  DateTime @updatedAt
 }
+
+model approval_trans {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  approvalStatus       String
+  approvalLevel        String
+  userId               String
+  quotationId          String
+  isEmailQuoteSend     Boolean
+  isAddendumsQuoteSend Boolean
+  notes                String
+  quoteType            String
+  createdOn            DateTime @default(now())
+  modifiedOn           DateTime @updatedAt
+}

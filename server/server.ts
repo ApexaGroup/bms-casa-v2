@@ -30,6 +30,7 @@ const quotePremiumRatesRoutes = require("./src/routes/quotePremiumRatesRoutes")
 const quoteShortLoadRoutes = require("./src/routes/quoteShortLoadRoutes")
 const termsConditionShortRoutes = require("./src/routes/termsConditionShortRoutes")
 const termsConditionFullRoutes = require("./src/routes/termsConditionFullRoutes")
+const approvalTransRoutes = require("./src/routes/approverMasterRoutes")
 // dotenve imports
 require("dotenv").config();
 
@@ -72,6 +73,7 @@ app.use("/quotePremiumRates", quotePremiumRatesRoutes)
 app.use("/quoteShortLoad", quoteShortLoadRoutes)
 app.use("/termsConditionShortDetail", termsConditionShortRoutes)
 app.use("/termsConditionFullDetail", termsConditionFullRoutes)
+app.use("/approvalTrans", approvalTransRoutes)
 // port defination
 const PORT = process.env.PORT || 8080;
 
