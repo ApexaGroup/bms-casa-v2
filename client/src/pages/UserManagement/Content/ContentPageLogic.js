@@ -16,6 +16,7 @@ import {
   Tabs,
   Table,
   Radio,
+  notification
 } from "antd";
 
 //antd icons import
@@ -94,6 +95,32 @@ function ContentPageLogic() {
   });
 
   const [leads, setLeads] = useState([]);
+
+  const [api, contextHolder] = notification.useNotification();
+  const close = () => {
+    console.log(
+      'Notification was closed. Either the close button was clicked or duration time elapsed.',
+    );
+  };
+  const openNotification = () => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Space>
+        <Button type="link" size="small" onClick={() => api.destroy()}>
+          Destroy All
+        </Button>
+        <Button type="primary" size="small" onClick={() => api.destroy(key)}>
+          Confirm
+        </Button>
+      </Space>
+    );
+    api.open({
+      message: 'Quotation is in Pending State',
+      description:
+        'Submitted Quotation is in pending state, Please check the Approver Master to Approve or Reject Quotation',
+      onClose: close,
+    });
+  };
 
   const [quoteExtraCharge, setQuoteExtraCharge] = useState([])
   const [quoteOvertimeFee, setQuoteOvertimeFee] = useState([])
@@ -5864,6 +5891,7 @@ function ContentPageLogic() {
             <Button key="back" onClick={() => setQuotationModalVisible(false)}>
               Cancel
             </Button>,
+            // { contextHolder },
             <Button key="submit" type="primary" loading={loading} onClick={() => {
               if (isEdit) {
                 updateAPICalls("quotation");
@@ -8454,6 +8482,7 @@ function ContentPageLogic() {
         let updatableDataforQuotation = {
           ...quotationData,
           id: id,
+          quotationStatus: "pending"
         };
 
         handler
@@ -8466,7 +8495,8 @@ function ContentPageLogic() {
             setLoading(false);
             if (response.status == 200) {
               setQuotationModalVisible(false);
-              message.success(response.data.message);
+              // message.success(response.data.message);
+              openNotification()
               getQuotations();
             } else if (response.status == 400) {
               window.alert(response.data.message);
@@ -10113,7 +10143,8 @@ function ContentPageLogic() {
     renderQuotationModal,
     quotationTblHeaders,
     termsShortDetailTblHeaders,
-    termsFullDetailTblHeaders
+    termsFullDetailTblHeaders,
+    contextHolder
   };
 
   return StatesContainer;

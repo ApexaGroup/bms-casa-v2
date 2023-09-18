@@ -483,6 +483,8 @@ model quotation_transaction {
   increaseDate          String
   notes                 String
   status                String
+  quotationType         Json
+  quotationCode         String
 }
 
 model quotation_transaction_backup {

@@ -43,6 +43,8 @@ export const addQuotationTransaction = async (req: Request, res: Response) => {
         increaseDate: increaseDate,
         notes: notes,
         status: status,
+        quotationType: {},
+        quotationCode: ""
       },
     });
 

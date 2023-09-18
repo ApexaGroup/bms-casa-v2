@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 // Antd components imports
-import { Input, Button, Table } from "antd";
+import { Input, Button, Table, notification } from "antd";
 
 // ContentPage Custom CSS
 import "./ContentPageCSS.css";
@@ -48,7 +48,8 @@ function ContentPageDesign(props) {
     renderQuotationModal,
     quotationTblHeaders,
     termsShortDetailTblHeaders,
-    termsFullDetailTblHeaders
+    termsFullDetailTblHeaders,
+    contextHolder
   } = ContentPageLogic();
 
   // useeffect
@@ -120,6 +121,7 @@ function ContentPageDesign(props) {
 
   return (
     <div>
+      {contextHolder}
       <div>
         <div className="div-page-header-parent">
           <h3>{pageName.toUpperCase().replaceAll("_", " ")}</h3>
