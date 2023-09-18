@@ -35,6 +35,7 @@ import { Constant } from "../../../Utils/Constant";
 
 // network handler
 import handler from "../../../handlers/generalHandler";
+import { delay } from "bluebird";
 
 function ContentPageLogic() {
   // useStates
@@ -69,6 +70,7 @@ function ContentPageLogic() {
   const [isQualityControlModalVisible, setQualityControlModalVisible] =
     useState(false);
   const [isQuotationModalVisible, setQuotationModalVisible] = useState(false);
+  const [isQuotationStatusModalVisible, setQuotationStatusModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [quoteCode, setQuoteCode] = useState("")
   const [companyId, setCompanyId] = useState("");
@@ -78,6 +80,7 @@ function ContentPageLogic() {
   const { Type, AirType, StoneType } = Constant();
   const [childDataSource, setChildDataSource] = useState([]);
   const [changeLog, setChangeLog] = useState([]);
+  const [quotationStatus, setQuotationStatus] = useState("")
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -468,6 +471,163 @@ function ContentPageLogic() {
   });
 
   // table headers
+
+  const pendingQuotationTblHeaders = [
+    {
+      title: "Quotation Code",
+      dataIndex: "quoteCode",
+      key: "quoteCode",
+    },
+    {
+      title: "Construction Company Name",
+      dataIndex: "constructionCompanyName",
+      key: "constructionCompanyName",
+    },
+    {
+      title: "Project Name",
+      dataIndex: "opportunityName",
+      key: "opportunityName",
+    },
+    {
+      title: "Project Manager Name",
+      key: "projectManagerName",
+      dataIndex: "projectManagerName",
+    },
+
+    {
+      title: "Due Date",
+      key: "dueDate",
+      dataIndex: "dueDate",
+    },
+
+    {
+      title: "Quote Type",
+      key: "quoteType",
+      dataIndex: "quoteType",
+    },
+
+    {
+      title: "Approval Status",
+      key: "quotationStatus",
+      dataIndex: "quotationStatus",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuotationStatusModalVisible(true)
+              setIsEdit(true);
+              // setQuotationModalVisible(true);
+              setId(record.id);
+              setQuotationId(record.quoteTypeList.id)
+              setQuoteCode(record.quoteTypeList.quoteCode)
+              setQuotationData({
+                constructionCompanyId: record.constructionCompanyId,
+                opportunityId: record.opportunityId,
+                quotationStatus: record.quotationStatus, // Bid, Awarded
+                tr3Required: record.tr3Required, // Yes, No
+                plantId: record.plantId,
+                projectManagerId: record.projectManagerId,
+                dueDate: record.dueDate,
+                increaseDate: record.increaseDate,
+                notes: record.notes,
+                status: record.status,
+                quotationType: record.quoteTypeList,
+                quotationCode: record.quoteTypeList.quoteCode,
+              });
+
+            }}
+          >
+            Edit
+          </Button>
+        </Space>
+      ),
+    },
+  ]
+
+  const approvedQuotationTblHeaders = [
+    {
+      title: "Quotation Code",
+      dataIndex: "quoteCode",
+      key: "quoteCode",
+    },
+    {
+      title: "Construction Company Name",
+      dataIndex: "constructionCompanyName",
+      key: "constructionCompanyName",
+    },
+    {
+      title: "Project Name",
+      dataIndex: "opportunityName",
+      key: "opportunityName",
+    },
+    {
+      title: "Project Manager Name",
+      key: "projectManagerName",
+      dataIndex: "projectManagerName",
+    },
+
+    {
+      title: "Due Date",
+      key: "dueDate",
+      dataIndex: "dueDate",
+    },
+
+    {
+      title: "Quote Type",
+      key: "quoteType",
+      dataIndex: "quoteType",
+    },
+
+    {
+      title: "Approval Status",
+      key: "quotationStatus",
+      dataIndex: "quotationStatus",
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuotationStatusModalVisible(true)
+              setIsEdit(true);
+              // setQuotationModalVisible(true);
+              setId(record.id);
+              setQuotationId(record.quoteTypeList.id)
+              setQuoteCode(record.quoteTypeList.quoteCode)
+              setQuotationData({
+                constructionCompanyId: record.constructionCompanyId,
+                opportunityId: record.opportunityId,
+                quotationStatus: record.quotationStatus, // Bid, Awarded
+                tr3Required: record.tr3Required, // Yes, No
+                plantId: record.plantId,
+                projectManagerId: record.projectManagerId,
+                dueDate: record.dueDate,
+                increaseDate: record.increaseDate,
+                notes: record.notes,
+                status: record.status,
+                quotationType: record.quoteTypeList,
+                quotationCode: record.quoteTypeList.quoteCode,
+              });
+
+            }}
+          >
+            Edit
+          </Button>
+        </Space>
+      ),
+    },
+  ]
+
   const userTblHeaders = [
     {
       title: "Profile Image",
@@ -7094,6 +7254,38 @@ function ContentPageLogic() {
     return qModal;
   };
 
+  const renderAcceptRejectModal = () => {
+    return (
+      <Modal title={<h2>Update Status Of Quotation</h2>}
+        visible={isQuotationStatusModalVisible}
+        onOk={() => {
+
+        }}
+        onCancel={() => setQuotationStatusModalVisible(false)}
+        destroyOnClose
+        footer={[
+          <Button key="back" danger onClick={(e) => {
+            e.preventDefault()
+            updateAPICalls("pending")
+            getAllData("pending")
+          }}>
+            Reject
+          </Button>,
+          // { contextHolder },
+          <Button key="submit" type="primary" loading={loading} onClick={(e) => {
+            e.preventDefault()
+            updateAPICalls("approved")
+            getAllData("pending")
+          }}>
+            Approve
+          </Button>
+
+        ]}>
+        You can accept or reject this quotation.
+      </Modal>
+    )
+  }
+
   // delete API calls
   const deleteAPICalls = (pageName, id, modalName) => {
     const updatebleData = {
@@ -8509,6 +8701,70 @@ function ContentPageLogic() {
             );
           });
         break;
+
+      case "pending":
+        setLoading(true);
+
+        let updatableDataforPQuotation = {
+          ...quotationData,
+          id: id,
+          quotationStatus: "rejected"
+        };
+
+        handler
+          .dataPost(
+            "/quotation/updateQuotationTransaction",
+            updatableDataforPQuotation,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              setQuotationStatusModalVisible(false);
+              getPendingQuotations();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- updateQuotationTransaction",
+              error
+            );
+          });
+        break;
+
+      case "approved":
+        setLoading(true);
+
+        let updatableDataforAQuotation = {
+          ...quotationData,
+          id: id,
+          quotationStatus: "approved"
+        };
+
+        handler
+          .dataPost(
+            "/quotation/updateQuotationTransaction",
+            updatableDataforAQuotation,
+            {}
+          )
+          .then((response) => {
+            setLoading(false);
+            if (response.status == 200) {
+              setQuotationStatusModalVisible(false);
+              getApprovedQuotations();
+            } else if (response.status == 400) {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error!- updateQuotationTransaction",
+              error
+            );
+          });
+        break;
       default:
         break;
     }
@@ -9504,6 +9760,50 @@ function ContentPageLogic() {
       });
   };
 
+  const getPendingQuotations = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quotation/getPendingQuotations", {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getPendingQuotations",
+          error
+        );
+      });
+  };
+
+  const getApprovedQuotations = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quotation/getApprovedQuotations", {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getApprovedQuotations",
+          error
+        );
+      });
+  };
+
   // add logs
   const addLogs = (operationName, sectionName, sectionDataid, updatedField) => {
     setLoading(true);
@@ -9896,6 +10196,12 @@ function ContentPageLogic() {
         getQuotations();
         break;
 
+      case "pending":
+        getPendingQuotations()
+        break;
+      case "approved":
+        getApprovedQuotations()
+        break;
       default:
         break;
     }
@@ -10141,10 +10447,13 @@ function ContentPageLogic() {
     opportunityInfoTblHeaders,
     renderOpportunityModal,
     renderQuotationModal,
+    renderAcceptRejectModal,
     quotationTblHeaders,
     termsShortDetailTblHeaders,
     termsFullDetailTblHeaders,
-    contextHolder
+    contextHolder,
+    pendingQuotationTblHeaders,
+    approvedQuotationTblHeaders
   };
 
   return StatesContainer;

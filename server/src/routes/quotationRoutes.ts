@@ -10,6 +10,8 @@ import {
   updateQuotationType,
   deleteQuotationType,
   getQuotationTypeList,
+  getPendingQuotations,
+  getApprovedQuotations
 } from "../handlers/QuotationHandler";
 
 //router instance
@@ -24,5 +26,7 @@ router.post("/addQuotationType", addQuotationType);
 router.post("/updateQuotationType", updateQuotationType);
 router.post("/deleteQuotationType", deleteQuotationType);
 router.get("/getQuotationTypeList", getQuotationTypeList);
+router.get("/getPendingQuotations", getPendingQuotations);
+router.get("/getApprovedQuotations", getApprovedQuotations);
 
 module.exports = router;

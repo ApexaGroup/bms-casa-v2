@@ -46,9 +46,12 @@ function ContentPageDesign(props) {
     renderAddCCModal,
     renderOpportunityModal,
     renderQuotationModal,
+    renderAcceptRejectModal,
     quotationTblHeaders,
     termsShortDetailTblHeaders,
     termsFullDetailTblHeaders,
+    pendingQuotationTblHeaders,
+    approvedQuotationTblHeaders,
     contextHolder
   } = ContentPageLogic();
 
@@ -117,6 +120,13 @@ function ContentPageDesign(props) {
     if (data.page === "terms_full_details") {
       setTblHeaders(termsFullDetailTblHeaders);
     }
+
+    if (data.page === "pending") {
+      setTblHeaders(pendingQuotationTblHeaders);
+    }
+    if (data.page === "approved") {
+      setTblHeaders(approvedQuotationTblHeaders);
+    }
   }, [data.page]);
 
   return (
@@ -145,6 +155,7 @@ function ContentPageDesign(props) {
         <div>{renderAddCCModal()}</div>
         <div>{renderOpportunityModal()}</div>
         <div>{renderQuotationModal()}</div>
+        <div>{renderAcceptRejectModal()}</div>
       </div>
     </div>
   );

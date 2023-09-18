@@ -93,6 +93,15 @@ const pageData = () => {
       page: "terms_full_details",
       buttonText: "Add Full Details",
     },
+
+    pending: {
+      page: "pending",
+      buttonText: ""
+    },
+    approved: {
+      page: "approved",
+      buttonText: ""
+    },
   };
 
   return data;

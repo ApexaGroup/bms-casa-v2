@@ -171,7 +171,24 @@ function TheSidebar() {
           <span>Quotation</span>
           <Link to="/quotation" />
         </Menu.Item>
+
+        <SubMenu key="8" title={"Approver Master"} icon={<DesktopOutlined />} id="approverMaster">
+          <Menu.Item key="/approver-master-section/pending" id="pending">
+            <SolutionOutlined />
+            <span>Pending Quotation</span>
+            <Link to={"/approver-master-section/pending"} />
+          </Menu.Item>
+          <Menu.Item key="/approver-master-section/approved" id="approved">
+            <ProjectOutlined />
+            <span>Approved Quotation</span>
+            <Link to={"/approver-master-section/approved"} />
+          </Menu.Item>
+        </SubMenu>
       </Menu>
+
+
+
+
       <Modal
         title="Version 2.0.0"
         visible={isModalVisible}
