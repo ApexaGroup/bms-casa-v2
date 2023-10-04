@@ -16,8 +16,10 @@ import {
   Tabs,
   Table,
   Radio,
-  notification
+  notification,
+  Checkbox
 } from "antd";
+
 
 //antd icons import
 import {
@@ -28,6 +30,9 @@ import {
   CheckCircleOutlined,
   InfoCircleOutlined,
   UploadOutlined,
+  MailOutlined,
+  ReloadOutlined,
+  EditOutlined
 } from "@ant-design/icons";
 
 // constant data import
@@ -81,6 +86,8 @@ function ContentPageLogic() {
   const [childDataSource, setChildDataSource] = useState([]);
   const [changeLog, setChangeLog] = useState([]);
   const [quotationStatus, setQuotationStatus] = useState("")
+  const [sendMailModalVisible, setSendMailModalVisible] = useState(false)
+  const [clientEmail, setClientEmail] = useState("")
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -98,6 +105,9 @@ function ContentPageLogic() {
   });
 
   const [leads, setLeads] = useState([]);
+
+  const [carbonCopyMail, setCarbonCopyMail] = useState("")
+  let [checkedEmail, setCheckedEmail] = useState([])
 
   const [api, contextHolder] = notification.useNotification();
   const close = () => {
@@ -123,6 +133,13 @@ function ContentPageLogic() {
         'Submitted Quotation is in pending state, Please check the Approver Master to Approve or Reject Quotation',
       onClose: close,
     });
+  };
+
+  const onCheckedChange = (checkedValues) => {
+    console.log('checked = ', checkedValues);
+    setCheckedEmail(checkedValues)
+
+    console.log(checkedEmail)
   };
 
   const [quoteExtraCharge, setQuoteExtraCharge] = useState([])
@@ -573,6 +590,13 @@ function ContentPageLogic() {
     },
 
     {
+      title: "Client Email",
+      key: "projectManagerEmail",
+      dataIndex: "projectManagerEmail",
+    },
+
+
+    {
       title: "Due Date",
       key: "dueDate",
       dataIndex: "dueDate",
@@ -596,6 +620,7 @@ function ContentPageLogic() {
       render: (_, record) => (
         <Space size="middle">
           <Button
+            icon={<EditOutlined />}
             onClick={(e) => {
               e.preventDefault();
               setQuotationStatusModalVisible(true)
@@ -623,6 +648,15 @@ function ContentPageLogic() {
           >
             Edit
           </Button>
+          <Button icon={<MailOutlined />} onClick={(e) => {
+            e.preventDefault()
+            setClientEmail(record.projectManagerEmail)
+            setSendMailModalVisible(true)
+          }}>Mail</Button>
+          <Button icon={<ReloadOutlined />} onClick={(e) => {
+            e.preventDefault()
+          }}>Re-Generate</Button>
+
         </Space>
       ),
     },
@@ -3084,7 +3118,7 @@ function ContentPageLogic() {
     }
   };
 
-  const sendMailtoManager = (toMail, body, attchment) => {
+  const sendMailtoManager = (toMail, body, attchment, cc) => {
     setLoading(true);
 
     handler
@@ -3094,6 +3128,7 @@ function ContentPageLogic() {
           toMail: toMail,
           body: body,
           attachment: attchment,
+          cc: cc
         },
         {}
       )
@@ -3102,6 +3137,35 @@ function ContentPageLogic() {
         if (response.status == 200) {
           message.success(response.data.message);
           addLogs("Email Sent", "opportunity", id, null);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- addLogs", error);
+      });
+  };
+
+  const sendMailtoManagerForNextPhase = (toMail, body, attchment, cc) => {
+    setLoading(true);
+
+    handler
+      .dataPost(
+        "/mail/sendMail",
+        {
+          toMail: toMail,
+          body: body,
+          attachment: attchment,
+          cc: cc
+        },
+        {}
+      )
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          message.success(response.data.message);
+          addLogs("Email Sent", "quotation", id, null);
+          sendMailModalVisible(false)
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -7286,6 +7350,78 @@ function ContentPageLogic() {
     )
   }
 
+  const renderSendMailModal = () => {
+    return (
+      <Modal title={<h2>Send Quotation</h2>}
+        visible={sendMailModalVisible}
+        onOk={() => {
+
+        }}
+        onCancel={() => setSendMailModalVisible(false)}
+        destroyOnClose
+        footer={[
+          <Button key="back" danger onClick={(e) => {
+            e.preventDefault()
+          }}>
+            Close
+          </Button>,
+          <Button key="submit" type="primary" loading={loading} onClick={(e) => {
+            e.preventDefault()
+            sendMailtoManagerForNextPhase(checkedEmail.toString(), "PFA", [
+              {
+                filename: "quotation1.pdf",
+                path: "https://www.africau.edu/images/default/sample.pdf",
+              }
+            ], carbonCopyMail)
+          }}>
+            Send Mail
+          </Button>
+
+        ]}>
+        <div style={{ display: 'flex' }}>
+          <div>Email Address: </div>
+          <div style={{ marginLeft: "10px" }}>
+            <Checkbox.Group
+              style={{
+                width: '100%',
+              }}
+              onChange={onCheckedChange}
+            >
+
+              <Col>
+                <Row span={8}>
+                  <Checkbox value={clientEmail}>{clientEmail}</Checkbox>
+                </Row>
+                <Row span={8}>
+                  <Checkbox value="casaadmin@gmail.com">casaadmin@gmail.com</Checkbox>
+                </Row>
+              </Col>
+
+            </Checkbox.Group>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', marginTop: "20px" }}>
+          <div style={{ width: "100px" }}>CC: </div>
+          <div style={{ marginLeft: "10px" }}>
+            <Col style={{
+              width: '100%',
+            }}>
+              <Row span={8}>
+                <Input onChange={(e) => {
+                  e.preventDefault()
+                  setCarbonCopyMail(e.target.value)
+                }} />
+              </Row>
+            </Col>
+
+          </div>
+        </div>
+
+      </Modal>
+    )
+  }
+
   // delete API calls
   const deleteAPICalls = (pageName, id, modalName) => {
     const updatebleData = {
@@ -10453,7 +10589,8 @@ function ContentPageLogic() {
     termsFullDetailTblHeaders,
     contextHolder,
     pendingQuotationTblHeaders,
-    approvedQuotationTblHeaders
+    approvedQuotationTblHeaders,
+    renderSendMailModal
   };
 
   return StatesContainer;

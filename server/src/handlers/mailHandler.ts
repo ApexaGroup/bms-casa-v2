@@ -19,6 +19,7 @@ export const sendMail = async (req: Request, res: Response) => {
   const toMail = req.body.toMail;
   const body = req.body.body;
   const attachment = req.body.attachment;
+  const cc = req.body.cc
 
   console.log(toMail);
 
@@ -26,6 +27,7 @@ export const sendMail = async (req: Request, res: Response) => {
     const mailOptions = {
       from: "Parshvee@apexa.in",
       to: toMail,
+      cc: cc,
       subject: "Update for you",
       body: body,
       attachments: attachment,

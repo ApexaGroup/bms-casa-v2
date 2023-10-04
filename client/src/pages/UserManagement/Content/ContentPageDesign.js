@@ -47,6 +47,7 @@ function ContentPageDesign(props) {
     renderOpportunityModal,
     renderQuotationModal,
     renderAcceptRejectModal,
+    renderSendMailModal,
     quotationTblHeaders,
     termsShortDetailTblHeaders,
     termsFullDetailTblHeaders,
@@ -156,6 +157,7 @@ function ContentPageDesign(props) {
         <div>{renderOpportunityModal()}</div>
         <div>{renderQuotationModal()}</div>
         <div>{renderAcceptRejectModal()}</div>
+        <div>{renderSendMailModal()}</div>
       </div>
     </div>
   );
