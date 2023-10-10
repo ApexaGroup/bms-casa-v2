@@ -620,6 +620,7 @@ export const getApprovedQuotations = async (req: Request, res: Response) => {
           tr3Required: data.tr3Required,
           quoteCode: quoteTypeList.quoteCode,
           quoteType: quoteTypeList.Quote_Type,
+          date: quoteTypeList.createdOn,
           quoteTypeList: quoteTypeList,
         });
       }
@@ -701,4 +702,92 @@ export const getQuotationData = async (req: Request, res: Response) => {
   }
 
 
+}
+
+
+export const getQuotationHistory = async (req: Request, res: Response) => {
+  try {
+    let list = [];
+    const quotation_transaction_list =
+      await prisma.quotation_transaction.findMany();
+
+    if (quotation_transaction_list) {
+      for (let i = 0; i < quotation_transaction_list.length; i++) {
+        const constructionCompanyId =
+          quotation_transaction_list[i].constructionCompanyId;
+        const opportunityId = quotation_transaction_list[i].opportunityId;
+        const projectManagerId = quotation_transaction_list[i].projectManagerId;
+        const salesPersonId = quotation_transaction_list[i].salesPersonId;
+
+        const companyData = await prisma.construction_company.findUnique({
+          where: {
+            id: constructionCompanyId,
+          },
+        });
+
+        const opportunityData = await prisma.opportunities.findUnique({
+          where: {
+            id: opportunityId,
+          },
+        });
+
+        const projectManagerData = await prisma.project_manager.findUnique({
+          where: {
+            id: projectManagerId,
+          },
+        });
+
+        const salesPersonData = await prisma.user.findUnique({
+          where: {
+            id: salesPersonId,
+          },
+        });
+
+        const quoteTypeList = await prisma.quotation_type.findFirst({
+          where: {
+            Quote_Transaction_Id: quotation_transaction_list[i].id
+          },
+        });
+
+        const data = quotation_transaction_list[i];
+
+        list.push({
+          constructionCompanyId: constructionCompanyId,
+          constructionCompanyName: companyData?.construction_company_name,
+          opportunityId: opportunityId,
+          opportunityName: opportunityData?.lead_name,
+          projectManagerId: projectManagerId,
+          projectManagerName: projectManagerData?.project_manager_name,
+          salesPersonId: salesPersonId,
+          salesPersonName: salesPersonData?.firstName,
+          plantId: data.plantId,
+          id: data.id,
+          dueDate: data.dueDate,
+          increaseDate: data.increaseDate,
+          notes: data.notes,
+          quotationStatus: data.quotationStatus,
+          status: data.status,
+          tr3Required: data.tr3Required,
+          quoteCode: quoteTypeList.quoteCode,
+          quoteType: quoteTypeList.Quote_Type,
+          date: quoteTypeList.createdOn,
+          quoteTypeList: quoteTypeList,
+          sendEmail: "pending"
+        });
+      }
+
+      return res
+        .status(http_status.OK)
+        .json({ data: list, message: "Success" });
+    } else {
+      return res
+        .status(http_status.Not_Found)
+        .json({ data: null, message: "No Data Found" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(http_status.Bad_Request)
+      .json({ message: "Failed to get data" });
+  }
 }

@@ -28,7 +28,8 @@ export default function () {
     terms_short_details,
     terms_full_details,
     pending,
-    approved
+    approved,
+    quotationHistory
   } = pageData();
 
   const isAuthenticated = localStorage.getItem("token") ? true : false
@@ -117,7 +118,10 @@ export default function () {
             element={<Content data={quotation} />}
           ></Route>
 
-
+          <Route
+            path="quotationHistory"
+            element={<Content data={quotationHistory} />}
+          ></Route>
           <Route path="approver-master-section" element={<TheContent />}>
             <Route
               path="pending"

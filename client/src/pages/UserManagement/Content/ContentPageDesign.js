@@ -53,6 +53,7 @@ function ContentPageDesign(props) {
     termsFullDetailTblHeaders,
     pendingQuotationTblHeaders,
     approvedQuotationTblHeaders,
+    quotationHistoryTblHeaders,
     contextHolder
   } = ContentPageLogic();
 
@@ -127,6 +128,9 @@ function ContentPageDesign(props) {
     }
     if (data.page === "approved") {
       setTblHeaders(approvedQuotationTblHeaders);
+    }
+    if (data.page === "quotation_history") {
+      setTblHeaders(quotationHistoryTblHeaders);
     }
   }, [data.page]);
 

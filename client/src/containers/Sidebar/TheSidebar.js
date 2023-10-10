@@ -172,6 +172,12 @@ function TheSidebar() {
           <Link to="/quotation" />
         </Menu.Item>
 
+        <Menu.Item key="/quotationHistory">
+          <DashboardOutlined />
+          <span>Quotation History</span>
+          <Link to="/quotationHistory" />
+        </Menu.Item>
+
         <SubMenu key="8" title={"Approver Master"} icon={<DesktopOutlined />} id="approverMaster">
           <Menu.Item key="/approver-master-section/pending" id="pending">
             <SolutionOutlined />

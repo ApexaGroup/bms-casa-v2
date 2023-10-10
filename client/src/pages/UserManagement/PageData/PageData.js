@@ -85,6 +85,10 @@ const pageData = () => {
       page: "quotation",
       buttonText: "Add Quotation",
     },
+    quotationHistory: {
+      page: "quotation_history",
+      buttonText: "",
+    },
     terms_short_details: {
       page: "terms_short_details",
       buttonText: "Add Short Details",

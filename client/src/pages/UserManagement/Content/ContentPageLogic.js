@@ -662,6 +662,96 @@ function ContentPageLogic() {
     },
   ]
 
+
+  const quotationHistoryTblHeaders = [
+    {
+      title: "Quotation Code",
+      dataIndex: "quoteCode",
+      key: "quoteCode",
+    },
+    {
+      title: "Project Name",
+      dataIndex: "opportunityName",
+      key: "opportunityName",
+    },
+    {
+      title: "Project Manager Name",
+      key: "projectManagerName",
+      dataIndex: "projectManagerName",
+    },
+
+
+    {
+      title: "Date",
+      key: "date",
+      dataIndex: "date",
+    },
+
+    {
+      title: "Quote Type",
+      key: "quoteType",
+      dataIndex: "quoteType",
+    },
+
+    {
+      title: "Approval Status",
+      key: "quotationStatus",
+      dataIndex: "quotationStatus",
+    },
+
+    {
+      title: "Send Mail",
+      key: "sendEmail",
+      dataIndex: "sendEmail",
+    },
+
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <Button
+    //         icon={<EditOutlined />}
+    //         onClick={(e) => {
+    //           e.preventDefault();
+    //           setQuotationStatusModalVisible(true)
+    //           setIsEdit(true);
+    //           // setQuotationModalVisible(true);
+    //           setId(record.id);
+    //           setQuotationId(record.quoteTypeList.id)
+    //           setQuoteCode(record.quoteTypeList.quoteCode)
+    //           setQuotationData({
+    //             constructionCompanyId: record.constructionCompanyId,
+    //             opportunityId: record.opportunityId,
+    //             quotationStatus: record.quotationStatus, // Bid, Awarded
+    //             tr3Required: record.tr3Required, // Yes, No
+    //             plantId: record.plantId,
+    //             projectManagerId: record.projectManagerId,
+    //             dueDate: record.dueDate,
+    //             increaseDate: record.increaseDate,
+    //             notes: record.notes,
+    //             status: record.status,
+    //             quotationType: record.quoteTypeList,
+    //             quotationCode: record.quoteTypeList.quoteCode,
+    //           });
+
+    //         }}
+    //       >
+    //         Edit
+    //       </Button>
+    //       <Button icon={<MailOutlined />} onClick={(e) => {
+    //         e.preventDefault()
+    //         setClientEmail(record.projectManagerEmail)
+    //         setSendMailModalVisible(true)
+    //       }}>Mail</Button>
+    //       <Button icon={<ReloadOutlined />} onClick={(e) => {
+    //         e.preventDefault()
+    //       }}>Re-Generate</Button>
+
+    //     </Space>
+    //   ),
+    // },
+  ]
   const userTblHeaders = [
     {
       title: "Profile Image",
@@ -9896,6 +9986,28 @@ function ContentPageLogic() {
       });
   };
 
+  const getQuotationHistory = () => {
+    setLoading(true);
+    handler
+      .dataGet("/quotation/getQuotationHistory", {
+        authorization: localStorage.getItem("token"),
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          setDataSource(response.data.data);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getQuotationHistory",
+          error
+        );
+      });
+  };
+
   const getPendingQuotations = () => {
     setLoading(true);
     handler
@@ -10332,6 +10444,10 @@ function ContentPageLogic() {
         getQuotations();
         break;
 
+      case "quotation_history":
+        getQuotationHistory();
+        break;
+
       case "pending":
         getPendingQuotations()
         break;
@@ -10590,6 +10706,7 @@ function ContentPageLogic() {
     contextHolder,
     pendingQuotationTblHeaders,
     approvedQuotationTblHeaders,
+    quotationHistoryTblHeaders,
     renderSendMailModal
   };
 
