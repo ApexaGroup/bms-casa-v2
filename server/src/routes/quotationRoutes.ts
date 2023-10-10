@@ -11,7 +11,8 @@ import {
   deleteQuotationType,
   getQuotationTypeList,
   getPendingQuotations,
-  getApprovedQuotations
+  getApprovedQuotations,
+  getQuotationHistory
 } from "../handlers/QuotationHandler";
 
 //router instance
@@ -28,5 +29,6 @@ router.post("/deleteQuotationType", deleteQuotationType);
 router.get("/getQuotationTypeList", getQuotationTypeList);
 router.get("/getPendingQuotations", getPendingQuotations);
 router.get("/getApprovedQuotations", getApprovedQuotations);
+router.get("/getQuotationHistory", getQuotationHistory);
 
 module.exports = router;
