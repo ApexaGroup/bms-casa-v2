@@ -6197,7 +6197,7 @@ function ContentPageLogic() {
               type="primary"
               loading={loading}
               onClick={() => {
-                alert("PDF must show")
+                quotePDF(id, "original")
               }}
             >
               View PDF
@@ -10355,6 +10355,23 @@ function ContentPageLogic() {
         );
       });
   };
+
+  const quotePDF = (quotationId, type) => {
+    setLoading(true)
+    handler.dataGet(`/quotation/get-quote-pdf/${quotationId}/${type}`).then((response) => {
+      setLoading(false)
+      if (response.status == 200) {
+        console.log(response)
+      } else if (response.status == 400) {
+        window.alert(response.data.message);
+      }
+    }).catch((error) => {
+      console.error(
+        "There was an error!- quotePDF",
+        error
+      );
+    });
+  }
 
   // get calls getAllData() getTblData()
   const getAllData = (pageName) => {

@@ -643,7 +643,7 @@ export const getApprovedQuotations = async (req: Request, res: Response) => {
 
 export const getQuotationData = async (req: Request, res: Response) => {
   try {
-    const quotation_id = req.query.id.toString()
+    const quotation_id = req.params.id
 
     const quoteData = await prisma.quotation_transaction.findUnique({
       where: {
@@ -696,9 +696,70 @@ export const getQuotationData = async (req: Request, res: Response) => {
 
 
   } catch (err) {
+    console.log(err)
     return res
       .status(http_status.Bad_Request)
       .json({ message: "Failed to get data" });
+  }
+
+
+}
+
+export const getQuotationDataForPDF = async (id: any) => {
+  try {
+    console.log("id: ", id)
+    const quotation_id = id
+
+    const quoteData = await prisma.quotation_transaction.findUnique({
+      where: {
+        id: quotation_id
+      }
+    })
+
+    const extraChargeData = await prisma.quote_extra_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const overtimeFeeData = await prisma.quote_overtime_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const premiumRateData = await prisma.quote_premium_rates.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const shortLoadChargeData = await prisma.quote_shortload_charge.findMany({
+      where: {
+        quotationId: quotation_id
+      }
+    })
+
+    const productData = await prisma.quality_control.findMany({
+      where: {
+        section_id: quotation_id
+      }
+    })
+
+    const termsShortData = await prisma.terms_and_condition_short_detail.findMany()
+
+    const termsDetailData = await prisma.terms_and_condition_short_detail.findMany()
+
+    const data = {
+      quoteData, extraChargeData, overtimeFeeData, premiumRateData, shortLoadChargeData, productData, termsShortData, termsDetailData
+    }
+
+
+    return data
+
+
+  } catch (err) {
+    console.log(err)
   }
 
 
@@ -791,3 +852,89 @@ export const getQuotationHistory = async (req: Request, res: Response) => {
       .json({ message: "Failed to get data" });
   }
 }
+
+// export const getQuotePdf =async(req: Request, res: Response)=>{
+//   try{
+
+//     const quotation_id = req.params.id
+
+//     const quoteData = await prisma.quotation_transaction.findUnique({
+//       where: {
+//         id: quotation_id
+//       }
+//     })
+
+//     const extraChargeData = await prisma.quote_extra_charge.findMany({
+//       where: {
+//         quotationId: quotation_id
+//       }
+//     })
+
+//     const overtimeFeeData = await prisma.quote_overtime_charge.findMany({
+//       where: {
+//         quotationId: quotation_id
+//       }
+//     })
+
+//     const premiumRateData = await prisma.quote_premium_rates.findMany({
+//       where: {
+//         quotationId: quotation_id
+//       }
+//     })
+
+//     const shortLoadChargeData = await prisma.quote_shortload_charge.findMany({
+//       where: {
+//         quotationId: quotation_id
+//       }
+//     })
+
+//     const productData = await prisma.quality_control.findMany({
+//       where: {
+//         section_id: quotation_id
+//       }
+//     })
+
+//     const termsShortData = await prisma.terms_and_condition_short_detail.findMany()
+
+//     const termsDetailData = await prisma.terms_and_condition_short_detail.findMany()
+
+//     const data = {
+//       quoteData, extraChargeData, overtimeFeeData, premiumRateData, shortLoadChargeData, productData, termsShortData, termsDetailData
+//     }
+
+//     HTMLGeneration(quotetransPdf).then((result: any) => {
+//       if (result.status) {
+//         res.status(httpStatus.OK).json(result)
+//       } else {
+//         if (!result.status) {
+//           res.status(httpStatus.Bad_Request).json({
+//             code: httpStatus.Bad_Request,
+//             error: result.error,
+//           })
+//         } else {
+//           res.status(httpStatus.Bad_Request).json({
+//             code: httpStatus.Bad_Request,
+//             error: "Error While Generate Quote PDF",
+//           })
+//         }
+//       }
+//     }).catch((err) =>
+//       res.status(httpStatus.Bad_Request).json({
+//         code: httpStatus.Bad_Request,
+//         error: err,
+//       }))
+
+
+//     return res
+//       .status(http_status.OK)
+//       .json({ data: data, message: "Success" });
+
+
+//   } catch (err) {
+//     console.log(err)
+//     return res
+//       .status(http_status.Bad_Request)
+//       .json({ message: "Failed to get data" });
+//   }
+
+// }

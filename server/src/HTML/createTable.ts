@@ -115,36 +115,36 @@ const createQuoteTable = async (quoteData: any) => `
  <thead>
     <tr>
       <th class="TableRowHeader"> Quote Date </th>
-      <td class="TableRowData">${moment(quoteData.quoteDate).format(
+      <td class="TableRowData">${moment(quoteData.createdOn).format(
     "MM/DD/YYYY"
 )}</td>
       <th class="TableRowHeader"> Quote Code </th>
-      <td class="TableRowData">${quoteData.quoteCodeId}</td>
+      <td class="TableRowData">${quoteData.quotationCode}</td>
     </tr>
     <tr>
       <th class="TableRowHeader"> Company </th>
-      <td class="TableRowData">${quoteData.companyName}</td>
+      <td class="TableRowData">${quoteData.constructionCompanyId}</td>
       <th class="TableRowHeader"> Phone# </th>
-      <td class="TableRowData">${quoteData.phone}</td>
+      <td class="TableRowData">${""}</td>
     </tr>
 </thead>
 <tbody>
     <tr>
       <th rowspan="2" class="TableRowHeader"> PROJECT</th>
-      <td class="TableRowData">${quoteData.project}</td>
+      <td class="TableRowData">${"quoteData.project"}</td>
       <th class="TableRowHeader">Email</th>
-      <td class="TableRowData">${quoteData.email}</td>
+      <td class="TableRowData">${"quoteData.email"}</td>
       <tr>
-        <td class="TableRowData">${quoteData.projectAddress}</td>
+        <td class="TableRowData">${"quoteData.projectAddress"}</td>
         <th class="TableRowHeader">ATTN</th>
-        <td class="TableRowData">${quoteData.attn}</td>
+        <td class="TableRowData">${"quoteData.attn"}</td>
       </tr>
     </tr>
     <tr>
       <th class="TableRowHeader">CUSTOMER FULL ACCT CREDIT LIMIT</th>
-      <td class="TableRowData">${quoteData.credit}</td>
+      <td class="TableRowData">${"quoteData.credit"}</td>
       <th class="TableRowHeader">PAYMENT TERMS FROM INVOICE DATE</th>
-      <td class="TableRowData">${quoteData.paymentterms}</td>
+      <td class="TableRowData">${"quoteData.paymentterms"}</td>
     </tr>
 </tbody>
  </table>
@@ -467,6 +467,7 @@ const createExtraChargeTable = async (
     let extraChargeTableData = ""
     extraChargeTableData += extraChargeRow
         ? extraChargeRow.map((items: any) => {
+            console.log(items)
             let isExitingData = extraChargeDataArray.some(
                 (value: any, index: any) => value.title == items.title
             )
@@ -559,19 +560,8 @@ const createExtraChargeTable = async (
             <tr>
                 <td class="Table"><label>${shortChargeRow.length > 0 ? shortChargeRow[0].title : " "
         }</label></td>
-                <td class="Table"><label>${shortChargeRow.length > 0 ? shortChargeRow[1].title : " "
-        }</label></td>
-                <td class="Table"><label>${shortChargeRow.length > 0 ? shortChargeRow[2].title : " "
-        }</label></td>
             </tr>
-            <tr>
-                <td class="Table"><label> ${shortChargeRow.length > 0 ? shortChargeRow[3].title : " "
-        }</label></td>
-                <td class="Table"><label> ${shortChargeRow.length > 0 ? shortChargeRow[4].title : " "
-        }</label></td>
-                <td class="Table"><label>${shortChargeRow.length > 0 ? shortChargeRow[5].title : " "
-        }</label></td>
-            </tr>
+        
         </tr>
         <tr>
             <th colSpan="12" class="${ExtraChargeTableHader}">
@@ -841,7 +831,7 @@ const newPdfGenration = async (
             Object.keys(result1).length &&
             Object.keys(result2).length
         ) {
-            const plantCodeId = data.quoteData.quoteObject.userPlantId
+            const plantCodeId = 1
             let plantFolder
 
             if (plantCodeId == 1) {
@@ -877,7 +867,7 @@ const newPdfGenration = async (
                 )
                 const checkStatusFile = fileExist.includes(false)
                 if (checkStatusFile) {
-                    console.error("Mix Desing File is Not Found !!!")
+                    console.error("Mix Design File is Not Found !!!")
                     // return false
                     return {
                         status: false,
@@ -917,26 +907,27 @@ const newPdfGenration = async (
 
 // Html code generation method which take data from the server and arrange that data for html object creation.
 const HTMLGeneration = async (data: any) => {
+    console.log("HTMLGeneration:  data: ", data)
     try {
-        const plantId = data.quoteData.quoteObject.userPlantId // Get Plant Id
-        /* Check if the file for `html` build exists in system or not */
+        const plantId = 1// Get Plant Id
+        //     /* Check if the file for `html` build exists in system or not */
         if (doesFileExist(BuildPath.buildPaths.buildPathHtml)) {
             /* If the file exists delete the file from system */
             fs.unlinkSync(BuildPath.buildPaths.buildPathHtml)
         }
 
-        //! Quote Details
-        const quoteData = data.quoteData.quoteObject
-        //! Extra charge Section
-        const extraChargeData = data.quoteData.extracharge
-        //! Get Over Time Details
-        const overTimeData = data.quoteData.overTime
-        //! Get primumRate Deatils
-        const primumRateData = data.quoteData.primumRateCharge
-        //! Short Load Charges Details
-        const shortChargeData = data.quoteData.shortCharge
-        //! Mix Design Data
-        const productRowData = data.quoteData.prouctData
+        //     //! Quote Details
+        const quoteData = data.quoteData
+        //     //! Extra charge Section
+        const extraChargeData = data.extraChargeData
+        //     //! Get Over Time Details
+        const overTimeData = data.overtimeFeeData
+        //     //! Get primumRate Deatils
+        const primumRateData = data.premiumRateData
+        //     //! Short Load Charges Details
+        const shortChargeData = data.shortLoadChargeData
+        //     //! Mix Design Data
+        const productRowData = data.productData
             .map(productRow)
             .join("")
         const extraChargeTable = await createExtraChargeTable(
@@ -946,12 +937,12 @@ const HTMLGeneration = async (data: any) => {
             shortChargeData,
             plantId
         )
-        //! Terms Condition Table
-        const termsRowData = data.quoteData.termsConditionTableData
-        //! terms Condition Details
-        const termsDetailsRowData = data.quoteData.termsConditionDetailsData
+        //     //! Terms Condition Table
+        const termsRowData = data.termsShortData
+        //     //! terms Condition Details
+        const termsDetailsRowData = data.termsDetailData
 
-        //! Project Summary
+        //     //! Project Summary
         const quoteTable = await createQuoteTable(quoteData)
         const productTable = await createProductTable(
             productRowData,
@@ -962,7 +953,7 @@ const HTMLGeneration = async (data: any) => {
         const termsDetailsTable = await createTermsDetailsTable(
             termsDetailsRowData
         )
-        // Company Details logo address logic
+        //     // Company Details logo address logic
         let plantAddress
         let plantLogo
         const { allCompany } = Company
@@ -982,7 +973,7 @@ const HTMLGeneration = async (data: any) => {
         }
         const quotationHeaderDetails = quoteHeader(plantLogo, plantAddress)
 
-        //Project Summary Logo Address logic
+        //     //Project Summary Logo Address logic
         let plantProjectAddress
         let plantProjectLogo
         const { allProjectCompany } = Project
@@ -1005,7 +996,7 @@ const HTMLGeneration = async (data: any) => {
             plantProjectAddress
         )
 
-        /* generate html */
+        //     /* generate html */
         const html = createHtml(
             quoteTable,
             productTable,
@@ -1017,33 +1008,35 @@ const HTMLGeneration = async (data: any) => {
         if (plantId === 1) {
             plantName = "Casa Redimix Concrete Corp. Terms and Conditions"
         }
-        if (plantId === 2) {
-            plantName = "City Transit Mix. Terms and Conditions"
-        }
-        if (plantId === 3) {
-            plantName =
-                "Prime Mix Corp D.B.A. Brooklyn Ready Mix Terms and Conditions"
-        }
-        if (plantId === 4) {
-            plantName = "Terms and Conditions"
-        }
+        // if (plantId === 2) {
+        //     plantName = "City Transit Mix. Terms and Conditions"
+        // }
+        // if (plantId === 3) {
+        //     plantName =
+        //         "Prime Mix Corp D.B.A. Brooklyn Ready Mix Terms and Conditions"
+        // }
+        // if (plantId === 4) {
+        //     plantName = "Terms and Conditions"
+        // }
         const termsHtml = createTermsHtml(
             plantName,
             termsDetailsTable,
             termsTable
         )
         let summaryHtml: any
-        if (plantId === 3) {
-            summaryHtml = createBrooklynSummary(quotationHeaderProject)
-        } else {
-            summaryHtml = createSummaryHtml(quotationHeaderProject)
-        }
+        // if (plantId === 3) {
+        //     summaryHtml = createBrooklynSummary(quotationHeaderProject)
+        // } else {
+        //     summaryHtml = createSummaryHtml(quotationHeaderProject)
+        // }
+
+        summaryHtml = createSummaryHtml(quotationHeaderProject)
 
         let relativePath = process.cwd()
         relativePath = path.join(relativePath, "public", "img")
         //! Quote File Name
-        const quoteFileName = data.quoteData.quoteFileName
-        const quoteId = data.quoteData.quoteObject.quoteId
+        const quoteFileName = data.quoteData.quotationType.quoteCode
+        const quoteId = data.quoteData.id
 
         // Create File Folder if folder is not exists
         let plantFolder
@@ -1081,7 +1074,7 @@ const HTMLGeneration = async (data: any) => {
             fs.mkdirSync(`./public/temp`)
         }
 
-        const plantCodeId = data.quoteData.quoteObject.userPlantId
+        const plantCodeId = plantId
         if (plantCodeId == 1) {
             plantFolder = "CASA"
         } else if (plantCodeId == 2) {
@@ -1095,50 +1088,50 @@ const HTMLGeneration = async (data: any) => {
         const filePath = `public/${plantFolder}/quote/${quoteFileName}`
         const orignalFilePath = `public/${plantFolder}/OrignalPdf/${quoteFileName}`
 
-        const result: any = await QuoteTypeRelation.getQuoteType(quoteId)
-        let getCountData: any = await CasaDB.QuoteDocumentRelation.count({
-            where: {
-                quoteType: result?.quoteType,
-                quoteId: quoteId
-            }
-        })
+        // const result: any = await QuoteTypeRelation.getQuoteType(quoteId)
+        // let getCountData: any = await CasaDB.QuoteDocumentRelation.count({
+        //     where: {
+        //         quoteType: result?.quoteType,
+        //         quoteId: quoteId
+        //     }
+        // })
 
-        const totalQuote = parseInt(getCountData) + 1
-        const userId = data.quoteData.quoteObject.userId
+        // const totalQuote = parseInt(getCountData) + 1
+        const userId = data.quoteData.salesPersonId
         const documentData: any = {
-            quoteType: result?.quoteType,
-            total: totalQuote,
+            quoteType: "original",
+            total: 1,
             filePath: filePath,
             date: moment().toDate(),
-            quoteTypeId: result?.id,
+            quoteTypeId: data.quoteData.quotationType.id,
             quoteId: quoteId,
             userId: userId
         }
-        const documentRelation = await QuoteDocumentRelation.createQuoteDocumentRelation(documentData, result?.id)
+        // const documentRelation = await QuoteDocumentRelation.createQuoteDocumentRelation(documentData, result?.id)
 
-        if (result?.quoteType === "Original") {
-            const updateDetails: any = await QuoteTrans.updateQuoteDocument(
-                {
-                    quotationDocument: filePath,
-                    orignalQuotePath: orignalFilePath,
-                },
-                quoteId
-            )
-        } else if (result?.quoteType === "Addendum") {
-            const updateDetails: any = await QuoteTrans.updatAddendumsDocumentPath(
-                {
-                    addendumsDocumentPath: orignalFilePath,
-                },
-                quoteId
-            )
-        } else if (result?.quoteType === "Revise") {
-            const updateDetails: any = await QuoteTrans.updatReviseDocumentPath(
-                {
-                    reviseDocumentPath: orignalFilePath,
-                },
-                quoteId
-            )
-        }
+        // if (result?.quoteType === "Original") {
+        //     const updateDetails: any = await QuoteTrans.updateQuoteDocument(
+        //         {
+        //             quotationDocument: filePath,
+        //             orignalQuotePath: orignalFilePath,
+        //         },
+        //         quoteId
+        //     )
+        // } else if (result?.quoteType === "Addendum") {
+        //     const updateDetails: any = await QuoteTrans.updatAddendumsDocumentPath(
+        //         {
+        //             addendumsDocumentPath: orignalFilePath,
+        //         },
+        //         quoteId
+        //     )
+        // } else if (result?.quoteType === "Revise") {
+        //     const updateDetails: any = await QuoteTrans.updatReviseDocumentPath(
+        //         {
+        //             reviseDocumentPath: orignalFilePath,
+        //         },
+        //         quoteId
+        //     )
+        // }
 
 
 
